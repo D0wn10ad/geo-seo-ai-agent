@@ -2,14 +2,16 @@
 set -euo pipefail
 
 # ============================================================
-# GEO-SEO Claude Code Skill Uninstaller
+# GEO-SEO AI Agent Toolkit Uninstaller
+# Removes from both Claude Code and OpenCode paths.
 # ============================================================
 
-CLAUDE_DIR="${HOME}/.claude"
-SKILLS_DIR="${CLAUDE_DIR}/skills"
-AGENTS_DIR="${CLAUDE_DIR}/agents"
+CLAUDE_SKILLS="${HOME}/.claude/skills"
+CLAUDE_AGENTS="${HOME}/.claude/agents"
+XDG_CONFIG="${XDG_CONFIG_HOME:-${HOME}/.config}"
+OPENCODE_AGENTS="${XDG_CONFIG}/opencode/agents"
+OPENCODE_COMMANDS="${XDG_CONFIG}/opencode/commands"
 
-# Detect if running via curl pipe (no interactive input available)
 INTERACTIVE=true
 if [ ! -t 0 ]; then
     INTERACTIVE=false
@@ -21,22 +23,27 @@ YELLOW='\033[1;33m'
 BLUE='\033[0;34m'
 NC='\033[0m'
 
-# Ensure unmatched globs expand to nothing
 shopt -s nullglob
 
 echo ""
-echo -e "${YELLOW}GEO-SEO Claude Code Skill Uninstaller${NC}"
+echo -e "${YELLOW}GEO-SEO AI Agent Toolkit Uninstaller${NC}"
 echo ""
 echo "This will remove the following:"
 echo ""
 
 # List what will be removed
-[ -d "$SKILLS_DIR/geo" ] && echo "  → ${SKILLS_DIR}/geo/"
-for skill_dir in "$SKILLS_DIR"/geo-*/; do
+[ -d "${CLAUDE_SKILLS}/geo" ] && echo "  → ${CLAUDE_SKILLS}/geo/"
+for skill_dir in "${CLAUDE_SKILLS}"/geo-*/; do
     [ -d "$skill_dir" ] && echo "  → ${skill_dir}"
 done
-for agent_file in "$AGENTS_DIR"/geo-*.md; do
+for agent_file in "${CLAUDE_AGENTS}"/geo-*.md; do
     [ -f "$agent_file" ] && echo "  → ${agent_file}"
+done
+for agent_file in "${OPENCODE_AGENTS}"/geo-*.md; do
+    [ -f "$agent_file" ] && echo "  → ${agent_file}"
+done
+for cmd_file in "${OPENCODE_COMMANDS}"/geo-*.md; do
+    [ -f "$cmd_file" ] && echo "  → ${cmd_file}"
 done
 
 echo ""
@@ -48,43 +55,50 @@ if [ "$INTERACTIVE" = true ]; then
         exit 0
     fi
 else
-    echo -e "${YELLOW}Non-interactive mode — proceeding with uninstall...${NC}"
+    echo -e "${YELLOW}Non-interactive mode — proceeding...${NC}"
 fi
 
 echo ""
 
-# Remove main skill
-if [ -d "$SKILLS_DIR/geo" ]; then
-    rm -rf "$SKILLS_DIR/geo"
-    echo -e "${GREEN}✓ Removed main skill${NC}"
-fi
-
-# Remove sub-skills
-for skill_dir in "$SKILLS_DIR"/geo-*/; do
+# Remove shared skills (Claude Code path — also used by OpenCode)
+for skill_dir in "${CLAUDE_SKILLS}/geo" "${CLAUDE_SKILLS}"/geo-*/; do
     if [ -d "$skill_dir" ]; then
-        skill_name=$(basename "$skill_dir")
+        name=$(basename "$skill_dir")
         rm -rf "$skill_dir"
-        echo -e "${GREEN}✓ Removed ${skill_name}${NC}"
+        echo -e "${GREEN}✓ Removed skill: ${name}${NC}"
     fi
 done
 
-# Remove agents
-for agent_file in "$AGENTS_DIR"/geo-*.md; do
+# Remove Claude Code agents
+for agent_file in "${CLAUDE_AGENTS}"/geo-*.md; do
     if [ -f "$agent_file" ]; then
-        agent_name=$(basename "$agent_file")
         rm -f "$agent_file"
-        echo -e "${GREEN}✓ Removed ${agent_name}${NC}"
+        echo -e "${GREEN}✓ Removed Claude agent: $(basename "$agent_file")${NC}"
+    fi
+done
+
+# Remove OpenCode agents
+for agent_file in "${OPENCODE_AGENTS}"/geo-*.md; do
+    if [ -f "$agent_file" ]; then
+        rm -f "$agent_file"
+        echo -e "${GREEN}✓ Removed OpenCode agent: $(basename "$agent_file")${NC}"
+    fi
+done
+
+# Remove OpenCode commands
+for cmd_file in "${OPENCODE_COMMANDS}"/geo-*.md; do
+    if [ -f "$cmd_file" ]; then
+        rm -f "$cmd_file"
+        echo -e "${GREEN}✓ Removed OpenCode command: $(basename "$cmd_file")${NC}"
     fi
 done
 
 echo ""
-echo -e "${GREEN}GEO-SEO skill has been uninstalled.${NC}"
+echo -e "${GREEN}GEO-SEO has been uninstalled from all platforms.${NC}"
 echo ""
-echo "Note: Python dependencies lived in an isolated venv inside the skill"
-echo "directory, so they were removed automatically. Nothing to clean up on"
-echo "your system Python."
+echo "Note: Python dependencies were in an isolated venv inside the skill"
+echo "directory and have been removed."
 echo ""
-echo "Note: Prospect data at ~/.geo-prospects/ was not removed."
-echo "To remove it manually:"
-echo "  rm -rf ~/.geo-prospects"
+echo "Prospect data at ~/.geo-prospects/ was not removed."
+echo "To remove manually: rm -rf ~/.geo-prospects"
 echo ""

@@ -12,10 +12,9 @@ description: >
   also adds 4 closure-loop skills: "matrix" (intent angle planning),
   "pipeline" (5-stage AI citation pipeline), "distribute" (tiered multi-platform
   distribution), and "compete" (cross-engine competitor gap analysis).
-allowed-tools: Read, Grep, Glob, Bash, WebFetch, Write
 ---
 
-# GEO-SEO Analysis Tool — Claude Code Skill (February 2026)
+# GEO-SEO Analysis Tool — Multi-AI Agent (February 2026)
 
 > **Philosophy:** GEO-first, SEO-supported. AI search is eating traditional search.
 > This tool optimizes for where traffic is going, not where it was.
@@ -72,7 +71,7 @@ allowed-tools: Read, Grep, Glob, Bash, WebFetch, Write
 ### Full Audit (`/geo audit <url>`)
 
 **Phase 1: Discovery (Sequential)**
-1. Fetch homepage HTML (curl or WebFetch)
+1. Fetch homepage HTML (curl or `fetch_url`)
 2. Detect business type (SaaS, Local, E-commerce, Publisher, Agency, Other)
 3. Extract key pages from sitemap.xml or internal links (up to 50 pages)
 
@@ -197,7 +196,7 @@ The `/geo report-pdf <url>` command generates a professional, branded PDF report
 ### How It Works
 1. Run the full audit or individual analyses first
 2. Collect all scores and findings into a JSON structure
-3. Execute the PDF generator: `python3 ~/.claude/skills/geo/scripts/generate_pdf_report.py data.json GEO-REPORT.pdf`
+3. Execute the PDF generator: `python3 scripts/generate_pdf_report.py data.json GEO-REPORT.pdf`
 
 ### What the PDF Includes
 - **Cover page** with GEO score gauge visualization

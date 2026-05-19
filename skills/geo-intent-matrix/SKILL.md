@@ -13,7 +13,6 @@ description: >
 version: 1.0.0
 author: geo-seo-claude-plus
 tags: [geo, intent, content-strategy, planning, matrix, coverage]
-allowed-tools: Read, Grep, Glob, Bash, WebFetch, Write
 ---
 
 # GEO Intent-Angle Matrix Skill
@@ -180,7 +179,7 @@ Each candidate question gets a P-score on three factors, then the product is buc
 
 ### Factor 1: Search Volume (SV)
 
-Estimate monthly search volume for the question. Use Bash + WebFetch to pull from Google Suggest, People Also Ask, or any available keyword tool the user has wired up. If no tool is available, infer from query head/torso/tail length:
+Estimate monthly search volume for the question. Use `` `run_command` `` + `` `fetch_url` `` to pull from Google Suggest, People Also Ask, or any available keyword tool the user has wired up. If no tool is available, infer from query head/torso/tail length:
 
 | SV Bucket | Volume Range | Score |
 |---|---|---|
@@ -260,7 +259,7 @@ Coverage score = (`COVERED` cells × 1.0 + `PARTIAL` cells × 0.5) / total cells
 ### Step 1: Resolve Core Topic and Seed Entities
 
 1. Capture the core topic from the user invocation.
-2. If the user did not provide seed entities, infer 3–10 from the homepage of the target domain via WebFetch (look for navigation items, product names, repeated noun phrases).
+2. If the user did not provide seed entities, infer 3–10 from the homepage of the target domain via `fetch_url` (look for navigation items, product names, repeated noun phrases).
 3. Confirm topic and seeds before proceeding.
 
 ### Step 2: Expand Candidate Questions per Quadrant

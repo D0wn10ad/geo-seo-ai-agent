@@ -13,7 +13,6 @@ description: >
 version: 1.0.0
 author: geo-seo-claude-plus
 tags: [geo, competitor, gap-analysis, citation, ai-engines, benchmarking]
-allowed-tools: Read, Grep, Glob, Bash, WebFetch, Write
 ---
 
 # GEO Competitor Citation Gap Skill
@@ -68,10 +67,10 @@ Each of the 20 questions must:
 |---|---|---|---|---|
 | 1 | **ChatGPT (search mode)** | chatgpt.com with search toggle on | No stable public-URL query API | Manual capture via the user pasting response text into a stub block |
 | 2 | **Claude (web search)** | claude.ai with web search | No stable public-URL query API | Manual capture |
-| 3 | **Perplexity** | perplexity.ai | Yes — `https://www.perplexity.ai/search?q=<encoded>` is fetchable but rate-limited; use WebFetch |
+| 3 | **Perplexity** | perplexity.ai | Yes — `https://www.perplexity.ai/search?q=<encoded>` is fetchable but rate-limited; use `fetch_url` |
 | 4 | **Gemini** | gemini.google.com | No stable public-URL query API | Manual capture |
 | 5 | **Microsoft Copilot** | copilot.microsoft.com or Bing chat | No stable public-URL query API | Manual capture |
-| 6 | **Google AI Overviews** | google.com SERP (AI Overview block) | Yes — fetch `https://www.google.com/search?q=<encoded>&udm=14` (web tab) or vanilla SERP and look for the AI Overview block; respect rate limits | WebFetch |
+| 6 | **Google AI Overviews** | google.com SERP (AI Overview block) | Yes — fetch `https://www.google.com/search?q=<encoded>&udm=14` (web tab) or vanilla SERP and look for the AI Overview block; respect rate limits | `fetch_url` |
 
 ### Denoising via 3 runs
 
@@ -237,7 +236,7 @@ Each CRITICAL_GAP and LAGGING quadrant maps to one (sometimes two) upstream skil
 
 ### Step 3: Execute Probes Against 6 AI Engines (3 runs each, denoise)
 
-1. For programmatic engines (Perplexity, Google AI Overviews), run via WebFetch with 5 s rate limit between probes and 90 s between runs of the same probe.
+1. For programmatic engines (Perplexity, Google AI Overviews), run via `fetch_url` with 5 s rate limit between probes and 90 s between runs of the same probe.
 2. For non-programmatic engines (ChatGPT, Claude, Gemini, Copilot), emit a numbered task list to the user with the exact probe text and a per-engine capture template; pause and await the user's pasted captures before resuming.
 3. Save each raw capture to `~/.geo-prospects/competitor/_runs/<my-domain>-<YYYY-MM-DD>/<engine>-<probe-id>.yaml`.
 

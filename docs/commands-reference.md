@@ -1,6 +1,8 @@
 # Commands Reference
 
-This file documents every command in the `geo-seo-claude` skill bundle. Commands are invoked inside Claude Code using the `/geo` prefix. The main skill at `geo/SKILL.md` acts as a router: it reads the first argument after `/geo` and delegates to the matching sub-skill under `skills/`. All commands accept a URL as their primary argument; CRM commands operate on domain names or prospect IDs instead. Every command that produces a score references the weighting model described in [scoring-methodology.md](scoring-methodology.md). The parallel subagent architecture used by `/geo audit` is described in [architecture.md](architecture.md).
+This file documents every command in the `geo-seo-claude` skill bundle. Commands are invoked inside Claude Code or OpenCode using the `/geo` prefix. The main skill at `geo/SKILL.md` acts as a router: it reads the first argument after `/geo` and delegates to the matching sub-skill under `skills/`. All commands accept a URL as their primary argument; CRM commands operate on domain names or prospect IDs instead. Every command that produces a score references the weighting model described in [scoring-methodology.md](scoring-methodology.md). The parallel subagent architecture used by `/geo audit` is described in [architecture.md](architecture.md).
+
+**OpenCode note:** The `.opencode/commands/` directory provides command wrapper files that delegate to the `geo` skill. These are registered automatically when installed via `scripts/update_toolkit.py`.
 
 ---
 

@@ -1,12 +1,15 @@
 # Architecture & Design
 
-The repository is structured to seamlessly provide GEO+SEO support by using Claude's tool capabilities alongside agents and python utility scripts.
+The repository is structured to seamlessly provide GEO+SEO support across both **Claude Code** and **OpenCode** platforms. Abstract tool names (`` `fetch_url` ``, `` `run_command` ``) are used in instruction text, resolved at runtime by the platform adapter layer (`platform/SKILL.md`).
 
 ```
 geo-seo-claude/
 ├── geo/                          # Main skill orchestrator
 │   └── SKILL.md                  # Primary skill file with commands & routing
-├── skills/                       # 13 specialized sub-skills
+├── platform/                     # Platform adapter layer
+│   ├── SKILL.md                  # Platform detection + abstract tool mapping
+│   └── TOOL-MAP.md               # Abstract-to-real tool name reference table
+├── skills/                       # 20 specialized sub-skills
 │   ├── geo-audit/                # Full audit orchestration & scoring
 │   ├── geo-citability/           # AI citation readiness scoring
 │   ├── geo-crawlers/             # AI crawler access analysis
@@ -20,19 +23,27 @@ geo-seo-claude/
 │   ├── geo-report-pdf/           # Professional PDF report with charts
 │   ├── geo-prospect/             # CRM-lite prospect pipeline management
 │   ├── geo-proposal/             # Auto-generate client proposals
-│   └── geo-compare/              # Monthly delta tracking & progress reports
-├── agents/                       # 5 parallel subagents
-│   ├── geo-ai-visibility.md      # GEO audit, citability, crawlers, brands
-│   ├── geo-platform-analysis.md  # Platform-specific optimization
-│   ├── geo-technical.md          # Technical SEO analysis
-│   ├── geo-content.md            # Content & E-E-A-T analysis
-│   └── geo-schema.md             # Schema markup analysis
+│   ├── geo-compare/              # Monthly delta tracking & progress reports
+│   ├── geo-intent-matrix/        # (fork+) 4-quadrant intent planning
+│   ├── geo-citation-pipeline/    # (fork+) AI citation pipeline + verification
+│   ├── geo-distribution-plan/    # (fork+) Multi-platform distribution
+│   └── geo-competitor-citation/  # (fork+) Cross-engine gap analysis
+├── agents/                       # 5 parallel subagents (Claude Code)
+│   ├── geo-ai-visibility.md
+│   ├── geo-platform-analysis.md
+│   ├── geo-technical.md
+│   ├── geo-content.md
+│   └── geo-schema.md
+├── .opencode/                    # OpenCode-specific config
+│   ├── agents/                   # 5 subagents (OpenCode permission format)
+│   └── commands/                 # 21 command wrappers
 ├── scripts/                      # Python utilities
 │   ├── fetch_page.py             # Page fetching & parsing
 │   ├── citability_scorer.py      # AI citability scoring engine
 │   ├── brand_scanner.py          # Brand mention detection
 │   ├── llmstxt_generator.py      # llms.txt validation & generation
-│   └── generate_pdf_report.py    # PDF report generator (ReportLab)
+│   ├── generate_pdf_report.py    # PDF report generator (ReportLab)
+│   └── update_toolkit.py         # Cross-platform installer/updater
 ├── schema/                       # JSON-LD templates
 │   ├── organization.json         # Organization schema (with sameAs)
 │   ├── local-business.json       # LocalBusiness schema
@@ -40,8 +51,8 @@ geo-seo-claude/
 │   ├── software-saas.json        # SoftwareApplication schema
 │   ├── product-ecommerce.json    # Product schema with offers
 │   └── website-searchaction.json # WebSite + SearchAction schema
-├── install.sh                    # One-command installer
-├── uninstall.sh                  # Uninstaller
+├── install.sh                    # Legacy installer (Claude Code)
+├── uninstall.sh                  # Legacy uninstaller
 ├── requirements.txt              # Python dependencies
 └── README.md                     # Main project view
 ```
@@ -59,6 +70,21 @@ When you run `/geo audit https://example.com`:
    - Schema Markup (detection, validation, generation)
 3. **Synthesis** — Aggregates scores, generates composite GEO Score (0-100)
 4. **Report** — Outputs prioritized action plan with quick wins
+
+### Platform Adapter Layer
+
+The `platform/` directory provides runtime platform detection and abstract tool name resolution. When a skill or agent uses `` `fetch_url` `` or `` `run_command` `` in its instruction text, the platform adapter maps these to the real tool names for the current platform:
+
+| Abstract Name | Claude Code | OpenCode |
+|---------------|-------------|----------|
+| `` `fetch_url` `` | `WebFetch` | `webfetch` |
+| `` `run_command` `` | `Bash` | `bash` |
+| `` `read_file` `` | `Read` | `read` |
+| `` `write_file` `` | `Write` | `write` |
+| `` `search_files` `` | `Glob` | `glob` |
+| `` `search_content` `` | `Grep` | `grep` |
+
+The adapter is loaded first (via `AGENTS.md`), ensuring the tool mapping is available from session start.
 
 ### Data Storage
 

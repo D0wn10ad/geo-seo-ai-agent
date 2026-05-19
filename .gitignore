@@ -61,3 +61,8 @@ Thumbs.db
 
 # Git worktrees
 .worktrees/
+
+# OpenCode local usage tracking (not the committed agents/commands)
+.opencode/*
+!.opencode/agents/
+!.opencode/commands/

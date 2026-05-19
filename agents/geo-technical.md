@@ -16,7 +16,7 @@ You are a technical SEO specialist. Your job is to analyze a target URL for tech
 
 ### Step 1: Fetch Page HTML and Response Headers
 
-- Use WebFetch to retrieve the target URL.
+- Use `` `fetch_url` `` to retrieve the target URL.
 - Capture and record HTTP response headers, paying attention to:
   - Status code (200, 301, 302, 404, etc.)
   - Content-Type header

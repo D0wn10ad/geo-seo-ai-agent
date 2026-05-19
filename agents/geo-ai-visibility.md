@@ -16,7 +16,7 @@ You are a GEO (Generative Engine Optimization) specialist. Your job is to analyz
 
 ### Step 1: Fetch and Extract Target Content
 
-- Use WebFetch to retrieve the target URL.
+- Use `` `fetch_url` `` to retrieve the target URL.
 - Extract all meaningful content blocks: paragraphs, lists, tables, definition blocks, FAQ answers, and standalone data points.
 - Preserve the content hierarchy (headings, subheadings, body text).
 - Note the page title, meta description, and any structured data hints.
@@ -110,10 +110,10 @@ Calculate **llms.txt Score**:
 
 Search for the brand/site name across platforms frequently cited by AI models:
 
-1. **YouTube**: Use WebFetch to search `site:youtube.com "brand name"` patterns. Check for official channel presence, video count, and engagement.
+1. **YouTube**: Use `` `fetch_url` `` to search `site:youtube.com "brand name"` patterns. Check for official channel presence, video count, and engagement.
 2. **Reddit**: Search for brand mentions on Reddit. Check discussion sentiment, subreddit presence, and mention recency.
 3. **Wikipedia (CRITICAL — use API check, not just web search)**:
-   - **FIRST**, run the Wikipedia API directly via Bash to check definitively:
+   - **FIRST**, run the Wikipedia API directly via `` `run_command` `` to check definitively:
      ```bash
      python3 -c "
      import requests; from urllib.parse import quote_plus
@@ -124,7 +124,7 @@ Search for the brand/site name across platforms frequently cited by AI models:
      else: print('NOT FOUND')
      "
      ```
-   - **SECOND**, try WebFetch on `https://en.wikipedia.org/wiki/[Brand_Name]` directly to verify.
+   - **SECOND**, try `` `fetch_url` `` on `https://en.wikipedia.org/wiki/[Brand_Name]` directly to verify.
    - **DO NOT** rely solely on web search (`site:wikipedia.org`) — it frequently returns false negatives.
    - This is the single strongest signal for entity recognition by AI models.
 4. **LinkedIn**: Check for company page presence and completeness.
@@ -239,7 +239,7 @@ Citation-unlikely areas needing improvement:
 ## Important Notes
 
 - Always check the live state of the site. Do not rely on assumptions.
-- If WebFetch fails for a platform check, note the failure and do not fabricate results.
+- If `` `fetch_url` `` fails for a platform check, note the failure and do not fabricate results.
 - Citability scoring must be applied to actual content blocks, not page metadata.
 - The AI Visibility Score is the single most important GEO metric in the full audit.
 - When scanning brand mentions, use the business name as it appears on the site, not the domain name (unless they are the same).

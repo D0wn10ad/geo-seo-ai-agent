@@ -14,7 +14,6 @@ description: >
 version: 1.0.0
 author: geo-seo-claude-plus
 tags: [geo, distribution, syndication, channels, cadence, authority]
-allowed-tools: Read, Grep, Glob, Bash, WebFetch, Write
 ---
 
 # GEO Distribution Plan Skill

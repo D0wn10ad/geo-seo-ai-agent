@@ -1,13 +1,6 @@
 ---
 name: geo-citability
 description: AI citability scoring and optimization. Analyzes web page content to determine how likely AI systems (ChatGPT, Claude, Perplexity, Gemini) are to cite or quote passages from the page. Provides a citability score (0-100) with specific rewrite suggestions.
-allowed-tools:
-  - Read
-  - Grep
-  - Glob
-  - Bash
-  - WebFetch
-  - Write
 ---
 
 # AI Citability Scoring Skill
@@ -171,7 +164,7 @@ This measures whether the content provides information that AI systems cannot fi
 
 ### Step 1: Fetch and Parse Page Content
 
-1. Use WebFetch to retrieve the target URL.
+1. Use `fetch_url` to retrieve the target URL.
 2. Extract the main content area (exclude navigation, footer, sidebar, ads).
 3. Preserve heading structure (H1-H6 tags).
 4. Preserve paragraph boundaries, lists, and tables.

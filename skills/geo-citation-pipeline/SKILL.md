@@ -13,7 +13,6 @@ description: >
 version: 1.0.0
 author: geo-seo-claude-plus
 tags: [geo, pipeline, crawlers, citability, indexing, preferred-answer]
-allowed-tools: Read, Grep, Glob, Bash, WebFetch, Write
 ---
 
 # GEO Citation Pipeline Skill
@@ -191,7 +190,7 @@ A `PIPELINE_DEGRADED` page is publishable but a remediation ticket is generated.
 
 ### Step 2: Audit Internal-Link Anchors and Depth
 
-1. Fetch the page's HTML via WebFetch.
+1. Fetch the page's HTML via `fetch_url`.
 2. Fetch the homepage and walk the sitemap to map the click-depth graph (cap at 5 levels deep; abort if no sitemap and crawl > 200 internal pages would be required).
 3. For each inbound internal link to the target URL, extract the anchor text.
 4. Look up the page's `intent:` value (from front-matter, from the matrix record, or by classifying the page using the disambiguation rules in `geo-intent-matrix`).
@@ -199,8 +198,8 @@ A `PIPELINE_DEGRADED` page is publishable but a remediation ticket is generated.
 
 ### Step 3: Score Authority Backlinks from AI-Training Source Domains
 
-1. For Tier A check Wikipedia first via API (see the procedure in `agents/geo-ai-visibility.md` Step 5 — do not duplicate). Then Reddit, GitHub, Stack Overflow, etc. via WebFetch `site:` search patterns.
-2. For Tier B check via WebFetch `site:<domain> "<core-topic>"` queries.
+1. For Tier A check Wikipedia first via API (see the procedure in `agents/geo-ai-visibility.md` Step 5 — do not duplicate). Then Reddit, GitHub, Stack Overflow, etc. via `fetch_url` `site:` search patterns.
+2. For Tier B check via `fetch_url` `site:<domain> "<core-topic>"` queries.
 3. Record mention counts, recency, and topical relevance.
 4. Compute Stage 3 verdict.
 
@@ -236,7 +235,7 @@ curl -X POST 'https://api.indexnow.org/IndexNow' \
 
 1. If invoked at publish time, set Stage 6 = `PENDING` and emit a 14-day callback note. Skip to Step 7.
 2. If invoked 14+ days post-publish (or the user passes `--verify`), build the probe question from the page's `intent:` and `question:` metadata.
-3. Use WebFetch to query each engine where a public web interface exists (Perplexity, Gemini, Google AI Overviews via google.com search). For ChatGPT, Claude, and Copilot, instruct the user to capture the response manually and paste into a stub block — these engines do not have stable public-URL query endpoints.
+3. Use `fetch_url` to query each engine where a public web interface exists (Perplexity, Gemini, Google AI Overviews via google.com search). For ChatGPT, Claude, and Copilot, instruct the user to capture the response manually and paste into a stub block — these engines do not have stable public-URL query endpoints.
 4. Record cited Y/N, position, and primary-anchor status per engine.
 5. Apply the Stage 6 rubric.
 
@@ -402,7 +401,7 @@ curl -X POST 'https://api.indexnow.org/IndexNow' \
 
 - **Stage 1 and Stage 4 are non-negotiable.** A FAIL on either drops the pipeline to BLOCKED regardless of how many other stages pass.
 - **Stage 6 cannot be run at publish time.** AI engines need indexing lag (median 7 days, P95 14 days). Always mark `PENDING` at publish and schedule a day-14 re-run.
-- **Stage 3 mention counts are noisy.** Wikipedia is authoritative (API check); other Tier A/B domains are best-effort via WebFetch and may under-report. Always note "minimum N found" rather than "exactly N exist."
+- **Stage 3 mention counts are noisy.** Wikipedia is authoritative (API check); other Tier A/B domains are best-effort via `fetch_url` and may under-report. Always note "minimum N found" rather than "exactly N exist."
 - **Inheritance freshness:** Inherited reports (`geo-crawlers`, `geo-citability`, `geo-schema`) older than 30 days must be re-run before being trusted. Mark stale inherited data with a `(stale, regenerated)` suffix.
 - **Distribution gate:** Never trigger `/geo distribute` for a URL whose pipeline state is BLOCKED. Distribution amplifies whatever the AI engine sees on the destination — if the destination is broken, distribution multiplies the waste.
 - **Rate limit:** Stage 6 probe runs should be spaced ≥ 5 seconds between engines and respect each engine's terms of service. Captured snapshots are point-in-time and may not be reproducible.
@@ -412,6 +411,6 @@ curl -X POST 'https://api.indexnow.org/IndexNow' \
 ## Important Notes
 
 - This skill is the **GEO step-3 implementation** in the four-step GEO workflow (angles → publish → guide → measure). The other three steps map to `geo-intent-matrix` (angles), `geo-distribution-plan` (publish), and `geo-competitor-citation` (measure).
-- Do not run this pipeline on every URL — it is expensive (WebFetch + multiple inherited skills). Run it on P0 pieces planned by `geo-intent-matrix` and on any URL that scores < 60 in a prior `geo-audit`.
+- Do not run this pipeline on every URL — it is expensive (`fetch_url` + multiple inherited skills). Run it on P0 pieces planned by `geo-intent-matrix` and on any URL that scores < 60 in a prior `geo-audit`.
 - The "preferred answer" verdict in Stage 6 is the only metric that proves the loop closed. All five upstream gates can be green and the engine can still ignore the page — usually because the engine has already locked onto a competitor's answer. When that happens, the remediation is not pipeline-level; it is competitive (run `/geo compete` and target the specific competitor citations).
 - If the site uses heavy client-side rendering (React/Vue SPA without SSR), Stage 1 will almost always FAIL. The remediation is structural (add SSR or pre-rendering) and outside the scope of this skill — flag it loudly in the remediation plan.

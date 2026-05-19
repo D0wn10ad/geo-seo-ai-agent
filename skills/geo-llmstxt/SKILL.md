@@ -1,13 +1,6 @@
 ---
 name: geo-llmstxt
 description: Analyzes and generates llms.txt files -- the emerging standard for helping AI systems understand website structure and content. Can validate existing llms.txt files or generate new ones from scratch by crawling the site.
-allowed-tools:
-  - Read
-  - Grep
-  - Glob
-  - Bash
-  - WebFetch
-  - Write
 ---
 
 # llms.txt Standard Analysis and Generation Skill
@@ -160,7 +153,7 @@ When checking an existing llms.txt file:
 
 ### Step 1: Fetch the File
 
-1. Use WebFetch to retrieve `[domain]/llms.txt`.
+1. Use `fetch_url` to retrieve `[domain]/llms.txt`.
 2. Also check for `[domain]/llms-full.txt`.
 3. Record HTTP status code:
    - **200:** File exists -- proceed to validation.
@@ -265,7 +258,7 @@ Categorize all discovered pages and select the most important ones:
 
 For each selected page:
 
-1. Fetch the page content using WebFetch.
+1. Fetch the page content using `fetch_url`.
 2. Read the H1, meta description, and first 2-3 paragraphs.
 3. Write a description that:
    - Is 10-30 words long

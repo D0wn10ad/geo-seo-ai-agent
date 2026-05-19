@@ -1,13 +1,6 @@
 ---
 name: geo-crawlers
 description: AI crawler access analysis. Checks robots.txt, meta tags, and HTTP headers to determine which AI crawlers can access the site. Provides a complete access map and recommendations for maximizing AI visibility while maintaining appropriate control.
-allowed-tools:
-  - Read
-  - Grep
-  - Glob
-  - Bash
-  - WebFetch
-  - Write
 ---
 
 # AI Crawler Access Analysis Skill
@@ -219,7 +212,7 @@ Disallow: /
 
 ### Step 1: Fetch and Parse robots.txt
 
-1. Use WebFetch to retrieve `[domain]/robots.txt`.
+1. Use `fetch_url` to retrieve `[domain]/robots.txt`.
 2. Parse all User-agent directives and their associated Allow/Disallow rules.
 3. For each AI crawler in the reference list above:
    - Check if there is a specific User-agent block for that crawler
