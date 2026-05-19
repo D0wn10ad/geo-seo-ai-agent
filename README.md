@@ -12,195 +12,190 @@
 </p>
 
 <p align="center">
-  AI search is eating traditional search. This tool optimizes for where traffic is going, not where it was.
+  AI search is eating traditional search. This toolkit optimizes for where traffic is going, not where it was.
 </p>
 
 ---
 
-## About This Fork
+## Overview
 
-This project (`geo-seo-claude-plus`) is a downstream fork of [zubair-trabzada/geo-seo-claude](https://github.com/zubair-trabzada/geo-seo-claude) extended with 4 additional skills that close the 4-step GEO workflow loop (angles → publish → guide → measure).
+This is a fork of [zubair-trabzada/geo-seo-claude](https://github.com/zubair-trabzada/geo-seo-claude) extended with a **cross-platform architecture** (Claude Code + OpenCode with superpowers) and **4 closure-loop skills** that complete the GEO workflow:
 
-| New Skill | Command | Purpose |
-| --- | --- | --- |
-| `geo-intent-matrix` | `/geo matrix <core-topic>` | Build a 4-quadrant intent matrix (Definitional / Comparative / Procedural / Causal) + a 12-week rolling editorial schedule |
-| `geo-citation-pipeline` | `/geo pipeline <url>` | Run the 5-stage AI citation pipeline (crawlers → internal-link wiring → AI-training authority backlinks → on-page compliance → rapid indexing) + 6-engine preferred-answer verification |
-| `geo-distribution-plan` | `/geo distribute <topic>` | Generate an authority-tiered multi-platform distribution plan with 14-day cadence, per-platform rewrite briefs, and 7/14/30-day reclaim checklist |
-| `geo-competitor-citation` | `/geo compete <my-domain> <competitor1,competitor2,...>` | Run a cross-engine competitor citation gap matrix (3-D: brand × engine × intent) with verdict per quadrant and top-3 remediation plan |
+| Fork-added Skill | Command | Purpose |
+|---|---|---|
+| `geo-intent-matrix` | `/geo matrix <core-topic>` | 4-quadrant intent matrix + 12-week editorial schedule |
+| `geo-citation-pipeline` | `/geo pipeline <url>` | 5-stage AI citation pipeline + 6-engine preferred-answer verification |
+| `geo-distribution-plan` | `/geo distribute <topic>` | Authority-tiered 14-day multi-platform distribution plan |
+| `geo-competitor-citation` | `/geo compete <domain> <c1,c2,...>` | Cross-engine competitor citation gap matrix with verdict per quadrant |
 
-All upstream skills, agents, scripts, schemas, and commands remain **unchanged**. The fork only adds new files and appends new rows to the orchestrator's routing tables. See [FORK_CHANGELOG.md](FORK_CHANGELOG.md) for the full diff and [NOTICE](NOTICE) for attribution.
-
-Original work © 2026 Zubair Trabzada, MIT-licensed (see [LICENSE](LICENSE)).
-
----
-
-## Why GEO Matters (2026)
-
-| Metric | Value |
-|--------|-------|
-| GEO services market | $850M+ (projected $7.3B by 2031) |
-| AI-referred traffic growth | +527% year-over-year |
-| AI traffic conversion rate vs organic | 4.4x higher |
-| Gartner: search traffic drop by 2028 | -50% |
-| Brand mentions vs backlinks for AI | 3x stronger correlation |
-| Marketers investing in GEO | Only 23% |
+Upstream skills, agents, scripts, and schemas remain unchanged. See [FORK_CHANGELOG.md](FORK_CHANGELOG.md) for the full diff.
 
 ---
 
 ## Quick Start
 
-### One-Command Install (macOS/Linux)
+### macOS / Linux
 
 ```bash
-curl -fsSL https://raw.githubusercontent.com/zubair-trabzada/geo-seo-claude/main/install.sh | bash
-```
+# Default branch (main)
+curl -fsSL https://raw.githubusercontent.com/D0wn10ad/geo-seo-ai-agent/main/install.sh | bash
 
-### Manual Install
-
-```bash
-git clone https://github.com/zubair-trabzada/geo-seo-claude.git
-cd geo-seo-claude
-./install.sh
+# Specific branch (for testing)
+curl -fsSL https://raw.githubusercontent.com/D0wn10ad/geo-seo-ai-agent/<branch>/install.sh | bash /dev/stdin -b <branch>
 ```
 
 ### Windows (Git Bash)
 
-Requires [Git for Windows](https://git-scm.com/downloads) which includes Git Bash.
-
 ```bash
-# Option 1: One-command install (run from Git Bash, not PowerShell/CMD)
-curl -fsSL https://raw.githubusercontent.com/zubair-trabzada/geo-seo-claude/main/install-win.sh | bash
-
-# Option 2: Manual install
-git clone https://github.com/zubair-trabzada/geo-seo-claude.git
-cd geo-seo-claude
-./install-win.sh
+curl -fsSL https://raw.githubusercontent.com/D0wn10ad/geo-seo-ai-agent/main/install-win.sh | bash
 ```
 
-> **Note:** Right-click the folder and select "Open Git Bash here", or open Git Bash and navigate to the directory. Do not use PowerShell or Command Prompt.
+> Run from Git Bash, not PowerShell or CMD. Requires [Git for Windows](https://git-scm.com/downloads).
+
+### Manual
+
+```bash
+git clone https://github.com/D0wn10ad/geo-seo-ai-agent.git
+cd geo-seo-ai-agent
+bash install.sh
+```
 
 ### Requirements
 
-- Python 3.8+ (on Debian/Ubuntu also `python3-venv`)
-- Claude Code CLI or OpenCode with superpowers plugin
-- Git
-- Optional: [`uv`](https://docs.astral.sh/uv/) — if present, the installer uses it for a faster dependency install
-- Optional: Playwright (for screenshots)
+| Dependency | Notes |
+|------------|-------|
+| Python 3.8+ | Debian/Ubuntu also needs `python3-venv` |
+| Claude Code CLI | or OpenCode with [oh-my-opencode](https://opencode.ai) plugin |
+| Git | Required for installer |
+| `uv` (optional) | Faster pip — auto-detected by installer |
+| Playwright (optional) | For PDF screenshot generation |
 
 ### Isolated install
 
-Python dependencies are installed into a dedicated virtual environment at
-`~/.claude/skills/geo/.venv/`. Your system Python is **not** touched, and
-uninstalling the skill removes the venv together with the rest of the files.
-
-Skill and agent files reference that venv directly, so the tool works
-regardless of what `python3` resolves to on your `PATH`.
+Python deps go into `~/.claude/skills/geo/.venv/` — your system Python is untouched. Uninstalling removes the venv too.
 
 ---
 
 ## Commands
 
-Open your AI agent CLI (Claude Code or OpenCode) and use these commands:
+All 22 commands work identically in Claude Code (`/geo <cmd>`) and OpenCode (`/geo-<cmd>`):
 
-| Command | What It Does |
-|---------|-------------|
-| `/geo audit <url>` | Full GEO + SEO audit with parallel subagents |
-| `/geo quick <url>` | 60-second GEO visibility snapshot |
-| `/geo citability <url>` | Score content for AI citation readiness |
-| `/geo crawlers <url>` | Check AI crawler access (robots.txt) |
+| Command | Purpose |
+|---------|---------|
+| `/geo audit <url>` | Full GEO + SEO audit with 5 parallel subagents |
+| `/geo citability <url>` | AI citation readiness score |
+| `/geo crawlers <url>` | AI crawler access check (robots.txt) |
 | `/geo llmstxt <url>` | Analyze or generate llms.txt |
-| `/geo brands <url>` | Scan brand mentions across AI-cited platforms |
-| `/geo platforms <url>` | Platform-specific optimization |
-| `/geo schema <url>` | Structured data analysis & generation |
+| `/geo brands <url>` | Brand mention scan across AI-cited platforms |
+| `/geo platforms <url>` | Platform-specific optimization (ChatGPT, Perplexity, Google AIO) |
+| `/geo schema <url>` | Structured data detection, validation, generation |
 | `/geo technical <url>` | Technical SEO audit |
 | `/geo content <url>` | Content quality & E-E-A-T assessment |
-| `/geo report <url>` | Generate client-ready GEO report |
-| `/geo report-pdf` | Generate professional PDF report with charts & visualizations |
+| `/geo page <url>` | Deep single-page GEO analysis |
+| `/geo quick <url>` | 60-second GEO visibility snapshot |
+| `/geo report <url>` | Client-ready GEO report (Markdown) |
+| `/geo report-pdf <url>` | Professional PDF report with charts |
+| `/geo prospect <cmd>` | CRM-lite: manage prospects pipeline |
+| `/geo proposal <domain>` | Auto-generate client proposal |
+| `/geo compare <domain>` | Monthly delta / progress report |
+| `/geo update` | Pull latest updates from upstream |
+| `/geo matrix <topic>` | Intent matrix + editorial schedule |
+| `/geo pipeline <url>` | 5-stage AI citation pipeline |
+| `/geo distribute <topic>` | Multi-platform distribution plan |
+| `/geo compete <d> <c1,c2,...>` | Competitor citation gap analysis |
+| `/geo help` | Show all commands with descriptions |
+
+> Commands after `/geo update` are fork-added. Run `/geo help` inside your AI client for the full list.
 
 ---
 
 ## Architecture
 
 ```
-geo-seo-claude/
-├── geo/                          # Main skill orchestrator
-│   └── SKILL.md                  # Primary skill file with commands & routing
-├── skills/                       # 13 specialized sub-skills
-│   ├── geo-audit/                # Full audit orchestration & scoring
-│   ├── geo-citability/           # AI citation readiness scoring
-│   ├── geo-crawlers/             # AI crawler access analysis
-│   ├── geo-llmstxt/              # llms.txt standard analysis & generation
-│   ├── geo-brand-mentions/       # Brand presence on AI-cited platforms
-│   ├── geo-platform-optimizer/   # Platform-specific AI search optimization
-│   ├── geo-schema/               # Structured data for AI discoverability
-│   ├── geo-technical/            # Technical SEO foundations
-│   ├── geo-content/              # Content quality & E-E-A-T
-│   ├── geo-report/               # Client-ready markdown report generation
-│   ├── geo-report-pdf/           # Professional PDF report with charts
-│   ├── geo-prospect/             # CRM-lite prospect pipeline management
-│   ├── geo-proposal/             # Auto-generate client proposals
-│   └── geo-compare/              # Monthly delta tracking & progress reports
-├── agents/                       # 5 parallel subagents
-│   ├── geo-ai-visibility.md      # GEO audit, citability, crawlers, brands
-│   ├── geo-platform-analysis.md  # Platform-specific optimization
-│   ├── geo-technical.md          # Technical SEO analysis
-│   ├── geo-content.md            # Content & E-E-A-T analysis
-│   └── geo-schema.md             # Schema markup analysis
-├── scripts/                      # Python utilities
-│   ├── fetch_page.py             # Page fetching & parsing
-│   ├── citability_scorer.py      # AI citability scoring engine
-│   ├── brand_scanner.py          # Brand mention detection
-│   ├── llmstxt_generator.py      # llms.txt validation & generation
-│   └── generate_pdf_report.py    # PDF report generator (ReportLab)
-├── schema/                       # JSON-LD templates
-│   ├── organization.json         # Organization schema (with sameAs)
-│   ├── local-business.json       # LocalBusiness schema
-│   ├── article-author.json       # Article + Person schema (E-E-A-T)
-│   ├── software-saas.json        # SoftwareApplication schema
-│   ├── product-ecommerce.json    # Product schema with offers
-│   └── website-searchaction.json # WebSite + SearchAction schema
-├── install.sh                    # One-command installer
-├── uninstall.sh                  # Uninstaller
-├── requirements.txt              # Python dependencies
-└── README.md                     # This file
+geo-seo-ai-agent/
+├── geo/                        # Main orchestrator (SKILL.md)
+├── skills/                     # 19 specialized sub-skills
+│   ├── geo-audit/
+│   ├── geo-citability/
+│   ├── geo-crawlers/
+│   ├── geo-llmstxt/
+│   ├── geo-brand-mentions/
+│   ├── geo-platform-optimizer/
+│   ├── geo-schema/
+│   ├── geo-technical/
+│   ├── geo-content/
+│   ├── geo-report/
+│   ├── geo-report-pdf/
+│   ├── geo-prospect/
+│   ├── geo-proposal/
+│   ├── geo-compare/
+│   ├── geo-intent-matrix/      ═ fork-added
+│   ├── geo-citation-pipeline/  ═ fork-added
+│   ├── geo-distribution-plan/  ═ fork-added
+│   ├── geo-competitor-citation/═ fork-added
+│   └── geo-update/
+├── platform/                   # Cross-platform tool mapping adapter
+│   ├── SKILL.md
+│   └── TOOL-MAP.md
+├── agents/                     # 5 parallel subagents (Claude Code)
+├── .opencode/                  # OpenCode-specific files
+│   ├── agents/                 # 5 subagents (OpenCode format)
+│   └── commands/               # 21 /geo-* command wrappers
+├── scripts/                    # Python utilities
+│   ├── fetch_page.py
+│   ├── citability_scorer.py
+│   ├── brand_scanner.py
+│   ├── llmstxt_generator.py
+│   ├── generate_pdf_report.py
+│   ├── update_toolkit.py       ═ cross-platform installer
+│   ├── crm_dashboard.py
+│   └── webapp/
+├── schema/                     # JSON-LD templates (6 files)
+├── docs/                       # Full documentation
+│   ├── getting-started.md
+│   ├── commands-reference.md
+│   ├── architecture.md
+│   ├── skills-and-agents.md
+│   ├── scoring-methodology.md
+│   ├── faq.md
+│   └── test-plan.md
+├── install.sh                  # Cross-platform installer
+├── uninstall.sh                # Cross-platform uninstaller
+└── requirements.txt
 ```
 
 ---
 
 ## Data Storage
 
-The CRM and reporting skills (`/geo prospect`, `/geo proposal`, `/geo compare`) store runtime data outside the Claude Code directory:
+CRM and reporting skills store data outside the skill directory:
 
 ```
 ~/.geo-prospects/
-├── prospects.json              # Client/prospect pipeline data
-├── proposals/                  # Generated proposal documents
-│   └── <domain>-proposal-<date>.md
-└── reports/                    # Monthly delta reports
-    └── <domain>-monthly-<YYYY-MM>.md
+├── prospects.json
+├── proposals/
+└── reports/
 ```
 
-This directory is **not removed** by the uninstaller — delete it manually if you no longer need your prospect data.
+This directory is **not removed** by `uninstall.sh` — delete manually if needed.
 
 ---
 
 ## How It Works
 
-### Full Audit Flow
+### Full Audit Flow (`/geo audit <url>`)
 
-When you run `/geo audit https://example.com`:
-
-1. **Discovery** — Fetches homepage, detects business type, crawls sitemap
-2. **Parallel Analysis** — Launches 5 subagents simultaneously:
+1. **Discovery** — Fetches homepage, detects business type, crawls sitemap (up to 50 pages)
+2. **Parallel Analysis** — 5 subagents run simultaneously:
    - AI Visibility (citability, crawlers, llms.txt, brand mentions)
    - Platform Analysis (ChatGPT, Perplexity, Google AIO readiness)
    - Technical SEO (Core Web Vitals, SSR, security, mobile)
    - Content Quality (E-E-A-T, readability, freshness)
    - Schema Markup (detection, validation, generation)
-3. **Synthesis** — Aggregates scores, generates composite GEO Score (0-100)
-4. **Report** — Outputs prioritized action plan with quick wins
+3. **Synthesis** — Aggregates scores into composite GEO Score (0–100)
+4. **Report** — Prioritized action plan with quick wins
 
-### Scoring Methodology
+### Scoring
 
 | Category | Weight |
 |----------|--------|
@@ -213,25 +208,35 @@ When you run `/geo audit https://example.com`:
 
 ---
 
-## Key Features
+## Uninstall
 
-### Citability Scoring
-Analyzes content blocks for AI citation readiness. Optimal AI-cited passages are 134-167 words, self-contained, fact-rich, and directly answer questions.
+```bash
+bash uninstall.sh
+```
 
-### AI Crawler Analysis
-Checks robots.txt for 14+ AI crawlers (GPTBot, ClaudeBot, PerplexityBot, etc.) and provides specific allow/block recommendations.
+Removes from both `~/.claude/` (skills, agents, venv) and `~/.config/opencode/` (agents, commands).
 
-### Brand Mention Scanning
-Brand mentions correlate 3x more strongly with AI visibility than backlinks. Scans YouTube, Reddit, Wikipedia, LinkedIn, and 7+ other platforms.
+Manual cleanup:
+```bash
+rm -rf ~/.claude/skills/geo ~/.claude/skills/geo-* ~/.claude/agents/geo-*.md
+rm -rf ~/.config/opencode/agents/geo-*.md ~/.config/opencode/commands/geo-*.md
+```
 
-### Platform-Specific Optimization
-Only 11% of domains are cited by both ChatGPT and Google AI Overviews for the same query. Provides tailored recommendations per platform.
+---
 
-### llms.txt Generation
-Generates the emerging llms.txt standard file that helps AI crawlers understand your site structure.
+## Documentation
 
-### Client-Ready Reports
-Generates professional GEO reports in markdown or PDF format. PDF reports include score gauges, bar charts, platform readiness visualizations, color-coded tables, and prioritized action plans — ready to deliver to clients.
+Detailed docs are in the `docs/` directory:
+
+| Doc | What's in it |
+|-----|-------------|
+| [Getting Started](docs/getting-started.md) | Prerequisites, install, first audit, troubleshooting |
+| [Commands Reference](docs/commands-reference.md) | Every `/geo` command with usage and examples |
+| [Architecture](docs/architecture.md) | Repo layout, audit flow, subagent dispatch |
+| [Skills & Agents](docs/skills-and-agents.md) | Sub-skills, subagents, scripts, schemas |
+| [Scoring Methodology](docs/scoring-methodology.md) | GEO Score computation, signals, caveats |
+| [FAQ](docs/faq.md) | Common questions for users and contributors |
+| [Test Plan](docs/test-plan.md) | Manual verification checklist for multi-platform install |
 
 ---
 
@@ -246,45 +251,6 @@ Generates professional GEO reports in markdown or PDF format. PDF reports includ
 
 ---
 
-## Uninstall
-
-```bash
-./uninstall.sh
-```
-
-Or manually:
-```bash
-rm -rf ~/.claude/skills/geo ~/.claude/skills/geo-* ~/.claude/agents/geo-*.md
-```
-
----
-
-## Want to Turn This Into a Business?
-
-The tool is free. Learning how to monetize it is where the community comes in.
-
-**[Join the AI Workshop Community →](https://skool.com/aiworkshop)**
-
-Inside you'll get:
-- **Video walkthroughs** — Step-by-step setup, running audits, reading results
-- **Client acquisition playbook** — How to find prospects, pitch GEO services, and close deals
-- **Live office hours** — Bring your audit results, get direct help
-- **GEO agency pricing & templates** — Proposal docs, cold outreach scripts, onboarding workflows
-
-GEO agencies charge $2K–$12K/month. This tool does the audit. The community teaches you how to sell it.
-
----
-
 ## License
 
-MIT License
-
----
-
-## Contributing
-
-Contributions welcome!
-
----
-
-Built for the AI search era.
+MIT — see [LICENSE](LICENSE). Original work © 2026 Zubair Trabzada.
