@@ -75,8 +75,8 @@ def clone_or_pull_repo(upstream_url, target_dir):
 
 def copy_tree(src, dst, desc=""):
     """Copy src directory tree to dst, creating parents if needed."""
-    if not src.exists():
-        print(f"  SKIP: {desc} source not found at {src}")
+    if not src.is_dir():
+        print(f"  SKIP: {desc} not found or not a directory at {src}")
         return
     dst.parent.mkdir(parents=True, exist_ok=True)
     if dst.exists():
