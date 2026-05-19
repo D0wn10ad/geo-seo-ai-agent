@@ -5,9 +5,11 @@
 | Requirement | Why it's needed |
 |---|---|
 | Python 3.8+ | Runs the utility scripts (page fetching, citability scoring, PDF generation, etc.) |
-| Claude Code CLI | The skills and agents are loaded and invoked through Claude Code |
+| Claude Code CLI (or OpenCode with superpowers) | The skills and agents are loaded and invoked through an AI agent CLI |
 | Git | Used by the installer to clone the repository |
 | Playwright (optional) | Enables screenshot capture; install separately after the main install |
+
+### Claude Code
 
 Install Claude Code if you haven't already:
 
@@ -15,7 +17,17 @@ Install Claude Code if you haven't already:
 npm install -g @anthropic-ai/claude-code
 ```
 
+### OpenCode
+
+Install OpenCode with superpowers if you haven't already:
+
+```bash
+npm install -g @opencode-ai/cli
+```
+
 ---
+
+**Note:** All `/geo` slash commands work in both platforms. The project provides platform-specific agent files in `.opencode/agents/` and command wrappers in `.opencode/commands/`. Use `scripts/update_toolkit.py` to install for both platforms.
 
 ## Installation
 
@@ -49,10 +61,20 @@ cd geo-seo-claude
 
 Right-click the cloned folder and choose "Open Git Bash here", or navigate to it inside an existing Git Bash session.
 
+### OpenCode — update_toolkit.py
+
+```bash
+git clone https://github.com/zubair-trabzada/geo-seo-claude.git
+cd geo-seo-claude
+python3 scripts/update_toolkit.py
+```
+
+The script auto-detects which AI agent platform(s) are installed and installs skills (shared), Claude Code agents, OpenCode agents, and OpenCode command wrappers accordingly. Pass `--all-platforms` to install for both regardless of detection.
+
 ### What the installer does
 
 - Copies the `geo` orchestrator skill to `~/.claude/skills/geo/`
-- Copies 13 sub-skills to `~/.claude/skills/geo-*/`
+- Copies 20 sub-skills to `~/.claude/skills/geo-*/`
 - Copies 5 subagent definitions to `~/.claude/agents/`
 - Installs Python dependencies via `pip install --user`
 - Optionally installs the Playwright Chromium browser for screenshots
@@ -61,13 +83,13 @@ Right-click the cloned folder and choose "Open Git Bash here", or navigate to it
 
 ## Verify the Install
 
-After installation, open Claude Code in any project directory and run:
+After installation, open your AI agent CLI (Claude Code or OpenCode) in any project directory and run:
 
 ```
 /geo quick https://example.com
 ```
 
-If the skill is wired up correctly, Claude Code will start a 60-second GEO visibility snapshot. If you see "unknown command" or nothing happens, restart Claude Code — it reads skills and agents at startup.
+If the skill is wired up correctly, it will start a 60-second GEO visibility snapshot. If you see "unknown command" or nothing happens, restart your AI agent CLI — it reads skills and agents at startup.
 
 To confirm the files landed in the right place:
 
@@ -75,6 +97,9 @@ To confirm the files landed in the right place:
 ls ~/.claude/skills/geo/
 ls ~/.claude/skills/ | grep geo
 ls ~/.claude/agents/ | grep geo
+# OpenCode-specific:
+ls ~/.config/opencode/agents/ | grep geo
+ls ~/.config/opencode/commands/ | grep geo
 ```
 
 ---
@@ -113,10 +138,15 @@ The full audit takes several minutes depending on the site. See [scoring-methodo
 - Cause: `claude` is not installed or not on `PATH`
 - Fix: `npm install -g @anthropic-ai/claude-code`; confirm with `claude --version`
 
-**Skills not showing up in Claude Code**
+**OpenCode not found**
+- Symptom: `opencode` command not available after install
+- Cause: OpenCode CLI is not installed or not on `PATH`
+- Fix: `npm install -g @opencode-ai/cli`
+
+**Skills not showing up**
 - Symptom: `/geo quick` produces "unknown command" or no response
-- Cause: Claude Code reads skills at startup; it won't see files added after launch
-- Fix: fully quit and reopen Claude Code
+- Cause: The agent CLI reads skills and agents at startup; it won't see files added after launch
+- Fix: fully quit and reopen your AI agent CLI
 
 **Permission denied on `./install.sh`**
 - Symptom: `bash: ./install.sh: Permission denied`

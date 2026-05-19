@@ -1,6 +1,6 @@
 # Skills, Agents, Scripts, and Schemas
 
-This reference describes every moving part in the `geo-seo-claude` skill bundle. The bundle optimizes websites for Generative Engine Optimization (GEO) — making content discoverable and citable by AI search platforms (ChatGPT, Perplexity, Google AI Overviews, Gemini, Bing Copilot) — while maintaining traditional SEO foundations. It is structured as one orchestrator skill, 14 sub-skills, 5 parallel subagents, 6 Python helper scripts, and 6 JSON-LD schema templates.
+This reference describes every moving part in the `geo-seo-claude` skill bundle. The bundle optimizes websites for Generative Engine Optimization (GEO) — making content discoverable and citable by AI search platforms (ChatGPT, Perplexity, Google AI Overviews, Gemini, Bing Copilot) — while maintaining traditional SEO foundations. It is structured as one orchestrator skill, 20 sub-skills, 5 parallel subagents (with platform-specific copies for Claude Code and OpenCode), 7 Python helper scripts, and 6 JSON-LD schema templates.
 
 See [commands-reference.md](commands-reference.md) for the full slash-command reference and [architecture.md](architecture.md) for how the parallel subagent flow works during a full audit.
 

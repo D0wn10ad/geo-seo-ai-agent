@@ -1,13 +1,6 @@
 ---
 name: geo-brand-mentions
 description: Brand mention and authority scanner for AI visibility. Analyzes brand presence across platforms that AI models rely on for entity recognition and citation decisions. Produces a Brand Authority Score (0-100) with platform-specific recommendations.
-allowed-tools:
-  - Read
-  - Grep
-  - Glob
-  - Bash
-  - WebFetch
-  - Write
 ---
 
 # Brand Mention Scanner Skill
@@ -223,7 +216,7 @@ Gather the following from the user or from the website:
 
 ### Step 2: Platform Scanning
 
-For each platform, use WebFetch to search and assess presence:
+For each platform, use `fetch_url` to search and assess presence:
 
 **YouTube Check:**
 1. Search: `[brand name] site:youtube.com`
@@ -267,8 +260,8 @@ if entities:
 ```
 
 **Method 2 — Direct URL check (backup verification):**
-1. WebFetch: `https://en.wikipedia.org/wiki/[Brand_Name]` — check if the page loads (not a redirect to search)
-2. WebFetch: `https://en.wikipedia.org/wiki/[Founder_Name]` for founder article
+1. `fetch_url`: `https://en.wikipedia.org/wiki/[Brand_Name]` — check if the page loads (not a redirect to search)
+2. `fetch_url`: `https://en.wikipedia.org/wiki/[Founder_Name]` for founder article
 
 **Method 3 — Search (least reliable, use only for supplemental info):**
 1. Search: `[brand name] site:wikipedia.org`

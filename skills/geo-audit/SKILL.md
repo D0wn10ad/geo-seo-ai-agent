@@ -1,13 +1,6 @@
 ---
 name: geo-audit
 description: Full website GEO+SEO audit with parallel subagent delegation. Orchestrates a comprehensive Generative Engine Optimization audit across AI citability, platform analysis, technical infrastructure, content quality, and schema markup. Produces a composite GEO Score (0-100) with prioritized action plan.
-allowed-tools:
-  - Read
-  - Grep
-  - Glob
-  - Bash
-  - WebFetch
-  - Write
 ---
 
 # GEO Audit Orchestration Skill
@@ -28,7 +21,7 @@ Traditional SEO optimizes for search engine rankings. GEO optimizes for AI citat
 
 **Step 1: Fetch Homepage and Detect Business Type**
 
-1. Use WebFetch to retrieve the homepage at the provided URL.
+1. Use `fetch_url` to retrieve the homepage at the provided URL.
 2. Extract the following signals:
    - Page title, meta description, H1 heading
    - Navigation menu items (reveals site structure)

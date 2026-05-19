@@ -1,10 +1,14 @@
 <p align="center">
-  <img src="assets/banner.svg" alt="GEO-SEO Claude Code Skill" width="900"/>
+  <img src="assets/banner.svg" alt="GEO-SEO AI Agent Toolkit" width="900"/>
 </p>
 
 <p align="center">
   <strong>GEO-first, SEO-supported.</strong> Optimize websites for AI-powered search engines<br/>
   (ChatGPT, Claude, Perplexity, Gemini, Google AI Overviews) while maintaining traditional SEO foundations.
+</p>
+
+<p align="center">
+  <img alt="Claude Code" src="https://img.shields.io/badge/Claude%20Code-ready-brightgreen"/> <img alt="OpenCode" src="https://img.shields.io/badge/OpenCode-ready-blue"/>
 </p>
 
 <p align="center">
@@ -78,7 +82,7 @@ cd geo-seo-claude
 ### Requirements
 
 - Python 3.8+ (on Debian/Ubuntu also `python3-venv`)
-- Claude Code CLI
+- Claude Code CLI or OpenCode with superpowers plugin
 - Git
 - Optional: [`uv`](https://docs.astral.sh/uv/) — if present, the installer uses it for a faster dependency install
 - Optional: Playwright (for screenshots)
@@ -96,7 +100,7 @@ regardless of what `python3` resolves to on your `PATH`.
 
 ## Commands
 
-Open Claude Code and use these commands:
+Open your AI agent CLI (Claude Code or OpenCode) and use these commands:
 
 | Command | What It Does |
 |---------|-------------|

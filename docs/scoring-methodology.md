@@ -1,6 +1,6 @@
 # Scoring Methodology
 
-The GEO Score is a single composite number from 0 to 100 that summarises how well a website is optimised for discovery, citation, and recommendation by AI systems such as ChatGPT, Perplexity, Claude, and Google AI Overviews. It is computed as a weighted average of six category sub-scores, each evaluated independently by a specialised subagent. A high score signals strong readiness for generative-engine visibility; a low score points to concrete gaps with an accompanying prioritised action plan.
+The GEO Score is a single composite number from 0 to 100 that summarises how well a website is optimised for discovery, citation, and recommendation by AI systems such as ChatGPT, Perplexity, Claude, and Google AI Overviews. It is computed as a weighted average of six category sub-scores, each evaluated independently by a specialised subagent (works identically across Claude Code and OpenCode platforms). A high score signals strong readiness for generative-engine visibility; a low score points to concrete gaps with an accompanying prioritised action plan.
 
 ---
 
