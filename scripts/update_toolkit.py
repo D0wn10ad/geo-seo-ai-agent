@@ -5,10 +5,11 @@ Claude Code and OpenCode platforms. Auto-detects which platform(s)
 are present on the system and installs accordingly.
 
 Usage:
-    python3 scripts/update_toolkit.py                    # detect & install
-    python3 scripts/update_toolkit.py --upstream <url>   # custom source
-    python3 scripts/update_toolkit.py --target <dir>     # custom install dir
-    python3 scripts/update_toolkit.py --all-platforms    # install for both
+    python3 scripts/update_toolkit.py                          # detect & install
+    python3 scripts/update_toolkit.py --upstream <url>         # custom source
+    python3 scripts/update_toolkit.py --target <dir>           # custom install dir
+    python3 scripts/update_toolkit.py --all-platforms          # install for both
+    python3 scripts/update_toolkit.py --branch <branch>        # specific git branch
 """
 
 import argparse
@@ -55,19 +56,25 @@ def detect_platforms():
     return platforms
 
 
-def clone_or_pull_repo(upstream_url, target_dir):
+def clone_or_pull_repo(upstream_url, target_dir, branch="main"):
     """Clone or pull the upstream repository into target_dir."""
     if target_dir.exists():
         print(f"Updating existing repo at {target_dir}...")
         subprocess.run(
-            ["git", "pull", "--ff-only"],
+            ["git", "checkout", branch],
+            cwd=target_dir,
+            capture_output=True,
+            check=False,
+        )
+        subprocess.run(
+            ["git", "pull", "--ff-only", "origin", branch],
             cwd=target_dir,
             check=False,
         )
     else:
-        print(f"Cloning {upstream_url} into {target_dir}...")
+        print(f"Cloning {upstream_url} into {target_dir} (branch: {branch})...")
         subprocess.run(
-            ["git", "clone", upstream_url, str(target_dir)],
+            ["git", "clone", "--branch", branch, upstream_url, str(target_dir)],
             check=True,
         )
     return target_dir
@@ -123,8 +130,8 @@ def install_for_platform(repo_dir, platform_name):
         if sub.is_dir():
             copy_tree(sub, skills_dst / sub.name, f"Skill: {sub.name}")
     copy_tree(repo / "platform", skills_dst / "platform", "Platform adapter")
-    copy_tree(repo / SCRIPTS_DIR, skills_dst / SCRIPTS_DIR, "Scripts")
-    copy_tree(repo / DOCS_DIR, skills_dst / DOCS_DIR, "Documentation")
+    copy_tree(repo / SCRIPTS_DIR, skills_dst / "geo" / SCRIPTS_DIR, "Scripts")
+    copy_tree(repo / DOCS_DIR, skills_dst / "geo" / DOCS_DIR, "Documentation")
     copy_files(agents_src, agents_dst, "*.md", f"Agents ({platform_name})")
 
     if platform_name == "opencode":
@@ -157,6 +164,11 @@ def parse_args():
         help="Target clone directory (default: temp directory)",
     )
     parser.add_argument(
+        "--branch",
+        default="main",
+        help="Git branch to clone (default: %(default)s)",
+    )
+    parser.add_argument(
         "--all-platforms",
         action="store_true",
         help="Install for both Claude Code and OpenCode regardless of detection",
@@ -182,11 +194,11 @@ def main():
 
     if args.target:
         repo_dir = Path(args.target)
-        clone_or_pull_repo(args.upstream, repo_dir)
+        clone_or_pull_repo(args.upstream, repo_dir, args.branch)
     else:
         with tempfile.TemporaryDirectory(prefix="geo-seo-") as tmp:
             repo_dir = Path(tmp) / "geo-seo"
-            clone_or_pull_repo(args.upstream, repo_dir)
+            clone_or_pull_repo(args.upstream, repo_dir, args.branch)
             install_all_platforms(repo_dir, platforms)
             print("\nInstallation complete.")
             return

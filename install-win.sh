@@ -42,6 +42,22 @@ cleanup() { rm -rf "$TEMP_DIR"; }
 trap cleanup EXIT
 
 main() {
+    # ---- Parse arguments ----
+    BRANCH="main"
+    while [[ $# -gt 0 ]]; do
+        case "$1" in
+            -b|--branch)
+                BRANCH="$2"
+                shift 2
+                ;;
+            *)
+                print_error "Unknown option: $1"
+                echo "  Usage: bash install-win.sh [-b|--branch <branch>]"
+                exit 1
+                ;;
+        esac
+    done
+
     print_header
 
     # ---- Verify Git Bash environment ----
@@ -93,8 +109,8 @@ main() {
         print_info "Installing from local directory..."
         SOURCE_DIR="$SCRIPT_DIR"
     else
-        print_info "Cloning from repository..."
-        git clone --depth 1 "$REPO_URL" "$TEMP_DIR/repo" || {
+        print_info "Cloning from repository (branch: ${BRANCH})..."
+        git clone --depth 1 --branch "$BRANCH" "$REPO_URL" "$TEMP_DIR/repo" || {
             print_error "Failed to clone repository."
             exit 1
         }
@@ -106,7 +122,8 @@ main() {
     "$PYTHON_CMD" "$SOURCE_DIR/scripts/update_toolkit.py" \
         --upstream "$REPO_URL" \
         --target "$SOURCE_DIR" \
-        --all-platforms 2>&1 | sed 's/^/  /'
+        --all-platforms \
+        --branch "$BRANCH" 2>&1 | sed 's/^/  /'
     print_success "File deployment complete"
 
     # ---- Install Python Dependencies (--user, no venv on Windows) ----
