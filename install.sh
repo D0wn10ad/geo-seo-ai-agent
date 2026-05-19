@@ -93,6 +93,20 @@ main() {
         print_success "'uv' detected"
     fi
 
+    # ---- Early venv feasibility check ----
+    if [ "$USE_UV" = false ]; then
+        if ! $PYTHON_CMD -m venv "$TEMP_DIR/.test-venv" 2>/dev/null; then
+            print_error "Python venv module not available."
+            echo ""
+            echo "  Debian/Ubuntu:  sudo apt install python3-venv"
+            echo "  Fedora/RHEL:    sudo dnf install python3-virtualenv"
+            echo "  Or install 'uv' (no system packages needed):"
+            echo "    curl -LsSf https://astral.sh/uv/install.sh | sh"
+            exit 1
+        fi
+        rm -rf "$TEMP_DIR/.test-venv"
+    fi
+
     # ---- Resolve source directory ----
     print_info "Fetching source files..."
 
@@ -124,49 +138,94 @@ main() {
     # ---- Create Virtual Environment ----
     print_info "Creating isolated Python environment → ${VENV_DIR}"
     rm -rf "$VENV_DIR"
+
+    VENV_OK=false
     if [ "$USE_UV" = true ]; then
-        uv venv "$VENV_DIR" --python "$PYTHON_CMD" --quiet || {
-            print_error "uv venv creation failed."
-            exit 1
-        }
-    else
-        if ! $PYTHON_CMD -m venv "$VENV_DIR" 2>/dev/null; then
-            print_error "Failed to create virtual environment."
-            echo "  Install python3-venv (apt) or use 'uv' (no system deps needed)."
-            exit 1
+        if uv venv "$VENV_DIR" --python "$PYTHON_CMD" --quiet 2>/dev/null; then
+            VENV_OK=true
+        else
+            print_warning "uv venv failed — falling back to stdlib venv."
         fi
     fi
-    print_success "Virtual environment created"
+
+    if [ "$VENV_OK" = false ]; then
+        if $PYTHON_CMD -m venv "$VENV_DIR" 2>/dev/null; then
+            VENV_OK=true
+        elif $PYTHON_CMD -m venv --without-pip "$VENV_DIR" 2>/dev/null; then
+            print_info "Venv created without pip — bootstrapping..."
+            # Bootstrap pip into the venv (ensurepip is available at python3 system level)
+            if "$VENV_PY" -m ensurepip --upgrade 2>/dev/null || \
+               "$PYTHON_CMD" -m ensurepip --upgrade --root "$VENV_DIR" 2>/dev/null; then
+                VENV_OK=true
+            else
+                # Last resort: download get-pip.py
+                print_info "Downloading get-pip.py to bootstrap pip..."
+                if command -v curl &>/dev/null; then
+                    curl -fsSLo "$TEMP_DIR/get-pip.py" https://bootstrap.pypa.io/get-pip.py
+                elif command -v wget &>/dev/null; then
+                    wget -qO "$TEMP_DIR/get-pip.py" https://bootstrap.pypa.io/get-pip.py
+                fi
+                if [ -f "$TEMP_DIR/get-pip.py" ]; then
+                    "$VENV_PY" "$TEMP_DIR/get-pip.py" --quiet 2>/dev/null && VENV_OK=true
+                fi
+            fi
+        fi
+    fi
+
+    if [ "$VENV_OK" = false ]; then
+        print_warning "Could not create virtual environment."
+        print_warning "Installing dependencies system-wide with --user flag."
+        print_warning "  Fix: sudo apt install python3-venv && $0"
+        USER_INSTALL=true
+    else
+        print_success "Virtual environment created"
+        USER_INSTALL=false
+    fi
 
     # ---- Install Python Dependencies ----
-    print_info "Installing Python dependencies into venv..."
-    if [ ! -f "$SOURCE_DIR/requirements.txt" ]; then
-        print_warning "requirements.txt missing — skipping."
-    elif [ "$USE_UV" = true ]; then
-        uv pip install --python "$VENV_PY" -r "$SOURCE_DIR/requirements.txt" --quiet || {
-            print_error "Failed to install dependencies via uv."
-            exit 1
-        }
+    if [ -f "$SOURCE_DIR/requirements.txt" ]; then
+        if [ "$USER_INSTALL" = true ]; then
+            print_info "Installing Python dependencies (system --user)..."
+            $PYTHON_CMD -m pip install --user -r "$SOURCE_DIR/requirements.txt" --quiet || {
+                print_warning "Dependency install had issues — continuing anyway."
+            }
+            print_success "Dependencies installed (system --user)"
+        elif [ "$USE_UV" = true ]; then
+            print_info "Installing Python dependencies into venv via uv..."
+            uv pip install --python "$VENV_PY" -r "$SOURCE_DIR/requirements.txt" --quiet || {
+                print_warning "uv pip install failed — falling back to pip."
+                "$VENV_PY" -m pip install -r "$SOURCE_DIR/requirements.txt" --quiet || {
+                    print_warning "Dependency install had issues — continuing anyway."
+                }
+            }
+            print_success "Dependencies installed (isolated venv)"
+        else
+            print_info "Installing Python dependencies into venv..."
+            "$VENV_PY" -m pip install --upgrade pip --quiet 2>/dev/null || true
+            "$VENV_PY" -m pip install -r "$SOURCE_DIR/requirements.txt" --quiet || {
+                print_warning "Dependency install had issues — continuing anyway."
+            }
+            print_success "Dependencies installed (isolated venv)"
+        fi
     else
-        "$VENV_PY" -m pip install --upgrade pip --quiet
-        "$VENV_PY" -m pip install -r "$SOURCE_DIR/requirements.txt" --quiet || {
-            print_error "Failed to install dependencies."
-            exit 1
-        }
+        print_warning "requirements.txt missing — skipping dependency install."
     fi
-    print_success "Dependencies installed (isolated venv)"
     cp "$SOURCE_DIR/requirements.txt" "$INSTALL_DIR/" 2>/dev/null || true
 
-    # ---- Rewrite script shebangs to the venv interpreter ----
-    print_info "Pinning script shebangs to venv interpreter..."
-    SHEBANG_COUNT=0
-    for f in "$INSTALL_DIR/scripts/"*.py; do
-        [ -f "$f" ] || continue
-        sed_inplace "1s|^#!.*|#!${VENV_PY}|" "$f"
-        chmod +x "$f"
-        SHEBANG_COUNT=$((SHEBANG_COUNT + 1))
-    done
-    print_success "${SHEBANG_COUNT} script(s) pinned to venv"
+    # ---- Rewrite script shebangs ----
+    if [ "$USER_INSTALL" = false ]; then
+        print_info "Pinning script shebangs to venv interpreter..."
+        SHEBANG_COUNT=0
+        for f in "$INSTALL_DIR/scripts/"*.py; do
+            [ -f "$f" ] || continue
+            sed_inplace "1s|^#!.*|#!${VENV_PY}|" "$f"
+            chmod +x "$f"
+            SHEBANG_COUNT=$((SHEBANG_COUNT + 1))
+        done
+        print_success "${SHEBANG_COUNT} script(s) pinned to venv"
+    else
+        print_info "Skipping shebang pinning (no venv — scripts use system python3)"
+    fi
 
     # ---- Optional: Install Playwright ----
     if [ "$INTERACTIVE" = true ]; then

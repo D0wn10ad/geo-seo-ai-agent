@@ -20,7 +20,7 @@ import sys
 import tempfile
 from pathlib import Path
 
-REPO_URL = "https://github.com/zubair-trabzada/geo-seo-claude"
+REPO_URL = "https://github.com/D0wn10ad/geo-seo-ai-agent"
 SKILLS_DIR = "geo"
 SCRIPTS_DIR = "scripts"
 DOCS_DIR = "docs"
@@ -119,7 +119,9 @@ def install_for_platform(repo_dir, platform_name):
     skills_dst.mkdir(parents=True, exist_ok=True)
 
     copy_tree(repo / SKILLS_DIR, skills_dst / SKILLS_DIR, "Skill orchestrator")
-    copy_tree(repo / "skills", skills_dst / "skills", "Skill sub-commands")
+    for sub in sorted((repo / "skills").iterdir()):
+        if sub.is_dir():
+            copy_tree(sub, skills_dst / sub.name, f"Skill: {sub.name}")
     copy_tree(repo / "platform", skills_dst / "platform", "Platform adapter")
     copy_tree(repo / SCRIPTS_DIR, skills_dst / SCRIPTS_DIR, "Scripts")
     copy_tree(repo / DOCS_DIR, skills_dst / DOCS_DIR, "Documentation")
