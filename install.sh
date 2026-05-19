@@ -8,7 +8,7 @@ set -euo pipefail
 # Delegates file copying to scripts/update_toolkit.py.
 # ============================================================
 
-REPO_URL="https://github.com/zubair-trabzada/geo-seo-claude.git"
+REPO_URL="https://github.com/D0wn10ad/geo-seo-ai-agent.git"
 CLAUDE_DIR="${HOME}/.claude"
 SKILLS_DIR="${CLAUDE_DIR}/skills"
 INSTALL_DIR="${SKILLS_DIR}/geo"
