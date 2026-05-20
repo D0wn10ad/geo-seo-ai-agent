@@ -272,6 +272,7 @@ main() {
     [ "$agent_count" -gt 0 ]               && print_success "Claude agents"  || print_warning "No Claude agents"
     test -d "$INSTALL_DIR/scripts"         && print_success "Scripts"        || print_error "Scripts missing"
     test -x "$VENV_PY"                     && print_success "Venv"           || print_error "Venv missing"
+    test -d "$INSTALL_DIR/regions"         && print_success "Region profiles"|| print_info "No region profiles (feature branch only)"
 
     # ---- Summary ----
     echo ""
@@ -286,6 +287,10 @@ main() {
     echo "  Claude Code:  /geo audit https://example.com"
     echo "  OpenCode:     /geo-audit https://example.com"
     echo ""
+    echo -e "${BLUE}Region-Specific Audit:${NC}"
+    echo "  Claude Code:  /geo audit https://example.com --region cn"
+    echo "  OpenCode:     /geo-audit https://example.com --region cn"
+    echo ""
     echo -e "${BLUE}Available Commands:${NC}"
     echo "    /geo audit <url>      Full GEO + SEO audit"
     echo "    /geo quick <url>      60-second visibility snapshot"
@@ -299,6 +304,9 @@ main() {
     echo "    /geo content <url>    Content quality & E-E-A-T"
     echo "    /geo report <url>     Client-ready GEO report"
     echo "    /geo report-pdf       Generate PDF report from audit data"
+    echo ""
+    echo -e "${BLUE}Tip:${NC} Add '--region <code>' to any audit command for"
+    echo "  region-specific analysis (e.g., --region cn for China market)."
     echo ""
 }
 
