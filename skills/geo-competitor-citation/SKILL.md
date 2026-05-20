@@ -61,6 +61,21 @@ Each of the 20 questions must:
 
 ---
 
+### Region-aware engine selection
+
+When `region: cn` is set (passed in task description), replace the 6 Western
+engines with CN AI engines from `regions/cn/ai-engines.md`:
+1. Baidu AI Search (百度AI搜索) — replaces Google AI Overviews
+2. Doubao (豆包) — replaces ChatGPT
+3. ERNIE Bot (文心一言) — replaces Claude
+4. Tongyi Qianwen (通义千问) — replaces Perplexity
+5. Kimi (月之暗面) — replaces Gemini
+6. DeepSeek (深度求索) — replaces Copilot
+
+The probe methodology (20 questions × 6 engines × 3 runs), question quality gates,
+and scoring formulas remain identical. Only the engine endpoints change. Output
+file becomes `~/.geo-prospects/competitor/<my-domain>-<YYYY-MM-DD>-CN.md`.
+
 ## Cross-Engine Execution Protocol (6 engines × 3 runs for denoising)
 
 | # | Engine | Surface | Programmatic? | Probe handling |

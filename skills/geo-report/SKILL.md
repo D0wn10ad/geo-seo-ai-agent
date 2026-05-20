@@ -24,7 +24,7 @@ This skill aggregates outputs from all GEO audit skills into a single, professio
 2. Collect all scores and findings
 3. Calculate the composite GEO Readiness Score
 4. Generate the client report using the template below
-5. Output: GEO-CLIENT-REPORT.md
+5. Output: GEO-CLIENT-REPORT-[DOMAIN]-[REGION].md (default region: Global)
 
 ---
 
@@ -68,7 +68,7 @@ The complete report follows this exact structure. Each section includes instruct
 ### Section 1: Executive Summary
 
 Write exactly ONE paragraph (4-6 sentences) covering:
-- What was analyzed (domain, number of pages, date of analysis)
+- What was analyzed (domain, number of pages, date of analysis, region)
 - The overall GEO Readiness Score with context ("XX/100, which places [brand] in the [label] tier")
 - The single most impactful finding (positive or negative)
 - Top 3 priority recommendations in one sentence
@@ -326,7 +326,8 @@ If competitor URLs were analyzed alongside the primary domain:
 ### Methodology
 This GEO audit was conducted using the following methodology:
 - **Pages analyzed**: [List of specific URLs audited]
-- **Platforms assessed**: Google AI Overviews, ChatGPT, Perplexity AI, Google Gemini, Bing Copilot
+- **Region**: [Region name — Global, CN, EU, NAM, APAC]
+- **Platforms assessed**: Google AI Overviews, ChatGPT, Perplexity AI, Google Gemini, Bing Copilot (use region-specific platforms if CN: Baidu AI, Doubao, ERNIE, Qwen, Kimi, DeepSeek)
 - **Technical checks**: HTTP headers, robots.txt, HTML source analysis, structured data validation
 - **Content assessment**: E-E-A-T framework (Experience, Expertise, Authoritativeness, Trustworthiness) per Google's December 2025 Quality Rater Guidelines
 - **Schema validation**: JSON-LD parsing and Schema.org specification compliance
@@ -391,7 +392,7 @@ Be conservative with estimates. State assumptions clearly. Never guarantee speci
 
 ## Output
 
-Generate **GEO-CLIENT-REPORT.md** using the complete template above, filled with actual audit data. The report should be:
+Generate **GEO-CLIENT-REPORT-<DOMAIN>-<REGION>.md** using the complete template above, filled with actual audit data. Default region is Global. The report should be:
 - 40-80 pages equivalent in detail (3,000-6,000 words)
 - Ready to send to a client without editing
 - Self-contained (no references to other report files — all relevant data is included)

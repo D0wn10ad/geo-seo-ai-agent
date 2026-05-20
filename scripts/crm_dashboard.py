@@ -162,6 +162,7 @@ def view_prospect_table(prospects: list[dict]):
     table.add_column("ID",         style="dim", width=9)
     table.add_column("Company",    style="bold white", min_width=16)
     table.add_column("Domain",     style="cyan", min_width=18)
+    table.add_column("Region",     style="yellow", min_width=8)
     table.add_column("Status",     justify="center", min_width=12)
     table.add_column("GEO Score",  justify="left", min_width=26)
     table.add_column("Audit",      justify="center", min_width=12)
@@ -172,6 +173,7 @@ def view_prospect_table(prospects: list[dict]):
         pid     = p.get("id", "—")
         company = p.get("company", "—")
         domain  = p.get("domain", "—")
+        region  = p.get("region", p.get("country", "—"))
         status  = p.get("status", "lead")
         score   = p.get("geo_score", 0)
         audit   = p.get("audit_date", "—")
@@ -185,6 +187,7 @@ def view_prospect_table(prospects: list[dict]):
             pid,
             company,
             domain,
+            region,
             status_text,
             score_bar(score),
             audit,
@@ -226,6 +229,7 @@ def view_prospect_detail(prospects: list[dict], prospect_id: str):
         f"[dim]Status:[/dim]      {p.get('status', '—').upper()}",
         f"[dim]Industry:[/dim]    {p.get('industry', '—')}",
         f"[dim]Country:[/dim]     {p.get('country', '—')}",
+        f"[dim]Region:[/dim]      {p.get('region', p.get('country', '—'))}",
         f"[dim]Audit Date:[/dim]  {p.get('audit_date', '—')}",
         f"[dim]MRR:[/dim]         {format_eur(p.get('monthly_value'))}",
         f"[dim]Contract:[/dim]    {p.get('contract_months', '—')} months",
@@ -272,6 +276,7 @@ def view_prospect_detail(prospects: list[dict], prospect_id: str):
 def view_pipeline(prospects: list[dict]):
     """Show pipeline by status."""
     statuses = ["lead", "audit", "proposal", "active", "churned", "lost"]
+    regions = sorted(set(p.get("region", p.get("country", "—")) for p in prospects))
     console.print()
     console.print(Rule("[bold]Pipeline by Status[/bold]", style="bright_blue"))
     console.print()
@@ -286,10 +291,20 @@ def view_pipeline(prospects: list[dict]):
         console.print(f"  {label}", style=style)
         for p in group:
             score = p.get("geo_score", 0)
+            region_tag = p.get("region", p.get("country", "—"))
             color, _ = score_style(score)
             console.print(
-                f"    [dim]·[/dim] {p.get('company', '—'):<25} [{color}]{score:>3}/100[/{color}]  [dim]{p.get('domain', '—')}[/dim]"
+                f"    [dim]·[/dim] {p.get('company', '—'):<25} [{color}]{score:>3}/100[/{color}] [yellow]{region_tag:<6}[/yellow] [dim]{p.get('domain', '—')}[/dim]"
             )
+        console.print()
+
+    # Region breakdown
+    if len(regions) > 1:
+        console.print(Rule("[bold]By Region[/bold]", style="dim"))
+        for region in regions:
+            r_group = [p for p in prospects if p.get("region", p.get("country", "—")) == region]
+            r_mrr = sum(p.get("monthly_value", 0) for p in r_group if p.get("status") in ("active", "proposal"))
+            console.print(f"  [yellow]{region:<6}[/yellow]  {len(r_group):>2} prospects  {format_eur(r_mrr)}/mo pipeline")
         console.print()
 
 

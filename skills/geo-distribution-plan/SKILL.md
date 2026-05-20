@@ -63,9 +63,29 @@ Each candidate platform is scored on three dimensions and tiered. The tier gover
 | **Tier 2 — Authority Amplifier** | 8–15 | Rewrite with distinct opening; cross-link to Tier 1 + canonical |
 | **Tier 3 — Reach / Social Cut** | < 8 | Excerpt, snippet, or media cut; teaser link only |
 
-### Pre-scored platform reference
+### Region-aware platform loading
 
-This is the default scoring matrix. Adjust per topic / audience / region.
+When `region` is set, load the region's platform profile from `regions/profiles.yaml`
+and the platform reference files from `regions/<code>/platforms.md`. The pre-scored
+table below applies for `global`. For `cn`, use the CN platform list from
+`regions/cn/platforms.md` (Baidu Baike, Zhihu, WeChat OA, Xiaohongshu, Bilibili,
+Douyin) with region-specific Authority weight (A) and AI-corpus coverage (C) scores.
+
+The scoring methodology (A × F + C tier bump) remains identical across regions.
+Only the platform inventory and base scores change.
+
+### CN-specific distribution notes
+
+When `region: cn`:
+- All platform references, rewrite constraints, and syndication targets use Chinese platforms
+- Tier 1: Baidu Baike (if encyclopedic), WeChat OA, Zhihu column
+- Tier 2: Xiaohongshu, Bilibili, Douyin
+- Tier 3: 36Kr, Huxiu, CSDN, Juejin
+- Rewrite briefs must be in Chinese, matching platform-specific content styles
+- Social cuts target Chinese social platforms (WeChat Moments, Weibo, Douyin)
+- Authority reclaim checklist includes Baidu Baike update, Zhihu answer monitoring, and Baidu Zhanzhang URL submission
+
+### Pre-scored platform reference (Global)
 
 | Platform | A | Default F | C | Default tier | Region | Audience fit notes |
 |---|---|---|---|---|---|---|

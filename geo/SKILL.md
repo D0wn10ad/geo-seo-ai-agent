@@ -12,6 +12,8 @@ description: >
   also adds 4 closure-loop skills: "matrix" (intent angle planning),
   "pipeline" (5-stage AI citation pipeline), "distribute" (tiered multi-platform
   distribution), and "compete" (cross-engine competitor gap analysis).
+  Supports region-specific audits: `--region cn` for China market analysis,
+  or auto-detects region from URL and content.
 ---
 
 # GEO-SEO Analysis Tool — Multi-AI Agent (February 2026)
@@ -25,27 +27,55 @@ description: >
 
 | Command | What It Does |
 |---------|-------------|
-| `/geo audit <url>` | Full GEO + SEO audit with parallel subagents |
-| `/geo page <url>` | Deep single-page GEO analysis |
-| `/geo citability <url>` | Score content for AI citation readiness |
-| `/geo crawlers <url>` | Check AI crawler access (robots.txt analysis) |
-| `/geo llmstxt <url>` | Analyze or generate llms.txt file |
-| `/geo brands <url>` | Scan brand mentions across AI-cited platforms |
-| `/geo platforms <url>` | Platform-specific optimization (ChatGPT, Perplexity, Google AIO) |
-| `/geo schema <url>` | Detect, validate, and generate structured data |
-| `/geo technical <url>` | Traditional technical SEO audit |
-| `/geo content <url>` | Content quality and E-E-A-T assessment |
-| `/geo report <url>` | Generate client-ready GEO deliverable |
-| `/geo report-pdf <url>` | Generate professional PDF report with charts and scores |
-| `/geo quick <url>` | 60-second GEO visibility snapshot |
+| `/geo audit <url> [--region <code>]` | Full GEO + SEO audit with parallel subagents |
+| `/geo page <url> [--region <code>]` | Deep single-page GEO analysis |
+| `/geo citability <url> [--region <code>]` | Score content for AI citation readiness |
+| `/geo crawlers <url> [--region <code>]` | Check AI crawler access (robots.txt analysis) |
+| `/geo llmstxt <url> [--region <code>]` | Analyze or generate llms.txt file |
+| `/geo brands <url> [--region <code>]` | Scan brand mentions across AI-cited platforms |
+| `/geo platforms <url> [--region <code>]` | Platform-specific optimization (ChatGPT, Perplexity, Google AIO) |
+| `/geo schema <url> [--region <code>]` | Detect, validate, and generate structured data |
+| `/geo technical <url> [--region <code>]` | Traditional technical SEO audit |
+| `/geo content <url> [--region <code>]` | Content quality and E-E-A-T assessment |
+| `/geo report <url> [--region <code>]` | Generate client-ready GEO deliverable |
+| `/geo report-pdf <url> [--region <code>]` | Generate professional PDF report with charts and scores |
+| `/geo quick <url> [--region <code>]` | 60-second GEO visibility snapshot |
 | `/geo prospect <cmd>` | CRM-lite: manage prospects through the sales pipeline |
 | `/geo proposal <domain>` | Auto-generate client proposal from audit data |
 | `/geo compare <domain>` | Monthly delta report: show score improvements to client |
 | `/geo update` | Pull latest GEO skill updates from upstream |
-| `/geo matrix <core-topic>` | (fork+) Build 4-quadrant intent matrix and 12-week schedule |
-| `/geo pipeline <url>` | (fork+) Run 5-stage AI citation pipeline + 6-engine preferred-answer verify |
-| `/geo distribute <topic>` | (fork+) Generate tiered 14-day multi-platform distribution plan |
-| `/geo compete <domain> <c1,c2,...>` | (fork+) Cross-engine competitor citation gap matrix |
+| `/geo matrix <core-topic> [--region <code>]` | (fork+) Build 4-quadrant intent matrix and 12-week schedule |
+| `/geo pipeline <url> [--region <code>]` | (fork+) Run 5-stage AI citation pipeline + 6-engine preferred-answer verify |
+| `/geo distribute <topic> [--region <code>]` | (fork+) Generate tiered 14-day multi-platform distribution plan |
+| `/geo compete <domain> <c1,c2,...> [--region <code>]` | (fork+) Cross-engine competitor citation gap matrix |
+
+---
+
+## Region Support
+
+The tool supports region-specific analysis to account for different AI search
+ecosystems, platforms, and user behaviors across markets. Currently implemented:
+
+| Region | Code | AI Engines | Key Platforms | Profiles |
+|--------|------|------------|---------------|----------|
+| Global | `global` | ChatGPT, Claude, Perplexity, Gemini, Copilot | YouTube, Reddit, Wikipedia, LinkedIn | Default |
+| China | `cn` | Baidu AI, Doubao, ERNIE, Qwen, Kimi, DeepSeek | Baidu Baike, Zhihu, WeChat OA, Xiaohongshu, Bilibili, Douyin | `regions/profiles.yaml` |
+
+### How region is determined
+
+1. **Explicit**: `--region cn` on any command
+2. **TLD-based**: `.cn`, `.com.cn` → China; `.kr` → Korea (if implemented)
+3. **Content-based**: HTML `lang` attribute + CJK/Cyrillic script detection → region
+4. **Multi-language prompt**: If `.com` site has 3+ languages, **ask user**
+
+### Adding a new region
+
+See `regions/README.md` for the complete guide. Steps:
+1. Add profile to `regions/profiles.yaml`
+2. Create `regions/<code>/` with optional reference data files
+3. Create optional `SKILL.<code>.md` overrides for skill files
+4. Update subagent files with Region Awareness sections
+5. Update fork skills that accept `--region`
 
 ---
 
@@ -68,7 +98,22 @@ description: >
 
 ## Orchestration Logic
 
-### Full Audit (`/geo audit <url>`)
+### Full Audit (`/geo audit <url> [--region <code>]`)
+
+All audit commands accept an optional `--region` flag (e.g. `--region cn`).
+If omitted, the tool auto-detects the region from the URL and page content.
+See [Region Support](#region-support) below.
+
+**Phase 0: Region Detection (Sequential)**
+1. Check URL for country TLD (`.cn`, `.com.cn`, `.kr`, etc.)
+2. Fetch homepage and check `<html lang="...">` attributes
+3. Scan content for dominant language scripts (CJK, Cyrillic, Latin)
+4. Resolution: if multi-language detected (e.g. `.com` with 3+ languages), **ask user**:
+   - "1. Global — treat as global English"
+   - "2. Global+CN — run both Global and China assessments"
+   - "3. CN only — China market only"
+5. Set REGION variable (default: `global`)
+6. Load region profile from `regions/profiles.yaml` — provides region-specific scoring weights, AI engines, platforms, schema defaults, and crawler expectations
 
 **Phase 1: Discovery (Sequential)**
 1. Fetch homepage HTML (curl or `fetch_url`)
@@ -87,21 +132,29 @@ Launch these 5 subagents simultaneously:
 | geo-schema | `agents/geo-schema.md` | Schema markup detection, validation, generation |
 
 **Phase 3: Synthesis (Sequential)**
-1. Collect all subagent reports
-2. Calculate composite GEO Score (0-100)
-3. Generate prioritized action plan
-4. Output client-ready report
+1. Collect all subagent reports (region-aware: subagents received REGION in task description)
+2. Calculate composite GEO Score (0-100) using region-specific weights
+3. Generate prioritized action plan with region-specific recommendations
+4. Output client-ready report (region-tagged filename, e.g. `GEO-AUDIT-REPORT-CN.md`)
 
-### Scoring Methodology
+### Scoring Methodology (Region-Aware)
 
-| Category | Weight | Measured By |
-|----------|--------|-------------|
-| AI Citability & Visibility | 25% | Passage scoring, answer block quality, AI crawler access |
-| Brand Authority Signals | 20% | Mentions on Reddit, YouTube, Wikipedia, LinkedIn; entity presence |
-| Content Quality & E-E-A-T | 20% | Expertise signals, original data, author credentials |
-| Technical Foundations | 15% | SSR, Core Web Vitals, crawlability, mobile, security |
-| Structured Data | 10% | Schema completeness, JSON-LD validation, rich result eligibility |
-| Platform Optimization | 10% | Platform-specific readiness (Google AIO, ChatGPT, Perplexity) |
+Weights vary by region. Loaded from `regions/profiles.yaml`.
+
+| Category | Global Weight | CN Weight | Measured By |
+|----------|--------------|-----------|-------------|
+| AI Citability & Visibility | 25% | 20% | Passage scoring, answer block quality, AI crawler access |
+| Brand Authority Signals | 20% | **30%** | Brand mentions across region-relevant platforms |
+| Content Quality & E-E-A-T | 20% | 15% | Expertise signals, original data, author credentials |
+| Technical Foundations | 15% | 10% | SSR, Core Web Vitals, crawlability, mobile, security |
+| Structured Data | 10% | **15%** | Schema completeness, JSON-LD validation, Baidu extensions |
+| Platform Optimization | 10% | 10% | Region-specific AI platform readiness (ChatGPT/Baidu AI) |
+
+Non-global regions fall back to Global weights if their profile omits a weight.
+
+When running with `--region cn`, all scoring rubrics should reference the
+CN-specific AI engines (`regions/cn/ai-engines.md`), platforms (`regions/cn/platforms.md`),
+and schema guidance (`regions/cn/schema.md`).
 
 ---
 
@@ -150,6 +203,11 @@ Adjust recommendations based on detected type. Local businesses need LocalBusine
 
 ## Subagents (5 Parallel Workers)
 
+All subagents receive the REGION variable appended to their task description.
+Each agent file has a "Region Awareness" section that adjusts its scoring rubrics
+based on the target region (e.g. CN uses Baidu AI instead of ChatGPT, Baidu Baike
+instead of Wikipedia, etc.). See individual agent files for region-specific logic.
+
 | Agent | File | Skills Used |
 |-------|------|-------------|
 | geo-ai-visibility | `agents/geo-ai-visibility.md` | geo-citability, geo-crawlers, geo-llmstxt, geo-brand-mentions |
@@ -162,30 +220,32 @@ Adjust recommendations based on detected type. Local businesses need LocalBusine
 
 ## Output Files
 
-All commands generate structured output:
+All commands generate structured output. When a region is specified (or auto-detected
+as non-global), a `-<REGION>` suffix is appended to output filenames. For example:
+`/geo audit example.com --region cn` produces `GEO-AUDIT-REPORT-CN.md`.
 
-| Command | Output File |
-|---------|------------|
-| `/geo audit` | `GEO-AUDIT-REPORT.md` |
-| `/geo page` | `GEO-PAGE-ANALYSIS.md` |
-| `/geo citability` | `GEO-CITABILITY-SCORE.md` |
-| `/geo crawlers` | `GEO-CRAWLER-ACCESS.md` |
-| `/geo llmstxt` | `llms.txt` (ready to deploy) |
-| `/geo brands` | `GEO-BRAND-MENTIONS.md` |
-| `/geo platforms` | `GEO-PLATFORM-OPTIMIZATION.md` |
-| `/geo schema` | `GEO-SCHEMA-REPORT.md` + generated JSON-LD |
-| `/geo technical` | `GEO-TECHNICAL-AUDIT.md` |
-| `/geo content` | `GEO-CONTENT-ANALYSIS.md` |
-| `/geo report` | `GEO-CLIENT-REPORT.md` (presentation-ready) |
-| `/geo report-pdf` | `GEO-REPORT.pdf` (professional PDF with charts) |
-| `/geo quick` | Inline summary (no file) |
-| `/geo prospect` | Updates `~/.geo-prospects/prospects.json` |
-| `/geo proposal` | `~/.geo-prospects/proposals/<domain>-proposal-<date>.md` |
-| `/geo compare` | `~/.geo-prospects/reports/<domain>-monthly-<YYYY-MM>.md` |
-| `/geo matrix` | `~/.geo-prospects/matrices/<domain>-<topic>-<YYYY-MM-DD>.md` |
-| `/geo pipeline` | `~/.geo-prospects/pipelines/<domain>-<slug>-<YYYY-MM-DD>.md` |
-| `/geo distribute` | `~/.geo-prospects/distribution/<domain>-<topic-slug>-<YYYY-MM-DD>.md` |
-| `/geo compete` | `~/.geo-prospects/competitor/<my-domain>-<YYYY-MM-DD>.md` |
+| Command | Global Output File | Region Output File |
+|---------|-------------------|-------------------|
+| `/geo audit` | `GEO-AUDIT-REPORT.md` | `GEO-AUDIT-REPORT-{REGION}.md` |
+| `/geo page` | `GEO-PAGE-ANALYSIS.md` | `GEO-PAGE-ANALYSIS-{REGION}.md` |
+| `/geo citability` | `GEO-CITABILITY-SCORE.md` | `GEO-CITABILITY-SCORE-{REGION}.md` |
+| `/geo crawlers` | `GEO-CRAWLER-ACCESS.md` | `GEO-CRAWLER-ACCESS-{REGION}.md` |
+| `/geo llmstxt` | `llms.txt` | `llms-{REGION}.txt` |
+| `/geo brands` | `GEO-BRAND-MENTIONS.md` | `GEO-BRAND-MENTIONS-{REGION}.md` |
+| `/geo platforms` | `GEO-PLATFORM-OPTIMIZATION.md` | `GEO-PLATFORM-OPTIMIZATION-{REGION}.md` |
+| `/geo schema` | `GEO-SCHEMA-REPORT.md` | `GEO-SCHEMA-REPORT-{REGION}.md` |
+| `/geo technical` | `GEO-TECHNICAL-AUDIT.md` | `GEO-TECHNICAL-AUDIT-{REGION}.md` |
+| `/geo content` | `GEO-CONTENT-ANALYSIS.md` | `GEO-CONTENT-ANALYSIS-{REGION}.md` |
+| `/geo report` | `GEO-CLIENT-REPORT.md` | `GEO-CLIENT-REPORT-{REGION}.md` |
+| `/geo report-pdf` | `GEO-REPORT.pdf` | `GEO-REPORT-{REGION}.pdf` |
+| `/geo quick` | Inline summary (no file) | Inline (region noted) |
+| `/geo prospect` | Updates `~/.geo-prospects/prospects.json` | Same (prospect has region field) |
+| `/geo proposal` | `~/.geo-prospects/proposals/<domain>-proposal-<date>.md` | Same (region noted in proposal) |
+| `/geo compare` | `~/.geo-prospects/reports/<domain>-monthly-<YYYY-MM>.md` | Same (region noted in report) |
+| `/geo matrix` | `~/.geo-prospects/matrices/<domain>-<topic>-<YYYY-MM-DD>.md` | `...-{REGION}.md` |
+| `/geo pipeline` | `~/.geo-prospects/pipelines/<domain>-<slug>-<YYYY-MM-DD>.md` | `...-{REGION}.md` |
+| `/geo distribute` | `~/.geo-prospects/distribution/<domain>-<topic-slug>-<YYYY-MM-DD>.md` | `...-{REGION}.md` |
+| `/geo compete` | `~/.geo-prospects/competitor/<my-domain>-<YYYY-MM-DD>.md` | `...-{REGION}.md` |
 
 ---
 
@@ -269,17 +329,21 @@ distribution/, competitor/). See each skill's SKILL.md for full I/O contracts.
 ## Quick Start Examples
 
 ```
-# Full GEO audit of a website
+# Full GEO audit of a website (global)
 /geo audit https://example.com
 
-# Check if AI bots can see your site
-/geo crawlers https://example.com
+# China market audit (explicit region)
+/geo audit https://example.cn --region cn
 
-# Score a specific page for AI citability
-/geo citability https://example.com/blog/best-article
+# Check AI bot access (auto-detects region from URL)
+/geo crawlers https://shop.example.cn
 
-# Generate an llms.txt file for your site
-/geo llmstxt https://example.com
+# Score citability with China-specific AI engines
+/geo citability https://example.com/blog/ai-trends --region cn
+
+# Generate region-tagged output
+/geo brands https://example-cn.com --region cn
+# → GEO-BRAND-MENTIONS-CN.md
 
 # Get a 60-second visibility snapshot
 /geo quick https://example.com

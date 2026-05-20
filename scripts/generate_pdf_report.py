@@ -350,7 +350,7 @@ def make_table_style(header_color=PRIMARY):
     ])
 
 
-def generate_report(data, output_path="GEO-REPORT.pdf"):
+def generate_report(data, output_path=None):
     """Generate the full PDF report from audit data."""
 
     doc = SimpleDocTemplate(
@@ -370,6 +370,12 @@ def generate_report(data, output_path="GEO-REPORT.pdf"):
     brand_name = data.get("brand_name", url.replace("https://", "").replace("http://", "").split("/")[0])
     date = data.get("date", datetime.now().strftime("%Y-%m-%d"))
     geo_score = data.get("geo_score", 0)
+    region = data.get("region", "Global")
+
+    # Set default output path with region tag
+    if output_path is None:
+        domain_slug = brand_name.lower().replace(" ", "-")[:20]
+        output_path = f"GEO-REPORT-{domain_slug}-{region}.pdf"
 
     scores = data.get("scores", {})
     ai_citability = scores.get("ai_citability", 0)
@@ -419,6 +425,7 @@ def generate_report(data, output_path="GEO-REPORT.pdf"):
     # Key details table
     details_data = [
         ["Website", url],
+        ["Region", region],
         ["Analysis Date", datetime.strptime(date, "%Y-%m-%d").strftime("%B %d, %Y") if "-" in date else date],
         ["GEO Score", f"{geo_score}/100 — {get_score_label(geo_score)}"],
     ]
@@ -770,7 +777,7 @@ def generate_report(data, output_path="GEO-REPORT.pdf"):
     elements.append(HRFlowable(width="100%", thickness=1, color=ACCENT, spaceAfter=12))
 
     elements.append(Paragraph(
-        f"This GEO audit was conducted on {date} analyzing {url}. "
+        f"This GEO audit was conducted on {date} analyzing {url} (region: {region}). "
         "The analysis evaluated the website across six dimensions: AI Citability & Visibility (25%), "
         "Brand Authority Signals (20%), Content Quality & E-E-A-T (20%), Technical Foundations (15%), "
         "Structured Data (10%), and Platform Optimization (10%).",
@@ -779,9 +786,12 @@ def generate_report(data, output_path="GEO-REPORT.pdf"):
 
     elements.append(Spacer(1, 8))
 
+    if region == "CN":
+        platform_list = "Baidu AI Search, Doubao, ERNIE Bot, Qwen, Kimi, DeepSeek"
+    else:
+        platform_list = "Google AI Overviews, ChatGPT Web Search, Perplexity AI, Google Gemini, Bing Copilot"
     elements.append(Paragraph(
-        "<b>Platforms assessed:</b> Google AI Overviews, ChatGPT Web Search, Perplexity AI, "
-        "Google Gemini, Bing Copilot",
+        f"<b>Platforms assessed:</b> {platform_list}",
         styles['BodyText_Custom']
     ))
 
@@ -907,7 +917,7 @@ if __name__ == "__main__":
             },
         }
 
-        output_file = "GEO-REPORT-sample.pdf"
+        output_file = "GEO-REPORT-sample-Global.pdf"
         result = generate_report(sample_data, output_file)
         print(f"Report generated: {result}")
 
