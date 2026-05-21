@@ -10,6 +10,7 @@ Touch points tested:
   - Git clone vs pull behavior
   - Missing source directory handling
   - copy_tree and copy_files edge cases
+  - Runtime markdown rewriting for installed/generated artifacts
 """
 
 import sys
@@ -43,12 +44,23 @@ def repo(tmp_path):
     """Create a minimal mock repository structure."""
     r = tmp_path / "repo"
 
-    (r / "geo" / "SKILL.md").mkdir(parents=True)
+    (r / "geo").mkdir(parents=True)
+    (r / "geo" / "SKILL.md").write_text(
+        "---\nname: geo\n---\n# GEO root\n"
+        "python3 scripts/generate_pdf_report.py data.json GEO-REPORT.pdf\n"
+    )
 
     for name in ["geo-audit", "geo-citability", "geo-crawlers"]:
         d = r / "skills" / name
         d.mkdir(parents=True)
         (d / "SKILL.md").write_text(f"# {name}")
+
+    # Schema skill has a fetch_page reference
+    schema = r / "skills" / "geo-schema"
+    schema.mkdir(parents=True)
+    (schema / "SKILL.md").write_text(
+        "# schema\npython3 scripts/fetch_page.py <url> page\n"
+    )
 
     plat = r / "platform"
     plat.mkdir()
@@ -61,15 +73,17 @@ def repo(tmp_path):
     (r / "docs" / "README.md").write_text("# docs")
 
     (r / "agents").mkdir(parents=True)
-    (r / "agents" / "geo-content.md").write_text("# agent")
-    (r / "agents" / "geo-schema.md").write_text("# schema agent")
+    (r / "agents" / "geo-content.md").write_text("---\nname: geo-content\n---\n# agent")
+    (r / "agents" / "geo-schema.md").write_text(
+        "---\nname: geo-schema\n---\npython3 scripts/fetch_page.py <url> page\n"
+    )
 
     oa = r / ".opencode" / "agents"
     oa.mkdir(parents=True)
-    (oa / "geo-content.md").write_text("# oc agent")
+    (oa / "geo-content.md").write_text("---\nname: geo-content\n---\n# oc agent")
     oc = r / ".opencode" / "commands"
     oc.mkdir(parents=True)
-    (oc / "geo-audit.md").write_text("# oc command")
+    (oc / "geo-audit.md").write_text("---\nname: geo-audit\n---\naudit command")
 
     return r
 
@@ -120,7 +134,7 @@ class TestCloneOrPullRepo:
             result = clone_or_pull_repo("https://example.com/repo.git", target)
         assert result == target
         mock_run.assert_called_once_with(
-            ["git", "clone", "https://example.com/repo.git", str(target)],
+            ["git", "clone", "--branch", "main", "https://example.com/repo.git", str(target)],
             check=True,
         )
 
@@ -130,10 +144,20 @@ class TestCloneOrPullRepo:
         with patch("update_toolkit.subprocess.run") as mock_run:
             result = clone_or_pull_repo("https://example.com/repo.git", target)
         assert result == target
+        # Two calls: checkout then pull
+        assert mock_run.call_count == 2
+        mock_run.assert_has_calls([
+            call(["git", "checkout", "main"], cwd=target, capture_output=True, check=False),
+            call(["git", "pull", "--ff-only", "origin", "main"], cwd=target, check=False),
+        ])
+
+    def test_clone_with_branch(self, tmp_path):
+        target = tmp_path / "new-repo"
+        with patch("update_toolkit.subprocess.run") as mock_run:
+            clone_or_pull_repo("https://example.com/repo.git", target, branch="feature/foo")
         mock_run.assert_called_once_with(
-            ["git", "pull", "--ff-only"],
-            cwd=target,
-            check=False,
+            ["git", "clone", "--branch", "feature/foo", "https://example.com/repo.git", str(target)],
+            check=True,
         )
 
 
@@ -273,8 +297,9 @@ class TestInstallForPlatform:
         ):
             install_for_platform(repo, "claude-code")
 
-        assert (skills_dst / "scripts" / "fetch_page.py").exists()
-        assert (skills_dst / "docs" / "README.md").exists()
+        # Scripts are nested under skills_dst/geo/scripts/
+        assert (skills_dst / "geo" / "scripts" / "fetch_page.py").exists()
+        assert (skills_dst / "geo" / "docs" / "README.md").exists()
 
     def test_opencode_no_claude_agents(self, repo, tmp_path):
         """OpenCode install must NOT install to claude agent dir."""
@@ -321,9 +346,23 @@ class TestInstallAllPlatforms:
         with patch("update_toolkit.install_for_platform") as mock_install:
             install_all_platforms(repo, platforms)
         mock_install.assert_has_calls([
-            call(repo, "claude-code"),
-            call(repo, "opencode"),
+            call(repo, "claude-code", runtime_python=None, runtime_scripts_root=None),
+            call(repo, "opencode", runtime_python=None, runtime_scripts_root=None),
         ])
+
+    def test_passes_runtime_args(self, repo):
+        platforms = ["claude-code"]
+        with patch("update_toolkit.install_for_platform") as mock_install:
+            install_all_platforms(
+                repo, platforms,
+                runtime_python="/usr/bin/python3",
+                runtime_scripts_root="/usr/share/scripts",
+            )
+        mock_install.assert_called_once_with(
+            repo, "claude-code",
+            runtime_python="/usr/bin/python3",
+            runtime_scripts_root="/usr/share/scripts",
+        )
 
     def test_no_platforms_no_error(self, repo):
         with patch("update_toolkit.install_for_platform") as mock_install:
@@ -349,9 +388,7 @@ class TestMain:
             main()
 
         # Should install for both despite detect_platforms returning []
-        args, _ = mock_install.call_args
         assert mock_install.called
-        # The platforms were overridden to ["claude-code", "opencode"]
 
     def test_no_platforms_exits(self):
         test_args = ["prog"]
@@ -375,6 +412,7 @@ class TestMain:
         mock_clone.assert_called_once_with(
             "https://example.com/fork.git",
             Path("/tmp/test-target"),
+            "main",
         )
 
     def test_target_skip_pull_if_not_exists(self, tmp_path):
@@ -388,7 +426,6 @@ class TestMain:
             patch("update_toolkit.install_all_platforms"),
         ):
             main()
-
         assert mock_clone.called
 
 
@@ -419,3 +456,188 @@ class TestCopyTreeEdgeCases:
         from update_toolkit import REPO_URL
         assert "D0wn10ad" in REPO_URL
         assert "geo-seo-ai-agent" in REPO_URL
+
+
+# ---------------------------------------------------------------------------
+# Runtime markdown rewriting
+# ---------------------------------------------------------------------------
+
+class TestRewriteRuntimeMarkdown:
+    def test_rewrite_script_path(self, tmp_path):
+        """python3 scripts/foo.py → scripts_root/foo.py"""
+        from update_toolkit import rewrite_runtime_markdown
+        md = tmp_path / "test.md"
+        md.write_text("python3 scripts/fetch_page.py <url> page\n")
+        rewrite_runtime_markdown(
+            md,
+            runtime_scripts_root="~/.claude/skills/geo/scripts",
+        )
+        text = md.read_text()
+        assert "~/.claude/skills/geo/scripts/fetch_page.py <url> page" in text
+        assert "python3 scripts/" not in text
+
+    def test_rewrite_inline_python_c(self, tmp_path):
+        """python3 -c → runtime_python -c"""
+        from update_toolkit import rewrite_runtime_markdown
+        md = tmp_path / "test.md"
+        md.write_text("python3 -c \"print('hello')\"\n")
+        rewrite_runtime_markdown(
+            md,
+            runtime_python="~/.claude/skills/geo/.venv/bin/python3",
+        )
+        text = md.read_text()
+        assert "~/.claude/skills/geo/.venv/bin/python3 -c \"print('hello')\"" in text
+
+    def test_rewrite_inline_python_m(self, tmp_path):
+        """python3 -m → runtime_python -m"""
+        from update_toolkit import rewrite_runtime_markdown
+        md = tmp_path / "test.md"
+        md.write_text("python3 -m playwright install chromium\n")
+        rewrite_runtime_markdown(
+            md,
+            runtime_python="~/.claude/skills/geo/.venv/bin/python3",
+        )
+        text = md.read_text()
+        assert "~/.claude/skills/geo/.venv/bin/python3 -m playwright install chromium" in text
+
+    def test_no_rewrite_unless_flag(self, tmp_path):
+        """Without runtime_python/runtime_scripts_root, file is unchanged."""
+        from update_toolkit import rewrite_runtime_markdown
+        md = tmp_path / "test.md"
+        orig = "python3 scripts/fetch_page.py url page\npython3 -c \"x\"\n"
+        md.write_text(orig)
+        rewrite_runtime_markdown(md)
+        assert md.read_text() == orig
+
+    def test_rewrite_both_and_inline(self, tmp_path):
+        """All pattern types rewritten in a single pass."""
+        from update_toolkit import rewrite_runtime_markdown
+        md = tmp_path / "test.md"
+        md.write_text(
+            "python3 scripts/fetch_page.py <url> page\n"
+            "python3 -c \"print('x')\"\n"
+            "python3 -m playwright install chromium\n"
+        )
+        rewrite_runtime_markdown(
+            md,
+            runtime_python="~/.claude/skills/geo/.venv/bin/python3",
+            runtime_scripts_root="~/.claude/skills/geo/scripts",
+        )
+        text = md.read_text()
+        assert "~/.claude/skills/geo/scripts/fetch_page.py" in text
+        assert "~/.claude/skills/geo/.venv/bin/python3 -c" in text
+        assert "~/.claude/skills/geo/.venv/bin/python3 -m" in text
+        # Bare "python3 scripts/" should be gone (no standalone refs left)
+        lines = [l for l in text.splitlines() if "python3" in l]
+        assert all("~/.claude/skills/geo" in l for l in lines)
+
+
+# ---------------------------------------------------------------------------
+# Runtime markdown patching during install
+# ---------------------------------------------------------------------------
+
+class TestInstallWithRuntimePatching:
+    """Verify that installed skill/agent markdown files have runtime paths
+    rewritten when runtime_python and runtime_scripts_root are provided."""
+
+    def test_claude_skill_markdown_rewritten(self, repo, tmp_path):
+        skills_dst = tmp_path / "skills"
+        agents_dst = tmp_path / "agents"
+
+        with (
+            patch("update_toolkit.CLAUDE_SKILLS", skills_dst),
+            patch("update_toolkit.CLAUDE_AGENTS", agents_dst),
+            patch("update_toolkit.OPENCODE_AGENTS", tmp_path / "oc-agents"),
+            patch("update_toolkit.OPENCODE_COMMANDS", tmp_path / "oc-commands"),
+        ):
+            install_for_platform(
+                repo,
+                "claude-code",
+                runtime_scripts_root="~/.claude/skills/geo/scripts",
+                runtime_python="~/.claude/skills/geo/.venv/bin/python3",
+            )
+
+        # geo-schema skill should have fetch_page path rewritten
+        schema_skill = skills_dst / "geo-schema" / "SKILL.md"
+        schema_text = schema_skill.read_text()
+        assert "~/.claude/skills/geo/scripts/fetch_page.py" in schema_text
+        assert "python3 scripts/" not in schema_text
+
+    def test_claude_agent_markdown_rewritten(self, repo, tmp_path):
+        skills_dst = tmp_path / "skills"
+        agents_dst = tmp_path / "agents"
+
+        with (
+            patch("update_toolkit.CLAUDE_SKILLS", skills_dst),
+            patch("update_toolkit.CLAUDE_AGENTS", agents_dst),
+            patch("update_toolkit.OPENCODE_AGENTS", tmp_path / "oc-agents"),
+            patch("update_toolkit.OPENCODE_COMMANDS", tmp_path / "oc-commands"),
+        ):
+            install_for_platform(
+                repo,
+                "claude-code",
+                runtime_scripts_root="~/.claude/skills/geo/scripts",
+                runtime_python="~/.claude/skills/geo/.venv/bin/python3",
+            )
+
+        # geo-schema agent should have fetch_page path rewritten
+        schema_agent = agents_dst / "geo-schema.md"
+        text = schema_agent.read_text()
+        assert "~/.claude/skills/geo/scripts/fetch_page.py" in text
+        assert "python3 scripts/" not in text
+
+    def test_opencode_agent_markdown_rewritten(self, repo, tmp_path):
+        skills_dst = tmp_path / "skills"
+        oc_agents = tmp_path / "oc-agents"
+
+        with (
+            patch("update_toolkit.CLAUDE_SKILLS", skills_dst),
+            patch("update_toolkit.CLAUDE_AGENTS", tmp_path / "agents"),
+            patch("update_toolkit.OPENCODE_AGENTS", oc_agents),
+            patch("update_toolkit.OPENCODE_COMMANDS", tmp_path / "oc-commands"),
+        ):
+            install_for_platform(
+                repo,
+                "opencode",
+                runtime_scripts_root="~/.claude/skills/geo/scripts",
+                runtime_python="~/.claude/skills/geo/.venv/bin/python3",
+            )
+
+        schema_agent = oc_agents / "geo-schema.md"
+        text = schema_agent.read_text()
+        assert "~/.claude/skills/geo/scripts/fetch_page.py" in text
+        assert "python3 scripts/" not in text
+
+    def test_opencode_command_not_patched(self, repo, tmp_path):
+        """Command wrappers don't have script references, so they should be unchanged."""
+        skills_dst = tmp_path / "skills"
+        oc_commands = tmp_path / "oc-commands"
+
+        with (
+            patch("update_toolkit.CLAUDE_SKILLS", skills_dst),
+            patch("update_toolkit.CLAUDE_AGENTS", tmp_path / "agents"),
+            patch("update_toolkit.OPENCODE_AGENTS", tmp_path / "oc-agents"),
+            patch("update_toolkit.OPENCODE_COMMANDS", oc_commands),
+        ):
+            install_for_platform(
+                repo,
+                "opencode",
+                runtime_scripts_root="~/.claude/skills/geo/scripts",
+            )
+
+        text = (oc_commands / "geo-audit.md").read_text()
+        assert "scripts/" not in text
+
+    def test_requires_no_args_for_noop(self, repo, tmp_path):
+        """Without runtime args, install should work and not rewrite."""
+        skills_dst = tmp_path / "skills"
+        agents_dst = tmp_path / "agents"
+
+        with (
+            patch("update_toolkit.CLAUDE_SKILLS", skills_dst),
+            patch("update_toolkit.CLAUDE_AGENTS", agents_dst),
+        ):
+            install_for_platform(repo, "claude-code")
+
+        schema_skill = skills_dst / "geo-schema" / "SKILL.md"
+        assert "python3 scripts/fetch_page.py" in schema_skill.read_text()

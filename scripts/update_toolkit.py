@@ -185,6 +185,64 @@ _GEO_COMMANDS: dict[str, tuple[str, str]] = {
 }
 
 
+# ── Runtime markdown rewriting ──────────────────────────────────
+
+def rewrite_runtime_markdown(
+    file_path: Path,
+    runtime_python: str | None = None,
+    runtime_scripts_root: str | None = None,
+) -> None:
+    """Rewrite runtime Python/script references in an installed markdown file.
+
+    Replaces:
+      - 'python3 scripts/<name>.py'  with  '<runtime_scripts_root>/<name>.py'
+      - 'python scripts/<name>.py'   with  '<runtime_scripts_root>/<name>.py'
+      - 'python3 -c ...'             with  '<runtime_python> -c ...'
+      - 'python3 -m ...'             with  '<runtime_python> -m ...'
+      - 'python -c ...'              with  '<runtime_python> -c ...'
+      - 'python -m ...'              with  '<runtime_python> -m ...'
+
+    When a value is None, its corresponding pattern is left unchanged.
+    """
+    text = file_path.read_text()
+
+    if runtime_scripts_root:
+        text = re.sub(
+            r'\bpython3\s+scripts/([A-Za-z0-9_./-]+\.py)\b',
+            rf'{runtime_scripts_root}/\1',
+            text,
+        )
+        text = re.sub(
+            r'\bpython\s+scripts/([A-Za-z0-9_./-]+\.py)\b',
+            rf'{runtime_scripts_root}/\1',
+            text,
+        )
+
+    if runtime_python:
+        text = text.replace('python3 -c ', f'{runtime_python} -c ')
+        text = text.replace('python3 -m ', f'{runtime_python} -m ')
+        text = text.replace('python -c ', f'{runtime_python} -c ')
+        text = text.replace('python -m ', f'{runtime_python} -m ')
+
+    file_path.write_text(text)
+
+
+def patch_installed_markdown(
+    files: list[Path],
+    runtime_python: str | None = None,
+    runtime_scripts_root: str | None = None,
+) -> None:
+    """Patch runtime references across a list of installed markdown files."""
+    if not runtime_python and not runtime_scripts_root:
+        return
+    count = 0
+    for file_path in files:
+        if file_path.is_file():
+            rewrite_runtime_markdown(file_path, runtime_python, runtime_scripts_root)
+            count += 1
+    print(f"  OK: Runtime markdown patched ({count} files)")
+
+
 # ── Helpers ───────────────────────────────────────────────────────
 
 def platform_info():
@@ -326,7 +384,12 @@ def generate_opencode_commands(dst_dir):
 
 # ── Install logic ─────────────────────────────────────────────────
 
-def install_for_platform(repo_dir, platform_name):
+def install_for_platform(
+    repo_dir,
+    platform_name,
+    runtime_python: str | None = None,
+    runtime_scripts_root: str | None = None,
+):
     """Install skills and agents for the given platform."""
     repo = Path(repo_dir)
 
@@ -359,13 +422,26 @@ def install_for_platform(repo_dir, platform_name):
         generate_opencode_agents(agents_src, agents_dst)
         generate_opencode_commands(OPENCODE_COMMANDS)
 
+    # Rewrite runtime references in installed markdown
+    markdown_files: list[Path] = [
+        skills_dst / SKILLS_DIR / "SKILL.md",
+        *sorted(skills_dst.glob("geo-*/SKILL.md")),
+        *sorted(agents_dst.glob("geo-*.md")),
+    ]
+    patch_installed_markdown(markdown_files, runtime_python, runtime_scripts_root)
+
     print(f"  Done: {platform_name}")
 
 
-def install_all_platforms(repo_dir, platforms):
+def install_all_platforms(repo_dir, platforms, runtime_python=None, runtime_scripts_root=None):
     """Install for all detected platforms."""
     for p in platforms:
-        install_for_platform(repo_dir, p)
+        install_for_platform(
+            repo_dir,
+            p,
+            runtime_python=runtime_python,
+            runtime_scripts_root=runtime_scripts_root,
+        )
 
 
 # ── CLI ───────────────────────────────────────────────────────────
@@ -395,6 +471,16 @@ def parse_args():
         action="store_true",
         help="Install for both Claude Code and OpenCode regardless of detection",
     )
+    parser.add_argument(
+        "--runtime-python",
+        default=None,
+        help="Installed Python interpreter path for runtime markdown rewriting",
+    )
+    parser.add_argument(
+        "--runtime-scripts-root",
+        default=None,
+        help="Installed scripts root directory for runtime markdown rewriting",
+    )
     return parser.parse_args()
 
 
@@ -414,6 +500,12 @@ def main():
     print(f"Detected platforms: {', '.join(platforms)}")
     print(f"Upstream: {args.upstream}")
 
+    extra = {}
+    if args.runtime_python:
+        extra["runtime_python"] = args.runtime_python
+    if args.runtime_scripts_root:
+        extra["runtime_scripts_root"] = args.runtime_scripts_root
+
     if args.target:
         repo_dir = Path(args.target)
         clone_or_pull_repo(args.upstream, repo_dir, args.branch)
@@ -421,11 +513,11 @@ def main():
         with tempfile.TemporaryDirectory(prefix="geo-seo-") as tmp:
             repo_dir = Path(tmp) / "geo-seo"
             clone_or_pull_repo(args.upstream, repo_dir, args.branch)
-            install_all_platforms(repo_dir, platforms)
+            install_all_platforms(repo_dir, platforms, **extra)
             print("\nInstallation complete.")
             return
 
-    install_all_platforms(repo_dir, platforms)
+    install_all_platforms(repo_dir, platforms, **extra)
     print("\nInstallation complete.")
 
 

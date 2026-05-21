@@ -38,14 +38,14 @@ No lint, typecheck, build, CI, or lockfile exists. No Makefile, no task runner.
 
 ## Quirks
 
-### 1. `sed` venv patching in `install.sh`
+### 1. Runtime path rewriting in deployed markdown
 
-The installer creates a venv at `~/.claude/skills/geo/.venv/`, then rewrites `python3` in skill/agent `.md` files via `sed` to pin the venv interpreter:
-- `python3 ~/...scripts/` → `~/.claude/...scripts/` (scripts run via shebang after chmod)
-- `python3 -c <code>` → `~/.claude/skills/geo/.venv/bin/python3 -c <code>`
-- `python3 -m <mod>` → `~/.claude/skills/geo/.venv/bin/python3 -m <mod>`
+The deploy flow rewrites `python3` references in installed skill/agent `.md` files at deployment time (in `scripts/update_toolkit.py`, not `install.sh`) so runtime commands resolve to installed paths:
+- `python3 scripts/<name>.py` → `~/.claude/skills/geo/scripts/<name>.py` (self-executing shebang)
+- `python3 -c <code>` → `<venv>/bin/python3 -c <code>`
+- `python3 -m <mod>` → `<venv>/bin/python3 -m <mod>`
 
-The tilde is intentionally kept literal — Claude Code's Bash expands it at runtime. The Windows installer (`install-win.sh`) does **none of this** — it has no venv at all and uses `pip install --user`.
+The tilde is intentionally kept literal — Claude Code's Bash expands it at runtime. The `--runtime-python` and `--runtime-scripts-root` flags on `update_toolkit.py` control the replacement paths. The Windows installer (`install-win.sh`) does **none of this** — it has no venv at all and uses `pip install --user`. Source markdown files in the repo are never modified.
 
 ### 2. Missing skill files
 
