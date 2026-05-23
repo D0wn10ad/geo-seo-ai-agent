@@ -186,6 +186,22 @@ main() {
         fi
     fi
 
+    if [ "$VENV_OK" = true ]; then
+        # Verify the actual python binary exists in the venv.
+        # Some systems create bin/python instead of bin/python3.
+        if [ ! -x "$VENV_PY" ]; then
+            VENV_DIR_BIN="$(dirname "$VENV_PY")"
+            if [ -x "${VENV_DIR_BIN}/python" ]; then
+                VENV_PY="${VENV_DIR_BIN}/python"
+                # Also update the tilde-form path used for markdown rewriting
+                VENV_MD_PY='~/.claude/skills/geo/.venv/bin/python'
+            else
+                print_warning "Virtual environment created but python binary not found."
+                VENV_OK=false
+            fi
+        fi
+    fi
+
     if [ "$VENV_OK" = false ]; then
         print_warning "Could not create virtual environment."
         print_warning "Installing dependencies system-wide with --user flag."
