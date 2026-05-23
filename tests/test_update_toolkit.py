@@ -193,6 +193,21 @@ class TestCopyTree:
         assert "SKIP: Missing" in captured.out
         assert not dst.exists()
 
+    def test_preserves_venv_during_replace(self, tmp_path):
+        src = tmp_path / "src"
+        src.mkdir()
+        (src / "file.txt").write_text("new")
+        dst = tmp_path / "dst"
+        dst.mkdir()
+        (dst / "file.txt").write_text("old")
+        (dst / ".venv" / "bin" / "python3").mkdir(parents=True)
+        (dst / ".venv" / "pyvenv.cfg").write_text("home = /usr/bin")
+        copy_tree(src, dst, "Replace")
+        assert (dst / "file.txt").exists()
+        assert (dst / "file.txt").read_text() == "new"
+        assert (dst / ".venv" / "bin" / "python3").is_dir()
+        assert (dst / ".venv" / "pyvenv.cfg").read_text() == "home = /usr/bin"
+
 
 # ---------------------------------------------------------------------------
 # copy_files

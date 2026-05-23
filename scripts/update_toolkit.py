@@ -290,14 +290,27 @@ def clone_or_pull_repo(upstream_url, target_dir, branch="main"):
 
 
 def copy_tree(src, dst, desc=""):
-    """Copy src directory tree to dst, creating parents if needed."""
+    """Copy src directory tree to dst, creating parents if needed.
+
+    Preserves a .venv subdirectory in dst if present (created by the
+    installer before copy_tree runs).
+    """
     if not src.is_dir():
         print(f"  SKIP: {desc} not found or not a directory at {src}")
         return
     dst.parent.mkdir(parents=True, exist_ok=True)
+    temp_venv = None
     if dst.exists():
+        venv_path = dst / ".venv"
+        if venv_path.is_dir():
+            temp_venv = dst.parent / ".venv-tmp"
+            shutil.move(str(venv_path), str(temp_venv))
         shutil.rmtree(dst)
-    shutil.copytree(src, dst)
+        shutil.copytree(src, dst)
+        if temp_venv:
+            shutil.move(str(temp_venv), str(venv_path))
+    else:
+        shutil.copytree(src, dst)
     print(f"  OK: {desc} -> {dst}")
 
 
