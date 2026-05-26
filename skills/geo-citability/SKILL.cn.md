@@ -78,4 +78,14 @@ Same criteria apply. CN AI engines also value original data and proprietary insi
 - If the page offers both Chinese and English versions, CN AI engines will cite the Chinese version
 - Ensure Chinese content is original, not a direct translation (CN AI prefers native Chinese writing)
 
+### Mention Rate Prediction
+
+Mention rate prediction: Content with citability ≥80 has ~4x higher probability of being cited
+by AI engines than content with citability <50 (est. from 源易 correlation data).
+KPI hook: Citability score directly predicts AI mention rate potential.
+When scoring, flag content items as:
+- 85+: "High citation probability — prioritize for GEO-critical pages"
+- 65-84: "Moderate — requires distribution support"
+- Below 65: "Low — rewrite recommended before distribution investment"
+
 Output file: `GEO-CITABILITY-SCORE-CN.md`

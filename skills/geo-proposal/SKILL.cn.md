@@ -58,6 +58,12 @@ When generating proposals for CN clients, the service tiers include these CN-spe
 - 专属客户经理
 - 优先支持（4小时响应）
 
+### KPI Guarantees (when applicable):
+- Basic: Measurement + baseline report only (no guarantee)
+- Standard: Target 30%+ AI mention rate improvement within 12 weeks
+- Premium: Target 60%+ AI mention rate improvement + top-3 competitor position within 16 weeks
+Guarantees supported by 源易 case study data (KPI achievement rate 140%-450%).
+
 ---
 
 ## Proposal Template (Chinese)

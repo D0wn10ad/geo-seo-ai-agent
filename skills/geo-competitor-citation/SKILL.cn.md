@@ -3,7 +3,7 @@ name: geo-competitor-citation-cn
 description: >
   Cross-engine competitor GEO gap analysis for China market. Runs a representative
   Chinese-language question set against 6 CN AI engines (Baidu AI Search, Doubao,
-  ERNIE Bot, Qwen, Kimi, DeepSeek) for the brand and N competitors, normalizes
+  Yuanbao (腾讯元宝), Qwen, Kimi, DeepSeek) for the brand and N competitors, normalizes
   citations, and builds a 3-D gap matrix (brand × engine × intent type) showing
   citation count, average position, and contextual sentiment. Uses CN brand alias
   patterns and CN platform references for alias merging and gap narrative. Emits
@@ -33,7 +33,7 @@ Engine characteristics and sourcing preferences are detailed in `regions/cn/ai-e
 |---|---|---|---|---|---|
 | 1 | **Baidu AI Search** (百度AI搜索) | Google AI Overviews | ai.baidu.com | No stable public-URL query API | Manual capture via user pasting response |
 | 2 | **Doubao** (字节豆包) | ChatGPT | doubao.com | No stable public-URL query API | Manual capture |
-| 3 | **ERNIE Bot** (文心一言) | Claude | yiyan.baidu.com | No stable public-URL query API | Manual capture |
+| 3 | **Yuanbao** (腾讯元宝) | Claude | yuanbao.tencent.com | No stable public-URL query API | Manual capture |
 | 4 | **Qwen** (通义千问) | Perplexity | tongyi.aliyun.com | No stable public-URL query API | Manual capture |
 | 5 | **Kimi** (月之暗面) | Gemini | kimi.moonshot.cn | No stable public-URL query API | Manual capture |
 | 6 | **DeepSeek** (深度求索) | Copilot | chat.deepseek.com | No stable public-URL query API | Manual capture |
@@ -163,6 +163,14 @@ The base verdict rubric applies identically, with one adjustment for CN-specific
 
 **Rationale for widened ranges:** All 6 CN engines require manual capture (vs. 2 of 6 programmatic in the Western flow). Manual captures have higher variance — a user may capture 2 of 3 runs for one engine and 3 of 3 for another, introducing small positional noise. The widened PARITY and LAGGING thresholds absorb this noise without producing false gap signals.
 
+### Mention rate differential KPI
+
+Compare brand's mention rate vs each competitor per engine.
+
+- **Primary metric:** `(brand_mention_rate - competitor_mention_rate)` per engine per query.
+- **Target:** ≥20% advantage over nearest competitor within 12 weeks.
+- **Tracking:** `~/.geo-prospects/<domain>/mention-rate-diff-*.md` updated monthly.
+
 ---
 
 ## Remediation Mapping — CN Platform Adjustments
@@ -180,6 +188,13 @@ When mapping gaps to upstream skills, adapt the remediation actions to CN ecosys
 | Citation gap on Baidu AI Search specifically | `geo-citation-pipeline`: Run CN pipeline with Baidu Zhanzhang submission |
 | You have the right content but BaiduSpider missed it | `geo-crawlers`: Check CN crawler access; `geo-citation-pipeline`: Baidu Zhanzhang push |
 
+### Phased displacement strategy (源易 methodology)
+
+- **Phase 1 (Month 1-2):** Claim platforms with lowest bar — 百家号, 什么值得买, 头条号
+- **Phase 2 (Month 3-4):** Dominate 2nd-tier citation platforms — 知乎, 搜狐号, CSDN
+- **Phase 3 (Month 5-6):** Challenge established authorities on Baidu Baike, 36Kr
+- **Scoring:** Weighted by platform authority → competitor displacement difficulty → engine-specific citation probability
+
 ---
 
 ## Scoring for CN Context
@@ -192,10 +207,13 @@ When the base skill computes per-engine scores, use these CN rubrics:
 |---|---|---|---|
 | Baidu AI Search | Baidu Baike presence | .gov.cn / .edu.cn authority | Chinese citation quality |
 | Doubao | Content freshness (< 90 days) | ByteDance ecosystem presence | Multi-format content |
-| ERNIE Bot | Structured data completeness | Factual density | Author credentials |
+| Yuanbao (腾讯元宝) | Structured data completeness | Factual density | Author credentials |
 | Qwen | E-commerce/technical content | Logical structure | Alibaba ecosystem tie-in |
 | Kimi | Content depth (long-form) | Heading hierarchy | Academic quality |
 | DeepSeek | Technical accuracy | Code/format quality | Developer ecosystem |
+
+Engine weighting: Engines are weighted by MAU tier (see regions/cn/ai-engines.md).
+Composite gap score uses weighted averages across all 6 engines.
 
 ---
 
@@ -217,7 +235,7 @@ The output structure mirrors the base format with these CN-specific changes:
 **Topic scope:** <from matrix `<topic>` / "matrix-less probe set">
 **Probes executed:** 20 questions × 6 CN engines × 3 runs = 360 probes
 **Engines captured programmatically:** None (all manual)
-**Engines captured manually:** Baidu AI Search, Doubao, ERNIE Bot, Qwen, Kimi, DeepSeek
+**Engines captured manually:** Baidu AI Search, Doubao, Yuanbao (腾讯元宝), Qwen, Kimi, DeepSeek
 ```
 
 ### Gap Matrix tables
@@ -225,7 +243,7 @@ The output structure mirrors the base format with these CN-specific changes:
 Replace Western engine column headers with CN engine names:
 
 ```
-| Intent \ Engine | Baidu AI Search | Doubao | ERNIE Bot | Qwen | Kimi | DeepSeek |
+| Intent \ Engine | Baidu AI Search | Doubao | Yuanbao (腾讯元宝) | Qwen | Kimi | DeepSeek |
 |---|---|---|---|---|---|---|
 | Definitional | <n>/5 | <n>/5 | <n>/5 | <n>/5 | <n>/5 | <n>/5 |
 ...
@@ -272,7 +290,7 @@ In addition to the base quality gates:
 ## Important Notes (CN)
 
 - **All-manual capture:** Unlike the Western flow (where Perplexity and Google AI Overviews are programmatic), all 6 CN engines require manual interaction. Budget time accordingly and be transparent with the user.
-- **Baidu Baike is the kingmaker:** A competitor with a verified, comprehensive Baidu Baike entry will almost always outperform on Baidu AI Search and ERNIE Bot. Prioritize Baidu Baike entry creation/improvement if this pattern appears in the gap matrix.
+- **Baidu Baike is the kingmaker:** A competitor with a verified, comprehensive Baidu Baike entry will almost always outperform on Baidu AI Search and Yuanbao (腾讯元宝). Prioritize Baidu Baike entry creation/improvement if this pattern appears in the gap matrix.
 - **Platform polarization:** CN AI engines strongly favor their own ecosystem content (Baidu engines favor Baidu Baike, ByteDance's Doubao favors Douyin/Toutiao). A citation gap on one engine may not correlate with gaps on others — assess per-engine, not averaged.
 - **Dual-name brands:** Foreign brands in China often have multiple aliases (official Chinese name + transliteration + colloquial name + English name). User confirmation of the alias list is critical — a missed alias produces a false CRITICAL_GAP.
 - **Output filename:** Use the `-CN.md` suffix so reports are distinguished from Western-market reports in `~/.geo-prospects/competitor/`.

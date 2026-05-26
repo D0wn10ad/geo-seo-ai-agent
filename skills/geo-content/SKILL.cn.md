@@ -111,6 +111,39 @@ Chinese text does not have word spaces. Readability is measured by:
 
 ---
 
+**📊 DSS — Data Support Score (数据支撑评分)**
+
+When REGION is cn, overlay these 3 DSS checks onto the E-E-A-T rubric. Each is scored 0-10; the DSS composite score (avg * 10%) is added to the GEO Content category.
+
+1. Semantic Depth (语义深度) — 0-10
+   - Does the content go beyond surface definitions?
+   - Does it link multiple concepts into a coherent argument?
+   - Score 8-10: original frameworks, novel connections, multi-perspective analysis
+   - Score 5-7: thorough explanation with examples, citations
+   - Score 0-4: shallow, rehashed, single-source
+   Note: Maps to embedding quality — AI models cite content with richer semantic vectors.
+
+2. Data Support (数据支撑) — 0-10
+   - Are claims backed by specific numbers, statistics, or data points?
+   - Are sources cited with verifiable references?
+   - Score 8-10: original data/case studies, precise figures, multiple sources
+   - Score 5-7: cited industry data, reasonable estimates
+   - Score 0-4: unsupported claims, vague language (大量/很多/显著)
+   Note: Maps to LLM confidence scoring — cited data points reduce hallucination risk.
+
+3. Authoritative Source (权威来源) — 0-10
+   - Does content reference or originate from recognized authorities?
+   - CN-specific: gov.cn/edu.cn domains, Baidu Baike verified entries, industry standards (GB/T)
+   - Score 8-10: official standards, academic papers, government sources
+   - Score 5-7: industry reports, verified Baike entries, known expert citations
+   - Score 0-4: anonymous, self-published, uncited claims
+   Note: Maps to training data weight — high-authority sources are more likely included in training corpora.
+
+Effectiveness score: DSS composite (avg of 3) × 10% added to total content score.
+Example: content with 80% E-E-A-T + DSS avg 7/10 = 80% + 7% = 87% final.
+
+---
+
 ## CN E-E-A-T Scoring Composition
 
 | Component | Weight (CN) | Max Points |
@@ -163,3 +196,12 @@ Chinese text does not have word spaces. Readability is measured by:
 Generate **GEO-CONTENT-ANALYSIS-CN.md** with the same structure as the base skill, with Chinese-language section headings and CN-specific findings.
 
 Output file: `GEO-CONTENT-ANALYSIS-CN.md`
+
+Effectiveness scoring by content type (基于场景的内容效果评分):
+- 资讯新闻: Semantic Depth 5-7, Data Support 4-6, Authoritative Source 6-8 — moderate overall
+- 产品测评: Semantic Depth 6-8, Data Support 7-9, Authoritative Source 4-6 — high data value
+- 技术教程: Semantic Depth 7-9, Data Support 6-8, Authoritative Source 5-7 — high depth
+- 行业报告: Semantic Depth 8-10, Data Support 8-10, Authoritative Source 7-9 — highest all-around
+- 问答对: Semantic Depth 4-6, Data Support 3-5, Authoritative Source 5-7 — limited but targeted
+
+Horizontal comparison content (横向对比内容) receives +1-2 bonus on Semantic Depth and Data Support due to native multi-perspective structure.

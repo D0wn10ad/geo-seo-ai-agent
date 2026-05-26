@@ -67,6 +67,17 @@ For core topic `T`:
 5. 为什么<行业>从`前代`转向了`T`？(Why did <industry> shift from <predecessor> to T?)
 6. `T`的核心机制详解 (Detailed explanation of T's core mechanism)
 
+### Prompt expansion strategy
+
+Prompt expansion strategy (提示词扩展法):
+When generating Chinese candidate questions, expand each seed topic using:
+1. Baidu search suggest API (百度搜索下拉词)
+2. Zhihu topic-related questions (知乎相关问题)
+3. 5118 long-tail keyword tool (5118长尾词)
+4. WeChat Index trending terms (微信指数热门词)
+
+This ensures questions reflect real user search behavior, not author assumptions.
+
 ---
 
 ## CN Search Volume Sources
@@ -124,6 +135,17 @@ Downstream actions map to CN skill equivalents:
 - `→ geo-citation-pipeline-cn` (CN pipeline after publication)
 - `→ geo-distribution-plan-cn` (CN distribution cadence)
 - `→ geo-competitor-citation --region cn` (CN competitor analysis 14 days post-publication)
+
+### Citation affinity per intent
+
+Citation affinity per intent (基于 2,844 样本):
+- Definitional (定义型): Baidu Baike, 知乎, 百家号 → Avg 11.2% citation rate
+- Comparative (对比型): 什么值得买, 泡泡网, 中关村, 知乎 → Avg 6.8% citation rate
+- Procedural (流程型): IT之家, CSDN, 哔哩哔哩, 知乎 → Avg 8.5% citation rate
+- Causal (因果型): 36氪, 虎嗅, 网易, 微信公众号 → Avg 9.1% citation rate
+
+Recommendation: Prioritize Definitional content for new domains (highest absolute citation probability).
+For competitive queries, Comparative content offers better differentiation potential despite lower rates.
 
 ---
 

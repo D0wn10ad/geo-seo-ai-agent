@@ -37,6 +37,8 @@ GEO Score (CN) = (Platform Score * 0.30) + (Content Score * 0.25) + (Technical S
 
 Round to the nearest integer. Cap at 100.
 
+**MAU-tier weighting**: CN GEO Score uses MAU-tier weighted engine scores.
+
 ### 分数含义 (Score Interpretation — CN)
 
 | 分数范围 | 等级 | 客户描述 |
@@ -81,7 +83,23 @@ Write exactly ONE paragraph (4-6 sentences) in Chinese covering:
 | 品牌权威性 | XX/100 | 15% | XX |
 | **总分** | | | **XX/100** |
 
-### 第三部分：中国 AI 平台可见性概览 (CN AI Visibility Dashboard)
+### 第三部分：KPI 仪表盘 (KPI Dashboard)
+
+```
+## KPI Dashboard (关键绩效指标)
+
+| KPI | Baseline | 30-Day | 90-Day | 180-Day | Status |
+|-----|----------|--------|--------|---------|--------|
+| AI Mention Rate | 0% | 25% | 60% | 85% | 🟢 🟡 🔴 |
+| Competitor Rank | 15th | 10th | 3rd | 1st | 🟢 🟡 🔴 |
+| Recommendation Rate | 0% | 15% | 40% | 70% | 🟢 🟡 🔴 |
+| Citation Rate | 3% | 20% | 40% | 60% | 🟢 🟡 🔴 |
+| KPI Achievement | — | — | — | 140% | 🟢 🟡 🔴 |
+
+Targets derived from 源易 case study benchmarks. Adjust per client vertical.
+```
+
+### 第四部分：中国 AI 平台可见性概览 (CN AI Visibility Dashboard)
 
 ```markdown
 ## 中国 AI 平台可见性概览
@@ -90,7 +108,7 @@ Write exactly ONE paragraph (4-6 sentences) in Chinese covering:
 |---|---|---|---|
 | 百度 AI 搜索 (Baidu AI) | XX/100 | [一行描述] | [一行描述] |
 | 豆包 (Doubao) | XX/100 | [一行描述] | [一行描述] |
-| 文心一言 (ERNIE Bot) | XX/100 | [一行描述] | [一行描述] |
+| Yuanbao (腾讯元宝) | XX/100 | [一行描述] | [一行描述] |
 | 通义千问 (Qwen) | XX/100 | [一行描述] | [一行描述] |
 | Kimi (月之暗面) | XX/100 | [一行描述] | [一行描述] |
 | DeepSeek (深度求索) | XX/100 | [一行描述] | [一行描述] |
@@ -98,7 +116,7 @@ Write exactly ONE paragraph (4-6 sentences) in Chinese covering:
 
 Add a CN explanation paragraph: "这些分数反映了您的内容被各中国 AI 搜索平台引用的可能性。分数低于 50 分表明在该平台上存在显著的引用障碍。在中国市场，百度 AI 搜索由于占据超过 80% 的搜索份额，应作为首要优化目标。"
 
-### 第四部分：AI 爬虫访问状态 (AI Crawler Access — CN)
+### 第五部分：AI 爬虫访问状态 (AI Crawler Access — CN)
 
 ```markdown
 ## AI 爬虫访问状态
@@ -116,7 +134,7 @@ Add a CN explanation paragraph: "这些分数反映了您的内容被各中国 A
 
 Add CN-specific translation: "阻止 AI 爬虫访问您的网站，相当于在营业时间关闭店铺大门。如果爬虫无法访问您的网站，其背后的 AI 平台就无法引用您的内容。在中国市场，BaiduSpider 是所有爬虫中最关键的——它是百度 AI 搜索和文心一言的数据来源。"
 
-### 第五部分：品牌权威性分析 (Brand Authority — CN)
+### 第六部分：品牌权威性分析 (Brand Authority — CN)
 
 ```markdown
 ## 品牌权威性分析
@@ -133,7 +151,7 @@ Add CN-specific translation: "阻止 AI 爬虫访问您的网站，相当于在�
 
 Add CN translation: "AI 平台通过跨多个权威来源交叉验证您的品牌来建立信任。每个平台上的准确、一致的品牌存在都会增加您的内容在 AI 回答中被引用的可能性。百度百科是中国 AI 引擎最强的实体信号——拥有经过认证的百度百科词条是任何品牌在中国 AI 搜索策略中的首要任务。"
 
-### 第六部分：可被引用性分析 (Citability Analysis — CN)
+### 第七部分：可被引用性分析 (Citability Analysis — CN)
 
 #### 最易被引用的前 5 个页面
 For each page in Chinese:
@@ -149,7 +167,7 @@ For each page:
 
 **商业影响**："最易被引用的页面是您出现在 AI 生成答案中的最佳候选。改进最不易被引用的 5 个页面是您在 AI 可见性方面最具投资回报率的内容投入。"
 
-### 第七部分：技术健康摘要 (Technical Health Summary — CN)
+### 第八部分：技术健康摘要 (Technical Health Summary — CN)
 
 ```markdown
 ## 技术健康摘要
@@ -169,7 +187,7 @@ For each page:
 
 If ICP license is missing and site targets China users: "注意：如果您的网站托管在中国大陆服务器上，ICP 备案是法律要求。缺少 ICP 备案不仅影响百度 AI 抓取，还可能面临合规风险。"
 
-### 第八部分：结构化数据与 Schema
+### 第九部分：结构化数据与 Schema
 
 ```markdown
 ## 结构化数据与 Schema
@@ -186,7 +204,7 @@ If ICP license is missing and site targets China users: "注意：如果您的�
 
 Note for CN if Baidu-compatible schema is missing: "已为您准备了适用于百度 AI 搜索的结构化数据代码，见技术附录。您的开发团队可以在短时间内将这些代码部署到网站上。"
 
-### 第九部分：llms.txt 状态
+### 第十部分：llms.txt 状态
 
 ```markdown
 ## llms.txt — AI 内容指南
@@ -199,7 +217,7 @@ Note for CN if Baidu-compatible schema is missing: "已为您准备了适用于�
 
 Add CN context: "llms.txt 是一个新兴标准（类似于 robots.txt），用于告知 AI 系统您的网站内容及最重要的页面。对于中国市场，建议同时提供英文和中文版本的 llms.txt 文件，以同时覆盖国际和中国 AI 引擎。"
 
-### 第十部分：优先行动计划 (Prioritized Action Plan — CN)
+### 第十一部分：优先行动计划 (Prioritized Action Plan — CN)
 
 This is the most important section. Organize by timeline and impact with CN-specific actions.
 
@@ -284,7 +302,7 @@ Use conservative estimates. Base the RMB figure on:
 - Baidu holds ~80%+ CN search market share with AI search expanding rapidly
 - A 10-point GEO score improvement typically correlates with a 15-25% increase in AI citation frequency
 
-### 第十一部分：竞争对手对比 (Competitor Comparison — CN)
+### 第十二部分：竞争对手对比 (Competitor Comparison — CN)
 
 If competitor URLs were analyzed alongside the primary domain:
 
@@ -314,7 +332,7 @@ If competitor URLs were analyzed alongside the primary domain:
 
 ---
 
-### 第十二部分：附录 (Appendix — CN)
+### 第十三部分：附录 (Appendix — CN)
 
 ```markdown
 ## 附录

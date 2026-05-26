@@ -128,6 +128,43 @@ When `--region cn` is explicitly passed or auto-detected:
 
 ---
 
+## KPI Framework — CN GEO Performance Metrics
+
+### Baseline Measurement
+Before optimization begins, measure these KPIs:
+1. AI mention rate — % of target queries where brand is mentioned across 6 CN engines
+2. Competitor ranking — domain's position relative to N competitors for target queries
+3. Recommendation rate — % of AI responses including positive recommendation
+4. Citation rate — % of AI responses that cite brand-owned or -placed content
+5. KPI achievement rate — % of target KPI values achieved after optimization
+
+### Projection & Targets
+For each KPI, define:
+- Current baseline (Week 0 measurement)
+- 30-day target (intermediate milestone)
+- 90-day target (full optimization goal)
+- 180-day target (sustained leadership)
+- Historical benchmarks:
+  - AI mention rate: 0% → 93.3% (12 weeks, B2B tech)
+  - Competitor ranking: 15th → 1st (16 weeks, Enterprise SaaS)
+  - Recommendation rate: 0% → Top 8 overall (8 weeks, Consumer electronics)
+  - Citation rate: 3% → 51.4% (10 weeks, E-commerce)
+
+### Severity Weighting
+Weight KPI gaps by:
+- Coverage gaps (engine not citing at all): Critical — fix within 2 weeks
+- Weak citation (mentioned but not preferred): High — fix within 4 weeks
+- Platform gap (no presence on key platform): Medium — fix within 8 weeks
+- Content quality (cited but inaccurate): Low — continuous improvement
+
+### Quick-Win Impact Scoring
+Each quick win item in the action plan should include estimated KPI impact:
+- 🌟🌟 — 15%+ projected increase in AI mention rate within 4 weeks
+- 🌟 — 5-15% projected increase within 8 weeks
+- 📋 — Foundational setup, no direct KPI impact but enables future wins
+
+---
+
 ## Output
 
 Output file: `GEO-AUDIT-REPORT-CN.md`

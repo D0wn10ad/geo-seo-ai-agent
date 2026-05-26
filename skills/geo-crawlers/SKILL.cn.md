@@ -24,7 +24,7 @@ Reference: `regions/profiles.yaml` for CN crawler profile.
 - **Operator:** Baidu
 - **User-Agent:** `BaiduSpider`
 - **Full User-Agent String:** `Mozilla/5.0 (compatible; Baiduspider/2.0; +http://www.baidu.com/search/spider.html)`
-- **Purpose:** Primary crawler for Baidu Search, Baidu AI Search, and Baidu's ERNIE model grounding. Powers all Baidu AI products.
+- **Purpose:** Primary crawler for Baidu Search, Baidu AI Search, and Baidu's Yuanbao (腾讯元宝) model grounding. Powers all Baidu AI products.
 - **Impact of Blocking:** Content will NOT appear in Baidu Search results or Baidu AI Search. This is the highest-impact CN AI crawler — blocking it removes content from China's dominant search and AI ecosystem.
 - **Recommendation:** **ALLOW** — Baidu maintains ~65%+ search market share in China. Critical for CN visibility.
 
@@ -36,6 +36,8 @@ Reference: `regions/profiles.yaml` for CN crawler profile.
 - **Purpose:** Powers Doubao (豆包, ByteDance's ChatGPT competitor), Douyin/TikTok search, and Toutiao content indexing. Key crawler for ByteDance's AI ecosystem.
 - **Impact of Blocking:** Content will not appear in Doubao AI responses or Douyin/TikTok search results.
 - **Recommendation:** **ALLOW** — Doubao has 100M+ users in China. Unlike the global context where this is Tier 3, in China it is a critical AI search crawler.
+
+> **Note:** Yuanbao (Tencent/腾讯元宝) may also leverage Bytespider for crawling — treat any Yuanbao access under the Bytespider umbrella.
 
 #### Sogou Spider
 
