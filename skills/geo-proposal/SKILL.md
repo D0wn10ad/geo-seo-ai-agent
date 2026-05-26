@@ -26,7 +26,7 @@ Generate a fully customized, client-ready GEO service proposal that:
 ## Command
 
 ```
-/geo proposal <domain-or-audit-file> [--tier basic|standard|premium] [--client-name "Name"] [--monthly EUR]
+/geo proposal <domain-or-audit-file> [--tier basic|standard|premium] [--client-name "Name"] [--monthly EUR] [--region global|cn|eu|nam]
 ```
 
 **Examples:**
@@ -34,6 +34,7 @@ Generate a fully customized, client-ready GEO service proposal that:
 /geo proposal electron-srl.com
 /geo proposal electron-srl.com --tier standard --client-name "Electron Srl"
 /geo proposal ~/.geo-prospects/audits/electron-srl.com-2026-03-12.md
+/geo proposal example.cn --region cn --tier basic
 ```
 
 ---
@@ -50,6 +51,20 @@ Generate a fully customized, client-ready GEO service proposal that:
    - Quick wins list
    - Business type
    - Estimated organic traffic impact
+   - Region (from `--region` flag, prospect record, or auto-detect via TLD/content)
+4. Set region from flag if provided, else detect (`.cn` → CN, else use prospect record or Global)
+
+### Step 1b: Set Regional Pricing
+
+Use the pricing table matching the prospect's region:
+
+| Region | Currency | Basic | Standard | Premium | Tax Note |
+|--------|----------|-------|----------|---------|----------|
+| Global/EU | EUR (€) | €2,500 | €5,000 | €9,500 | excl. VAT |
+| NAM/US | USD ($) | $2,750 | $5,500 | $10,450 | excl. sales tax |
+| UK | GBP (£) | £2,150 | £4,300 | £8,170 | excl. VAT |
+| CN | RMB (¥) | ¥19,500 | ¥39,000 | ¥74,100 | incl. tax (fapiao) |
+| APAC | USD ($) | $2,500 | $5,000 | $9,500 | excl. local tax |
 
 ### Step 2: Customize the Proposal
 
@@ -91,11 +106,11 @@ Generate the following document, filling all `[PLACEHOLDERS]` with real audit da
 ## Executive Summary
 
 [COMPANY NAME] operates in [INDUSTRY] and serves customers across [GEOGRAPHY].
-Our GEO audit of [DOMAIN], conducted on [DATE], reveals a GEO Readiness Score
-of **[SCORE]/100 ([TIER LABEL])**.
+Our GEO audit of [DOMAIN] ([REGION] region), conducted on [DATE], reveals a GEO
+Readiness Score of **[SCORE]/100 ([TIER LABEL])**.
 
 This means your website currently has [TIER DESCRIPTION — use score interpretation table].
-As AI-powered search (ChatGPT, Google AI Overviews, Perplexity) now influences
+As AI-powered search ([REGION_AI_PLATFORMS]) now influences
 **[X]% of online discovery** and is growing at 527% year-over-year, this gap
 represents a measurable risk to your pipeline.
 
@@ -104,7 +119,7 @@ The three most urgent issues are:
 2. **[CRITICAL FINDING 2]** — [Business impact in one sentence]
 3. **[CRITICAL FINDING 3]** — [Business impact in one sentence]
 
-We recommend the **[TIER NAME] package** at **€[PRICE]/month**, which addresses
+We recommend the **[TIER NAME] package** at **[CURRENCY][PRICE]/month**, which addresses
 all critical issues within 90 days and positions [COMPANY] as an AI-visible
 authority in [INDUSTRY].
 
@@ -170,7 +185,7 @@ We offer three engagement models based on the scope of optimization needed.
 
 ---
 
-### BASIC — €2,500/month
+### BASIC — [CURRENCY][BASIC_PRICE]/month
 *Best for: Sites with score 61-75 needing targeted improvements*
 
 **What's included:**
@@ -179,6 +194,7 @@ We offer three engagement models based on the scope of optimization needed.
 - Schema.org implementation (Organization + key page schemas)
 - AI crawler access optimization (robots.txt)
 - llms.txt creation and maintenance
+- [REGION_PLATFORM_OPTIMIZATION]
 - Email support (48-hour response)
 
 **Estimated GEO score improvement:** +10-20 points in 6 months
@@ -186,15 +202,15 @@ We offer three engagement models based on the scope of optimization needed.
 
 ---
 
-### STANDARD — €5,000/month ⭐ Recommended for [COMPANY]
+### STANDARD — [CURRENCY][STANDARD_PRICE]/month ⭐ Recommended for [COMPANY]
 *Best for: Sites with score 40-60 needing structured monthly work*
 
 **Everything in Basic, plus:**
 - Monthly full GEO audit + delta report
 - Monthly strategy call (60 minutes)
 - Content citability optimization (up to 10 pages/month)
-- Brand authority building (Wikipedia, Wikidata, LinkedIn optimization)
-- Platform-specific optimization (Google AIO, ChatGPT, Perplexity)
+- Brand authority building ([REGION_BRAND_PLATFORMS])
+- Platform-specific optimization ([REGION_AI_PLATFORMS])
 - E-E-A-T improvements (author pages, credentials, freshness signals)
 - Slack channel for fast communication (24-hour response)
 
@@ -203,15 +219,15 @@ We offer three engagement models based on the scope of optimization needed.
 
 ---
 
-### PREMIUM — €9,500/month
+### PREMIUM — [CURRENCY][PREMIUM_PRICE]/month
 *Best for: Sites with score 0-40 with critical issues, or competitive industries*
 
 **Everything in Standard, plus:**
 - Bi-weekly strategy calls
 - Technical SEO implementation support (Core Web Vitals, SSR, speed)
 - Full content strategy + production (4 optimized articles/month)
-- Active brand building (Reddit, YouTube, industry citations)
-- Competitor monitoring and response
+- Active brand building ([REGION_ADV_BRAND_PLATFORMS])
+- [REGION_COMPETITOR_MONITORING]
 - Dedicated account manager
 - Priority support (4-hour response)
 
@@ -283,11 +299,11 @@ Based on your current GEO score of [SCORE]/100 and industry benchmarks:
 
 | Package | Monthly | 6-Month | 12-Month |
 |---------|---------|---------|----------|
-| Basic | €2,500 | €15,000 | €30,000 |
-| Standard | €5,000 | €30,000 | €60,000 |
-| Premium | €9,500 | €57,000 | €114,000 |
+| Basic | [CURRENCY][BASIC_PRICE] | [CURRENCY][BASIC_6M] | [CURRENCY][BASIC_12M] |
+| Standard | [CURRENCY][STANDARD_PRICE] | [CURRENCY][STANDARD_6M] | [CURRENCY][STANDARD_12M] |
+| Premium | [CURRENCY][PREMIUM_PRICE] | [CURRENCY][PREMIUM_6M] | [CURRENCY][PREMIUM_12M] |
 
-*All prices exclude VAT. Payment terms: monthly, due within 15 days of invoice.*
+*[TAX_NOTE] Payment terms: monthly, due within 15 days of invoice.*
 
 ---
 
@@ -330,7 +346,8 @@ are based on current industry best practices for Generative Engine Optimization.
    ```
    ✓ Proposal generated: ~/.geo-prospects/proposals/electron-srl.com-proposal-2026-03-12.md
    ✓ Prospect status updated: Qualified → Proposal
-   ✓ Recommended package: STANDARD (€5,000/month) — Score 32/100
+   ✓ Region: Global
+   ✓ Recommended package: STANDARD ([CURRENCY][STANDARD_PRICE]/month) — Score 32/100
 
    Next: Share the proposal file or run `/geo report-pdf` for a visual version.
    ```

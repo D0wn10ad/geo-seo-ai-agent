@@ -27,13 +27,23 @@ This skill turns one core topic into a 12-week rolling editorial plan that syste
 
 ---
 
+### Region awareness
+
+This skill accepts an optional `--region <code>` parameter. When `region: cn`:
+- All generated questions and content briefs must be in Chinese (Simplified)
+- Search volume estimations should reference CN data sources: Baidu Index (百度指数), WeChat Index (微信指数), Zhihu hot list
+- Platform recommendations in the distribution hook should map to CN platforms (see `regions/cn/platforms.md`)
+- P-scoring should account for CN AI engine citation propensity (see `regions/cn/ai-engines.md`)
+- Output file: `~/.geo-prospects/matrices/<domain>-<topic>-<YYYY-MM-DD>-CN.md`
+
 ## How to Use This Skill
 
 1. Collect a single **core topic** (1–4 words, the central entity the site wants to be cited for).
 2. Collect the **target domain** so the coverage heat-map can be built from the live sitemap and prior `geo-brand-mentions` data.
 3. (Optional) Collect a list of 3–10 **seed entities** the topic should co-occur with (related products, methods, audiences).
-4. Run the 6-step workflow below.
-5. Emit `~/.geo-prospects/matrices/<domain>-<topic>-<YYYY-MM-DD>.md`.
+4. (Optional) Pass `--region <code>` for region-specific intent analysis.
+5. Run the 6-step workflow below.
+6. Emit `~/.geo-prospects/matrices/<domain>-<topic>-<YYYY-MM-DD>.md` (region-tagged if applicable).
 
 ---
 

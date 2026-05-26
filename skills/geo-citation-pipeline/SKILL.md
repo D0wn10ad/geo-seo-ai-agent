@@ -27,12 +27,28 @@ This skill is an **orchestrator**, not a re-implementer. Stages 1, 4, and parts 
 
 ---
 
+### Region awareness
+
+This skill accepts an optional `--region <code>` parameter. When `region: cn`:
+
+| Stage | CN Adjustment |
+|---|---|
+| Stage 1 (Crawlers) | Check BaiduSpider, Sogou, 360Spider in addition to Western crawlers. Use CN crawler list from `regions/profiles.yaml` |
+| Stage 2 (Navigation) | Unchanged — internal link wiring is language-agnostic |
+| Stage 3 (Authority) | Check backlinks from CN-authority domains (.cn, .com.cn) and Baidu-relevant sources |
+| Stage 4 (On-page) | Use CN citability rubric from `regions/cn/ai-engines.md` and CN schema from `regions/cn/schema.md` |
+| Stage 5 (Indexing) | Add Baidu Zhanzhang (百度站长平台) URL submission alongside IndexNow. Baidu's inclusion tool is the CN equivalent of Google URL Inspection |
+| Stage 6 (Verify) | Verify against CN AI engines (Baidu AI, Doubao, ERNIE, Qwen, Kimi, DeepSeek) instead of Western engines |
+
+Output file: `~/.geo-prospects/pipelines/<domain>-<slug>-<YYYY-MM-DD>-CN.md`
+
 ## How to Use This Skill
 
 1. Take a URL as input (typically a P0 piece scheduled by `geo-intent-matrix`).
-2. Run the 7-step workflow below.
-3. Roll up the 5 stage gates into a single `PIPELINE_READY / PIPELINE_DEGRADED / BLOCKED` verdict.
-4. Emit `~/.geo-prospects/pipelines/<domain>-<slug>-<YYYY-MM-DD>.md` with a remediation plan.
+2. (Optional) Pass `--region <code>` for region-specific pipeline checks.
+3. Run the 7-step workflow below.
+4. Roll up the 5 stage gates into a single `PIPELINE_READY / PIPELINE_DEGRADED / BLOCKED` verdict.
+5. Emit `~/.geo-prospects/pipelines/<domain>-<slug>-<YYYY-MM-DD>.md` (region-tagged if applicable) with a remediation plan.
 
 ---
 

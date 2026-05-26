@@ -23,8 +23,8 @@ score is proof of value. This skill generates the "here's your progress" report.
 ## Commands
 
 ```
-/geo compare <domain>
-/geo compare <baseline-file> <current-file>
+/geo compare <domain> [--region global|cn|eu|nam]
+/geo compare <baseline-file> <current-file> [--region global|cn|eu|nam]
 /geo compare electron-srl.com --month march-2026
 ```
 
@@ -66,7 +66,7 @@ For each metric:
 
 ### Step 4: Generate Monthly Report
 
-Output to `~/.geo-prospects/reports/<domain>-monthly-<date>.md`
+Output to `~/.geo-prospects/reports/<domain>-monthly-<region>-<date>.md`
 
 ---
 
@@ -78,9 +78,10 @@ Generate the following document:
 # GEO Monthly Progress Report
 ## [COMPANY NAME] — [MONTH YEAR]
 
+**Region:** [REGION]
 **Reporting period:** [BASELINE DATE] → [CURRENT DATE]
 **Prepared by:** [AGENCY NAME]
-**Report reference:** GEO-MONTHLY-[DOMAIN]-[YYMMDD]
+**Report reference:** GEO-MONTHLY-[DOMAIN]-[REGION]-[YYMMDD]
 
 ---
 
@@ -292,10 +293,10 @@ fresh audit that weren't visible before. Frame declines as "newly discovered opp
 
 ## Output
 
-1. Save report to `~/.geo-prospects/reports/<domain>-monthly-<YYYY-MM>.md`
+1. Save report to `~/.geo-prospects/reports/<domain>-monthly-<region>-<YYYY-MM>.md`
 2. Print confirmation with key stats:
    ```
-   ✓ Monthly report generated: ~/.geo-prospects/reports/electron-srl.com-monthly-2026-03.md
+   ✓ Monthly report generated: ~/.geo-prospects/reports/electron-srl.com-monthly-Global-2026-03.md
 
    SUMMARY:
    GEO Score: 32 → 44 (+12 points) ▲

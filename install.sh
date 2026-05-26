@@ -16,6 +16,14 @@ VENV_DIR="${INSTALL_DIR}/.venv"
 VENV_PY="${VENV_DIR}/bin/python3"
 TEMP_DIR=$(mktemp -d)
 
+# Tilde-form paths for runtime markdown rewriting.
+# The tilde is intentionally kept literal — Claude Code's Bash
+# expands it when running the command later.
+# shellcheck disable=SC2088
+VENV_MD_PY='~/.claude/skills/geo/.venv/bin/python3'
+# shellcheck disable=SC2088
+SCRIPTS_MD_ROOT='~/.claude/skills/geo/scripts'
+
 # Detect if running via curl pipe (no interactive input available)
 INTERACTIVE=true
 if [ ! -t 0 ]; then
@@ -143,16 +151,7 @@ main() {
         SOURCE_DIR="${TEMP_DIR}/repo"
     fi
 
-    # ---- Deploy files via update_toolkit.py ----
-    print_info "Deploying skills, agents, and platform adapter..."
-    "$PYTHON_CMD" "$SOURCE_DIR/scripts/update_toolkit.py" \
-        --upstream "$REPO_URL" \
-        --target "$SOURCE_DIR" \
-        --all-platforms \
-        --branch "$BRANCH" 2>&1 | sed 's/^/  /'
-    print_success "File deployment complete"
-
-    # ---- Create Virtual Environment ----
+    # ---- Create Virtual Environment (before deployment) ----
     print_info "Creating isolated Python environment → ${VENV_DIR}"
     rm -rf "$VENV_DIR"
 
@@ -170,12 +169,10 @@ main() {
             VENV_OK=true
         elif $PYTHON_CMD -m venv --without-pip "$VENV_DIR" 2>/dev/null; then
             print_info "Venv created without pip — bootstrapping..."
-            # Bootstrap pip into the venv (ensurepip is available at python3 system level)
             if "$VENV_PY" -m ensurepip --upgrade 2>/dev/null || \
                "$PYTHON_CMD" -m ensurepip --upgrade --root "$VENV_DIR" 2>/dev/null; then
                 VENV_OK=true
             else
-                # Last resort: download get-pip.py
                 print_info "Downloading get-pip.py to bootstrap pip..."
                 if command -v curl &>/dev/null; then
                     curl -fsSLo "$TEMP_DIR/get-pip.py" https://bootstrap.pypa.io/get-pip.py
@@ -185,6 +182,22 @@ main() {
                 if [ -f "$TEMP_DIR/get-pip.py" ]; then
                     "$VENV_PY" "$TEMP_DIR/get-pip.py" --quiet 2>/dev/null && VENV_OK=true
                 fi
+            fi
+        fi
+    fi
+
+    if [ "$VENV_OK" = true ]; then
+        # Verify the actual python binary exists in the venv.
+        # Some systems create bin/python instead of bin/python3.
+        if [ ! -x "$VENV_PY" ]; then
+            VENV_DIR_BIN="$(dirname "$VENV_PY")"
+            if [ -x "${VENV_DIR_BIN}/python" ]; then
+                VENV_PY="${VENV_DIR_BIN}/python"
+                # Also update the tilde-form path used for markdown rewriting
+                VENV_MD_PY='~/.claude/skills/geo/.venv/bin/python'
+            else
+                print_warning "Virtual environment created but python binary not found."
+                VENV_OK=false
             fi
         fi
     fi
@@ -199,31 +212,53 @@ main() {
         USER_INSTALL=false
     fi
 
+    # ---- Deploy files via update_toolkit.py ----
+    print_info "Deploying skills, agents, and platform adapter..."
+    DEPLOY_EXTRA=""
+    if [ "$USER_INSTALL" = false ]; then
+        DEPLOY_EXTRA="--runtime-python ${VENV_MD_PY} --runtime-scripts-root ${SCRIPTS_MD_ROOT}"
+    else
+        DEPLOY_EXTRA="--runtime-scripts-root ${SCRIPTS_MD_ROOT}"
+    fi
+    # shellcheck disable=SC2086
+    "$PYTHON_CMD" "$SOURCE_DIR/scripts/update_toolkit.py" \
+        --upstream "$REPO_URL" \
+        --target "$SOURCE_DIR" \
+        --all-platforms \
+        --branch "$BRANCH" \
+        $DEPLOY_EXTRA 2>&1 | sed 's/^/  /'
+    print_success "File deployment complete"
+
     # ---- Install Python Dependencies ----
+    DEPS_OK=true
     if [ -f "$SOURCE_DIR/requirements.txt" ]; then
         if [ "$USER_INSTALL" = true ]; then
-            print_info "Installing Python dependencies (system --user)..."
-            $PYTHON_CMD -m pip install --user -r "$SOURCE_DIR/requirements.txt" --quiet || {
-                print_warning "Dependency install had issues — continuing anyway."
-            }
-            print_success "Dependencies installed (system --user)"
+            print_info "Python dependency mode: system --user"
+            if ! $PYTHON_CMD -m pip install --user -r "$SOURCE_DIR/requirements.txt"; then
+                print_error "Python dependency installation failed."
+                print_error "See pip output above for the exact error."
+                exit 1
+            fi
         elif [ "$USE_UV" = true ]; then
-            print_info "Installing Python dependencies into venv via uv..."
-            uv pip install --python "$VENV_PY" -r "$SOURCE_DIR/requirements.txt" --quiet || {
+            print_info "Python dependency mode: isolated venv via uv"
+            if ! uv pip install --python "$VENV_PY" -r "$SOURCE_DIR/requirements.txt"; then
                 print_warning "uv pip install failed — falling back to pip."
-                "$VENV_PY" -m pip install -r "$SOURCE_DIR/requirements.txt" --quiet || {
-                    print_warning "Dependency install had issues — continuing anyway."
-                }
-            }
-            print_success "Dependencies installed (isolated venv)"
+                if ! "$VENV_PY" -m pip install -r "$SOURCE_DIR/requirements.txt"; then
+                    print_error "Python dependency installation failed."
+                    print_error "See pip output above for the exact error."
+                    exit 1
+                fi
+            fi
         else
-            print_info "Installing Python dependencies into venv..."
-            "$VENV_PY" -m pip install --upgrade pip --quiet 2>/dev/null || true
-            "$VENV_PY" -m pip install -r "$SOURCE_DIR/requirements.txt" --quiet || {
-                print_warning "Dependency install had issues — continuing anyway."
-            }
-            print_success "Dependencies installed (isolated venv)"
+            print_info "Python dependency mode: isolated venv via pip"
+            "$VENV_PY" -m pip install --upgrade pip || true
+            if ! "$VENV_PY" -m pip install -r "$SOURCE_DIR/requirements.txt"; then
+                print_error "Python dependency installation failed."
+                print_error "See pip output above for the exact error."
+                exit 1
+            fi
         fi
+        print_success "Python dependencies installed"
     else
         print_warning "requirements.txt missing — skipping dependency install."
     fi
@@ -272,6 +307,7 @@ main() {
     [ "$agent_count" -gt 0 ]               && print_success "Claude agents"  || print_warning "No Claude agents"
     test -d "$INSTALL_DIR/scripts"         && print_success "Scripts"        || print_error "Scripts missing"
     test -x "$VENV_PY"                     && print_success "Venv"           || print_error "Venv missing"
+    test -d "$INSTALL_DIR/regions"         && print_success "Region profiles"|| print_info "No region profiles (feature branch only)"
 
     # ---- Summary ----
     echo ""
@@ -286,6 +322,10 @@ main() {
     echo "  Claude Code:  /geo audit https://example.com"
     echo "  OpenCode:     /geo-audit https://example.com"
     echo ""
+    echo -e "${BLUE}Region-Specific Audit:${NC}"
+    echo "  Claude Code:  /geo audit https://example.com --region cn"
+    echo "  OpenCode:     /geo-audit https://example.com --region cn"
+    echo ""
     echo -e "${BLUE}Available Commands:${NC}"
     echo "    /geo audit <url>      Full GEO + SEO audit"
     echo "    /geo quick <url>      60-second visibility snapshot"
@@ -299,6 +339,9 @@ main() {
     echo "    /geo content <url>    Content quality & E-E-A-T"
     echo "    /geo report <url>     Client-ready GEO report"
     echo "    /geo report-pdf       Generate PDF report from audit data"
+    echo ""
+    echo -e "${BLUE}Tip:${NC} Add '--region <code>' to any audit command for"
+    echo "  region-specific analysis (e.g., --region cn for China market)."
     echo ""
 }
 

@@ -49,6 +49,7 @@ Each prospect is stored as a JSON record:
   "contact_name": "",
   "industry": "Educational Equipment Manufacturing",
   "country": "Italy",
+  "region": "EU",
   "status": "qualified",
   "geo_score": 32,
   "audit_date": "2026-03-12",
@@ -77,11 +78,18 @@ Each prospect is stored as a JSON record:
 1. Check if `~/.geo-prospects/prospects.json` exists, create if not (empty array)
 2. Auto-detect company name from domain (e.g., `electron-srl.com` → `Electron Srl`)
 3. Assign next sequential ID: `PRO-001`, `PRO-002`, etc.
-4. Ask user for:
+4. Auto-detect region from domain:
+   - Run a quick URL check: fetch page, check `<html lang>` and CJK content
+   - If `.cn`, `.com.cn`, `.hk`, `.tw` → region = `CN`
+   - If Chinese/CJK content detected → region = `CN`
+   - If multilingual (multiple `<html lang>` variants or URL hreflang patterns) → ask: "Multiple languages detected. Region: 1) global 2) CN 3) EU 4) NAM?"
+   - Otherwise → region = `global`
+5. Ask user for:
    - Contact name (optional)
    - Contact email
    - Monthly contract value estimate (optional)
-5. Set status to `lead`
+   - Confirm or override region if auto-detected
+6. Set status to `lead`
 6. Save to JSON file
 7. Suggest next step: "Run `/geo prospect audit electron-srl.com` to score this prospect"
 
@@ -93,15 +101,16 @@ Read `~/.geo-prospects/prospects.json` and render a summary table:
 GEO Prospect Pipeline — March 2026
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-ID       Domain                  Company           Status      Score  Value
-───────  ──────────────────────  ────────────────  ──────────  ─────  ──────
-PRO-001  electron-srl.com        Electron Srl      Qualified   32/100  €4.5K
-PRO-002  acme.com                ACME Corp         Lead        —       —
-PRO-003  bigshop.it              BigShop           Won         41/100  €6.0K
+ID       Domain                  Company           Region   Status      Score  Value
+───────  ──────────────────────  ────────────────  ───────  ──────────  ─────  ──────
+PRO-001  electron-srl.com        Electron Srl      EU       Qualified   32/100  €4.5K
+PRO-002  acme.com                ACME Corp         NAM      Lead        —       —
+PRO-003  bigshop.it              BigShop           EU       Won         41/100  €6.0K
 
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 Pipeline: 1 lead | 1 qualified | 0 proposals | 1 won | 0 lost
 Committed MRR: €6,000 | Pipeline Value: €4,500
+Regions: EU (2) | NAM (1)
 ```
 
 ### `/geo prospect audit <id-or-domain>`
@@ -148,6 +157,11 @@ Lost             1      —                Budget freeze
 COMMITTED MRR:        €18,500
 PIPELINE (qualified+): €10,500
 TOTAL POTENTIAL:      €29,000/mo → €348,000/yr
+
+BY REGION:
+  EU:        3 clients | €12,500/mo
+  NAM:       1 client |  €4,000/mo
+  APAC:      1 client |  €2,000/mo
 
 Next actions:
 → PRO-003 (acme.com): Send proposal — score 38/100 (strong case)

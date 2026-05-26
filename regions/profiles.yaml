@@ -1,0 +1,128 @@
+# Region profiles for GEO-SEO AI Agent
+# Each region defines scoring weights, AI engines, brand platforms,
+# crawlers, schema defaults, and technical checks.
+#
+# To add a new region: copy a `global` section, replace values,
+# add TLD/language patterns for auto-detection, then optionally
+# create SKILL.<code>.md overrides for individual commands.
+
+regions:
+  global:
+    label: "Global (Western Default)"
+    code: global
+    description: >
+      The default profile. Covers US, EU, and English-language markets.
+      Uses Western AI engines, brand platforms, and schema conventions.
+    tlds: []
+    languages: [en]
+    scoring_weights:
+      citability: 25
+      brand: 20
+      eeat: 20
+      technical: 15
+      schema: 10
+      platform: 10
+    ai_engines:
+      - google_aio
+      - chatgpt
+      - perplexity
+      - gemini
+      - copilot
+    brand_platforms:
+      - id: wikipedia
+        name: Wikipedia
+        weight: 30
+      - id: reddit
+        name: Reddit
+        weight: 20
+      - id: youtube
+        name: YouTube
+        weight: 15
+      - id: linkedin
+        name: LinkedIn
+        weight: 10
+      - id: industry_sources
+        name: Industry/Niche Sources
+        weight: 25
+    crawlers:
+      - GPTBot
+      - OAI-SearchBot
+      - ChatGPT-User
+      - ClaudeBot
+      - PerplexityBot
+      - Google-Extended
+      - GoogleBot
+      - CCBot
+      - Applebot-Extended
+      - FacebookBot
+      - Cohere-ai
+    schema_defaults:
+      address_country: US
+      same_as_platforms: [wikipedia, linkedin, crunchbase, bbb]
+    technical_checks:
+      - ssr_js_dependency
+      - core_web_vitals
+      - security_headers
+      - mobile_optimization
+      - sitemap_robots
+      - hreflang
+      - canonical_urls
+
+  cn:
+    label: "China"
+    code: cn
+    description: >
+      China mainland market. Uses Chinese AI engines (Baidu, Doubao, ERNIE,
+      Qwen, Kimi, DeepSeek), Chinese brand platforms (Baidu Baike, Zhihu,
+      WeChat, Xiaohongshu, Bilibili, Douyin), and China-specific technical
+      checks (ICP filing, China CDN, Baidu Webmaster Tools).
+    tlds: [.cn, .com.cn]
+    languages: [zh, zh-CN, zh-Hans, zh-Hant]
+    scoring_weights:
+      citability: 20
+      brand: 30
+      eeat: 15
+      technical: 10
+      schema: 15
+      platform: 10
+    ai_engines:
+      - baidu_ai
+      - doubao
+      - ernie
+      - qwen
+      - kimi
+      - deepseek
+    brand_platforms:
+      - id: baidu_baike
+        name: Baidu Baike (百度百科)
+        weight: 25
+      - id: zhihu
+        name: Zhihu (知乎)
+        weight: 20
+      - id: wechat_oa
+        name: WeChat OA (公众号)
+        weight: 20
+      - id: xiaohongshu
+        name: Xiaohongshu (小红书)
+        weight: 15
+      - id: bilibili
+        name: Bilibili (B站)
+        weight: 10
+      - id: douyin
+        name: Douyin (抖音)
+        weight: 10
+    crawlers:
+      - BaiduSpider
+      - SogouSpider
+      - 360Spider
+      - Bytespider
+    schema_defaults:
+      address_country: CN
+      same_as_platforms: [baidu_baike, wechat, weibo, zhihu]
+    technical_checks:
+      - icp_filing
+      - china_cdn
+      - baidu_webmaster_tools
+      - mobile_first
+      - ssr_js_dependency
+      - sitemap_robots
