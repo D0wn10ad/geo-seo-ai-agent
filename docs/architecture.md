@@ -9,6 +9,10 @@ geo-seo-claude/
 ├── platform/                     # Platform adapter layer
 │   ├── SKILL.md                  # Platform detection + abstract tool mapping
 │   └── TOOL-MAP.md               # Abstract-to-real tool name reference table
+├── regions/                      # Region profiles (feature branch)
+│   ├── profiles.yaml             # Scoring weights, engines, platforms per region
+│   ├── README.md                 # Guide for adding new regions
+│   └── cn/                       # China market reference data
 ├── skills/                       # 20 specialized sub-skills
 │   ├── geo-audit/                # Full audit orchestration & scoring
 │   ├── geo-citability/           # AI citation readiness scoring
@@ -85,6 +89,32 @@ The `platform/` directory provides runtime platform detection and abstract tool 
 | `` `search_content` `` | `Grep` | `grep` |
 
 The adapter is loaded first (via `AGENTS.md`), ensuring the tool mapping is available from session start.
+
+### Generate, Don't Duplicate
+
+Some platform-specific files in `.opencode/` are **generated at install time** by `scripts/update_toolkit.py`, never hand-edited:
+
+| Derived File | Source of Truth | Generator |
+|---|---|---|
+| `.opencode/agents/geo-*.md` (5 files) | `agents/geo-*.md` — Claude Code agents are the single source | `generate_opencode_agents()` in `update_toolkit.py` |
+| `.opencode/commands/geo-*.md` (21 files) | `_GEO_COMMANDS` dict in `update_toolkit.py` | `generate_opencode_commands()` in `update_toolkit.py` |
+| `~/.claude/skills/geo/regions/` | `regions/` in repo | `copy_tree()` in `update_toolkit.py` |
+
+**Why:** Prevents divergence. Previously, `.opencode/agents/*` and `agents/*` were manually maintained copies that drifted apart — the OpenCode copies lacked Region Awareness sections introduced in the `feature/region-aware-geo` branch. By generating at install time, OpenCode agents always reflect the same body content as Claude Code agents, with only the frontmatter differing.
+
+**Rule:** If you need to change an OpenCode agent body, edit `agents/geo-<name>.md`. If you need to change an OpenCode command wrapper, edit the `_GEO_COMMANDS` dict in `scripts/update_toolkit.py`. Never edit `.opencode/` files directly.
+
+**Other derived relationships:**
+
+| Relationship | How Linked |
+|---|---|
+| `SKILL.cn.md` (skill overrides) ↔ `regions/profiles.yaml` | Files named `SKILL.<code>.md` alongside a `SKILL.md` are loaded when targeting that region; their `_GEO_COMMANDS`-generated command wrappers append `--region <code>` |
+| `docs/*.md` ↔ `skills/*/SKILL.md` | Documentation files describe usage patterns that must match orchestrator behavior; verify by diffing docs against the orchestrator's `/geo <command>` table |
+| `regions/cn/ai-engines.md` → `agents/geo-platform-analysis.md` | The CN engine rubrics are referenced by the region-awareness logic in the agent file; update both when adding a new engine |
+| `regions/cn/schema.md` → `agents/geo-schema.md` | CN-specific schema defaults and Baidu extensions documented in region data, applied via conditional logic in the agent |
+| `regions/cn/platforms.md` → `agents/geo-ai-visibility.md` | CN brand platforms listed in region data, referenced by the agent's region-awareness brand scoring section |
+
+**Footnote:** `(†)` — These directories exist in the git repo only as build-time source snapshots for backward compatibility. `update_toolkit.py` generates the actual deployed files from the canonical sources listed above. The stale committed copies have been removed from git tracking.
 
 ### Data Storage
 

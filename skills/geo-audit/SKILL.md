@@ -108,7 +108,7 @@ Delegate analysis to 5 specialized subagents. Each subagent operates on the coll
 - If REGION is `cn`, use `regions/cn/platforms.md` for platform list
 
 **Subagent 2: Platform Optimization (geo-platform-analysis)**
-- Assess readiness for region-specific AI engines (global: ChatGPT, Perplexity, Gemini, Copilot; CN: Baidu AI, Doubao, ERNIE, Qwen, Kimi, DeepSeek)
+- Assess readiness for region-specific AI engines (global: ChatGPT, Perplexity, Gemini, Copilot; CN: Baidu AI, Doubao, Yuanbao, Qwen, Kimi, DeepSeek)
 - Check platform-specific ranking factors and optimization opportunities
 - If REGION is `cn`, use `regions/cn/ai-engines.md` for engine rubrics
 

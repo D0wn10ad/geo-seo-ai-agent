@@ -44,7 +44,7 @@ When generating proposals for CN clients, the service tiers include these CN-spe
 - 月度策略会议（60分钟）
 - 内容可引用性优化（每月最多10页）
 - 品牌权威建设（百度百科词条管理、知乎机构号运营）
-- 平台专项优化（百度AI搜索、豆包、文心一言）
+- 平台专项优化（百度AI搜索、豆包、腾讯元宝）
 - E-E-A-T改进（作者页面、资质信息、时效性信号）
 - 微信企业微信群支持（24小时响应）
 
@@ -57,6 +57,12 @@ When generating proposals for CN clients, the service tiers include these CN-spe
 - 竞争对手AI可见性监控
 - 专属客户经理
 - 优先支持（4小时响应）
+
+### KPI Guarantees (when applicable):
+- Basic: Measurement + baseline report only (no guarantee)
+- Standard: Target 30%+ AI mention rate improvement within 12 weeks
+- Premium: Target 60%+ AI mention rate improvement + top-3 competitor position within 16 weeks
+Guarantees supported by 源易科技 published case study data (KPI achievement rate 140%-450%).
 
 ---
 
@@ -85,7 +91,7 @@ Generate the following document, filling all `[占位符]` with real audit data:
 结果显示其GEO就绪度评分为 **[评分]/100（[等级标签]）**。
 
 这意味着贵网站在[等级描述 — 使用评分解读表]。
-随着AI驱动的搜索（百度AI搜索、豆包、文心一言、通义千问、Kimi、DeepSeek）
+随着AI驱动的搜索（百度AI搜索、豆包、腾讯元宝、通义千问、Kimi、DeepSeek）
 现已影响约 **[X]%** 的在线发现渠道，且年增长率达527%，
 这一差距对贵公司的销售管道构成了可量化的风险。
 
@@ -183,7 +189,7 @@ Generate the following document, filling all `[占位符]` with real audit data:
 - 月度策略会议（60分钟）
 - 内容可引用性优化（每月最多10页）
 - 品牌权威建设：百度百科词条管理、知乎机构号运营
-- 平台专项优化：百度AI搜索、豆包、文心一言、通义千问
+- 平台专项优化：百度AI搜索、豆包、腾讯元宝、通义千问
 - E-E-A-T改进（作者页面、资质信息、时效性信号）
 - 微信企业微信群支持（24小时响应）
 
@@ -217,7 +223,7 @@ Generate the following document, filling all `[占位符]` with real audit data:
 
 ### 案例2：知乎机构号运营 — 消费品牌
 某消费品品牌通过6个月的知乎机构号运营（每月8-10条专业问答），
-在豆包和文心一言中的品牌提及率提升210%，预计带来每月¥80,000+的AI推荐流量价值。
+在豆包和腾讯元宝中的品牌提及率提升210%，预计带来每月¥80,000+的AI推荐流量价值。
 
 ### 案例3：小红书品牌内容 — 美妆品牌
 某美妆品牌通过小红书品牌号内容矩阵（每月15-20篇笔记），

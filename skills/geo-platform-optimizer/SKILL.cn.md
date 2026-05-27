@@ -1,6 +1,6 @@
 ---
 name: geo-platform-optimizer-cn
-description: CN-specific platform optimization overrides — Baidu AI, Doubao, ERNIE, Qwen, Kimi, DeepSeek
+description: CN-specific platform optimization overrides — Baidu AI, Doubao, Yuanbao, Qwen, Kimi, DeepSeek
 version: 1.0.0
 region: cn
 parent: geo-platform-optimizer
@@ -10,8 +10,9 @@ parent: geo-platform-optimizer
 
 **Load this file alongside `SKILL.md` when REGION is `cn`.**
 Replace the Western platform rubrics (Google AIO, ChatGPT, Perplexity, Gemini, Copilot)
-with the CN engine rubrics below. Scoring structure (content signals, entity recognition,
-technical access) mirrors the base skill but uses CN-specific criteria.
+with the CN engine rubrics below. Scoring uses CN-specific 3-bucket rubrics (entity signals, content signals,
+technical access) per platform — different methodology from the base skill's 10-item checklist,
+optimized for CN engine behavior patterns.
 
 Reference: `regions/cn/ai-engines.md` for detailed per-engine rubrics.
 
@@ -22,7 +23,7 @@ Reference: `regions/cn/ai-engines.md` for detailed per-engine rubrics.
 Replaces: Google AI Overviews
 
 ### How Baidu AI Selects Sources
-- Baidu's ERNIE-powered AI search pulls from its own index (80%+ CN market share)
+- Baidu's AI search (Yuanbao-powered) pulls from its own index (80%+ CN market share)
 - Strongly favors Baidu Baike entries, Baidu Zhidao (Q&A), and Baidu-owned properties
 - Prefers Chinese-language content with proper Baidu SEO (百度优化)
 - Baidu's AI summaries prioritize authoritative sources with ICP licenses
@@ -39,6 +40,7 @@ Replaces: Google AI Overviews
 - Baidu Baike + entity signals: 35 points
 - Content signals (Q&A, structure, Chinese language): 35 points
 - Baidu technical access (robots.txt, sitemap, site speed): 30 points
+Referral info: Most-cited platforms for this engine: Baidu Baike, Zhihu, 36Kr, 百家号
 
 ---
 
@@ -62,29 +64,32 @@ Replaces: ChatGPT Web Search
 - Douyin/Toutiao ecosystem presence: 35 points
 - Content adaptability (visual + text): 35 points
 - Technical access: 30 points
+Referral info: Most-cited platforms for this engine: Xiaohongshu, WeChat, Zhihu, Bilibili
 
 ---
 
-## Platform 3: ERNIE Bot (文心一言) — Baidu
+## Platform 3: Yuanbao (腾讯元宝) — Tencent
 
 Replaces: Google Gemini
 
-### How ERNIE Sources Content
-- ERNIE is Baidu's foundational LLM powering Wenxin Yiyan
-- Sources from Baidu's index, Baidu Baike, and Baidu-owned properties
-- Strongly integrates with Baidu's Knowledge Graph
-- Preferences align closely with Baidu AI Search (Platform 1)
+### How Yuanbao Sources Content
+- Yuanbao (元宝) is Tencent's AI assistant, integrated with WeChat (微信) and QQ ecosystems
+- Strongly indexes content from WeChat Official Accounts, QQ News, and Tencent News
+- Leverages Tencent's knowledge graph built from social and media ecosystem data
+- Prefers content with demonstrated social proof (shares, likes, reading counts)
 
 ### Optimization Checklist
-1. Same as Baidu AI Search — ERNIE and Baidu AI share the same underlying index
-2. **Knowledge Graph entity**: Ensure brand is in Baidu's Knowledge Graph with complete structured data
-3. **Baidu Baike**: Same entry serves both Baidu AI Search and ERNIE — ensure it is comprehensive
-4. **Structured data**: Baidu-compatible schema markup (see `regions/cn/schema.md`)
+1. **WeChat Official Account**: Maintain branded WeChat Official Account (微信公众号) with regular content
+2. **QQ News/腾讯新闻**: Publish/promote content on Tencent News platforms
+3. **Social engagement signals**: High-quality content that generates WeChat shares and reads
+4. **Tencent ecosystem**: Leverage QQ Channels, Tencent Video, and Weixin Read
+5. **Structured data**: Schema markup compatible with Tencent's content parsing
 
 ### Scoring Rubric (0-100)
-- Same as Baidu AI Search, with extra weight on Knowledge Graph: 40 points
-- Content alignment: 30 points
-- Technical: 30 points
+- Tencent ecosystem presence (WeChat/QQ): 40 points
+- Content engagement signals: 30 points
+- Technical access: 30 points
+Referral info: Most-cited platforms for this engine: WeChat, QQ News, Zhihu, 搜狐
 
 ---
 
@@ -108,6 +113,7 @@ Replaces: Perplexity AI
 - Alibaba ecosystem presence: 35 points
 - Content quality (detail, structure): 35 points
 - Community signals (reviews, ratings): 30 points
+Referral info: Most-cited platforms for this engine: CSDN, Juejin, Zhihu, 36Kr
 
 ---
 
@@ -132,6 +138,7 @@ Replaces: Bing Copilot
 - Content depth and comprehensiveness: 40 points
 - Technical/professional signals: 30 points
 - Structure and accessibility: 30 points
+Referral info: Most-cited platforms for this engine: 微信公众号, Zhihu, 小红书, 豆瓣
 
 ---
 
@@ -155,6 +162,17 @@ Additional CN engine not replacing a specific Western one.
 - Developer community presence: 30 points
 - Technical content quality: 40 points
 - Open/attribution signals: 30 points
+Referral info: Most-cited platforms for this engine: GitHub, CSDN, Zhihu, technical docs
+
+---
+
+## Scene Knowledge Base Strategy (场景知识库)
+
+When REGION is cn, extend platform analysis with scene-KB binding:
+- Identify the user's scene/task type (购物对比/故障排查/学术研究/政策查询/行业分析)
+- Map each scene to the most-cited platforms for that intent
+- Recommend KB-format content (问答对/对比表格/操作步骤/数据报告)
+- See `regions/cn/platforms.md` scene-citation affinity tables
 
 ---
 
@@ -163,5 +181,5 @@ Additional CN engine not replacing a specific Western one.
 After scoring all 6 CN platforms, identify:
 - **Strongest CN platform**: Highest score with explanation
 - **Weakest CN platform**: Lowest score with gap analysis
-- **CN platform synergies**: Actions that improve multiple CN platforms (e.g., Baidu Baike helps both Baidu AI Search and ERNIE)
+- **CN platform synergies**: Actions that improve multiple CN platforms (e.g., Baidu Baike helps Baidu AI Search and Yuanbao)
 - **Output file**: `GEO-PLATFORM-OPTIMIZATION-CN.md`

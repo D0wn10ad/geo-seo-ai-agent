@@ -327,7 +327,7 @@ If competitor URLs were analyzed alongside the primary domain:
 This GEO audit was conducted using the following methodology:
 - **Pages analyzed**: [List of specific URLs audited]
 - **Region**: [Region name — Global, CN, EU, NAM, APAC]
-- **Platforms assessed**: Google AI Overviews, ChatGPT, Perplexity AI, Google Gemini, Bing Copilot (use region-specific platforms if CN: Baidu AI, Doubao, ERNIE, Qwen, Kimi, DeepSeek)
+- **Platforms assessed**: Google AI Overviews, ChatGPT, Perplexity AI, Google Gemini, Bing Copilot (use region-specific platforms if CN: Baidu AI, Doubao, Yuanbao, Qwen, Kimi, DeepSeek)
 - **Technical checks**: HTTP headers, robots.txt, HTML source analysis, structured data validation
 - **Content assessment**: E-E-A-T framework (Experience, Expertise, Authoritativeness, Trustworthiness) per Google's December 2025 Quality Rater Guidelines
 - **Schema validation**: JSON-LD parsing and Schema.org specification compliance

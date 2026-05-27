@@ -1,6 +1,7 @@
 ---
 name: geo-crawlers
 description: AI crawler access analysis. Checks robots.txt, meta tags, and HTTP headers to determine which AI crawlers can access the site. Provides a complete access map and recommendations for maximizing AI visibility while maintaining appropriate control.
+version: 1.0.0
 ---
 
 # AI Crawler Access Analysis Skill

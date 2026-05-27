@@ -72,6 +72,14 @@ import generate_pdf_report as base
 # throughout. After registration, map 'Helvetica' -> 'NotoSansSC' and
 # 'Helvetica-Bold' -> 'NotoSansSC-Bold'. This can be done post-import
 # by monkey-patching the paragraph styles and table styles.
+
+# Example: patch the base script's paragraph styles
+for name in dir(base):
+    obj = getattr(base, name)
+    if isinstance(obj, ParagraphStyle):
+        obj.fontName = 'NotoSansSC'
+        if 'Bold' in name:
+            obj.fontName = 'NotoSansSC-Bold'
 ```
 
 **Option C (Recommended)**: Run the script with an environment variable or CLI flag to tell it to use CJK fonts. If the base script does not support this, prefer Option A for simplicity.
@@ -112,13 +120,12 @@ Replace Western engine names in all charts, tables, and score gauges:
 
 | Western (base) | CN Replacement |
 |---|---|
-| Google AI Overviews | 百度 AI 搜索 (Baidu AI Search) |
-| ChatGPT | 豆包 (Doubao) |
-| Perplexity | 通义千问 (Tongyi Qianwen) |
-| Gemini | 文心一言 (ERNIE Bot) |
-| Bing Copilot | Kimi 月之暗面 (Moonshot AI) |
-
-Add an additional bar for **DeepSeek (深度求索)** if data is available.
+| Google AI Overviews | Baidu AI Search |
+| ChatGPT | Doubao (字节豆包) |
+| Perplexity | Qwen (通义千问) |
+| Gemini | Yuanbao (腾讯元宝) |
+| Bing Copilot | Kimi (月之暗面) |
+| — | DeepSeek (深度求索) |
 
 ### AI Crawler Table Column
 
@@ -129,7 +136,7 @@ Add an additional bar for **DeepSeek (深度求索)** if data is available.
 | Google-Extended | Google-Extended | Google / Baidu cross-ref |
 | PerplexityBot | PerplexityBot | Perplexity / Tongyi cross-ref |
 | CCBot | CCBot | Common Crawl / general |
-| — | **BaiduSpider** | Baidu AI Search / ERNIE |
+| — | **BaiduSpider** | Baidu AI Search |
 | — | **Bytespider** | Doubao / Douyin |
 | — | **Sogou Spider** | Sogou Search |
 | — | **360Spider** | 360 Search |
@@ -159,12 +166,12 @@ When building the audit JSON for the PDF generator, add CN-specific fields along
         "platform_optimization": 59
     },
     "platforms": {
-        "百度 AI 搜索": 68,
-        "豆包": 62,
-        "通义千问": 55,
-        "文心一言": 60,
-        "Kimi 月之暗面": 50,
-        "DeepSeek": 45
+        "Baidu AI Search": 68,
+        "Doubao (字节豆包)": 62,
+        "Qwen (通义千问)": 55,
+        "Yuanbao (腾讯元宝)": 60,
+        "Kimi (月之暗面)": 50,
+        "DeepSeek (深度求索)": 45
     },
     "crawler_access": {
         "BaiduSpider": {"platform": "百度 AI 搜索", "status": "Allowed", "recommendation": "保持允许"},

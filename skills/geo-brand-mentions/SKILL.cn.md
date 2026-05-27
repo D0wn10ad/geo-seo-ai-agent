@@ -10,7 +10,7 @@ parent: geo-brand-mentions
 
 **Load this file alongside `SKILL.md` when REGION is `cn`.**
 Replace the Western platform importance ranking with CN-specific platforms below.
-Scoring methodology (presence, engagement, recency) mirrors the base skill.
+Scoring methodology (presence, engagement, recency) uses CN-specific weighted scoring.
 
 Reference: `regions/cn/platforms.md` for platform details and verification methods.
 
@@ -22,7 +22,7 @@ Reference: `regions/cn/platforms.md` for platform details and verification metho
 
 **Why Baidu Baike matters most:**
 - Baidu Baike is China's equivalent of Wikipedia — the #1 entity recognition signal for all CN AI engines
-- All major CN AI models (Baidu AI, ERNIE, Doubao, Tongyi, Kimi, DeepSeek) reference Baidu Baike for entity grounding
+- All major CN AI models (Baidu AI, Yuanbao, Doubao, Qwen, Kimi, DeepSeek) reference Baidu Baike for entity grounding
 - A verified Baidu Baike entry is the single strongest trust signal in CN AI search
 - Unlike Wikipedia, Baidu Baike entries can be created/edited by brands (with verification)
 
@@ -172,8 +172,34 @@ Reference: `regions/cn/platforms.md` for platform details and verification metho
 
 ---
 
+## Citation-Probability Weight Adjustment
+
+Platform weight adjustment for AI citation probability:
+- Baidu Baike: weight 1.0 (entity recognition anchor)
+- Zhihu: weight 1.3 (highest citation rate)
+- 36Kr: weight 1.2 (high industry citation)
+- WeChat OA: weight 1.1
+- CSDN: weight 1.0
+- Bilibili: weight 0.9
+- Xiaohongshu: weight 0.8
+- Juejin: weight 0.8
+- Douyin: weight 0.6
+- Huxiu: weight 0.5
+- 百家号: weight 0.8 (self-media quality varies)
+- 微博: weight 0.5 (high volume, low per-post weight)
+
+Negative query monitoring: Track brand mentions in negative context on key platforms.
+Negative mentions on high-weight platforms (Zhihu, WeChat, 36Kr) reduce Brand Authority Score
+by -5 to -15 depending on sentiment severity and mention prominence.
+
+---
+
 ## Total Brand Mention Score (CN)
 
 Max 100 points: Baidu Baike (30) + Zhihu (20) + WeChat OA (15) + Xiaohongshu (10) + Bilibili (10) + Douyin (10) + Industry CN Sources (5)
+
+Recommendation rate KPI: Track percentage of AI engine responses that include a positive recommendation.
+Baseline measurement: Run 20 target queries without GEO optimization.
+Post-optimization: Target Top 3 recommendation in ≥60% of queries (源易科技 case: 0% → Top 8 in 8 weeks).
 
 Output file: `GEO-BRAND-MENTIONS-CN.md`

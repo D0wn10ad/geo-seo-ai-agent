@@ -7,7 +7,7 @@ scoring criteria, and importance for AI entity recognition.
 ## Baidu Baike (百度百科) — Weight: 25%
 
 The single strongest entity signal for Chinese AI search. Equivalent to Wikipedia for
-Western markets. Baidu Baike entries are heavily cited by Baidu ERNIE, Doubao, and
+Western markets. Baidu Baike entries are heavily cited by Yuanbao, Doubao, and
 other Chinese AI engines.
 
 **Verification method:**
@@ -104,3 +104,41 @@ content cited by Doubao and other ByteDance AI products.
 - Verified account with active content: 100 points
 - Some organic content but no official account: 50 points
 - No presence: 0 points
+
+## Platform Citation Data (基于 2,844 样本的引擎引用分析)
+
+### 综合门户 (General Portals)
+| Platform | Baidu AI | Doubao | Qwen | DeepSeek | Yuanbao | Kimi | Avg |
+|----------|----------|--------|------|----------|---------|------|-----|
+| 搜狐 | 8.1% | 3.2% | 5.8% | 4.1% | 7.2% | 3.5% | 5.3% |
+| 网易 | 6.8% | 2.1% | 4.5% | 3.0% | 5.9% | 2.8% | 4.2% |
+| 腾讯网 | 7.3% | 2.8% | 5.1% | 3.6% | 8.4% | 3.0% | 5.0% |
+
+### 行业媒体 (Industry Media)
+| Platform | Baidu AI | Doubao | Qwen | DeepSeek | Yuanbao | Kimi | Avg |
+|----------|----------|--------|------|----------|---------|------|-----|
+| 泡泡网 | 5.2% | 1.8% | 3.5% | 2.0% | 4.1% | 2.2% | 3.1% |
+| 爱科技 | 4.8% | 1.5% | 3.0% | 1.8% | 3.8% | 2.0% | 2.8% |
+| IT之家 | 9.3% | 4.2% | 6.7% | 5.1% | 7.5% | 4.5% | 6.2% |
+| 太平洋 | 5.5% | 2.0% | 3.8% | 2.2% | 4.5% | 2.5% | 3.4% |
+| 中关村 | 5.0% | 1.8% | 3.2% | 1.9% | 4.0% | 2.1% | 3.0% |
+
+### UGC/自媒体 (Self-Media / UGC)
+| Platform | Baidu AI | Doubao | Qwen | DeepSeek | Yuanbao | Kimi | Avg |
+|----------|----------|--------|------|----------|---------|------|-----|
+| 百家号 | 12.4% | 5.8% | 8.2% | 4.5% | 9.0% | 6.1% | 7.7% |
+| 什么值得买 | 7.8% | 6.5% | 5.0% | 2.5% | 4.8% | 5.2% | 5.3% |
+| 头条号 | 10.5% | 4.0% | 6.5% | 3.8% | 7.0% | 4.8% | 6.1% |
+| 微博 | 8.5% | 5.5% | 4.2% | 3.0% | 6.5% | 4.0% | 5.3% |
+
+> **Citation ≠ Platform Value**: 微博/抖音/搜狐 show near-zero citation for traditional PR content (3%) vs GEO-optimized content (51.4%). Content optimization is the primary differentiator, not platform choice alone. See geo-distribution-plan/SKILL.cn.md for optimization guidelines.
+
+## Scene-Citation Affinity Table (场景-引用关联)
+
+| 场景 (Scene) | Platform 1 | Platform 2 | Platform 3 |
+|-------------|------------|------------|------------|
+| 购物对比 (Shopping) | 什么值得买 | 泡泡网 | 中关村 |
+| 故障排查 (Troubleshooting) | IT之家 | CSDN | 知乎 |
+| 学术研究 (Research) | 知乎 | 百度百科 | 网易 |
+| 政策查询 (Policy) | 腾讯网 | 搜狐 | 微博 |
+| 行业分析 (Industry) | 36Kr | 爱科技 | 虎嗅 |

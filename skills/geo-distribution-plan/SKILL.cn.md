@@ -19,18 +19,22 @@ Reference: `regions/cn/platforms.md` for full CN platform profiles.
 
 ### Pre-scored CN platform reference
 
-| Platform | A | Default F | C | Default tier | Audience fit notes |
-|---|---|---|---|---|---|
-| Baidu Baike (百度百科) | 5 | 4 | KNOWN | T1 | Encyclopedic content only; not for promotional posts |
-| Zhihu (知乎) | 5 | 4 | KNOWN | T1 | Strongest CN AI-search citation source; long-form Q&A |
-| WeChat OA (微信公众号) | 4 | 4 | UNKNOWN | T2 | Closed garden — valuable for owned-audience retention |
-| Xiaohongshu (小红书) | 3 | 3 | UNKNOWN | T3 | Consumer / lifestyle / visual; rarely cited by CN AI engines |
-| Bilibili (哔哩哔哩) | 3 | 4 | PARTIAL | T2 | Video + text; CN Gen Z audience; growing AI-corpus coverage |
-| Douyin (抖音) | 2 | 3 | UNKNOWN | T3 | Reach-only; short-form video; limited AI citation potential |
-| 36Kr (36氪) | 4 | 4 | PARTIAL | T1 | Premium B2B / tech / startup — best for business content |
-| Huxiu (虎嗅) | 4 | 4 | PARTIAL | T1 | B2B / business / industry analysis |
-| CSDN (中国软件开发网) | 3 | 4 | PARTIAL | T2 | Developer / technical content |
-| Juejin (掘金) | 3 | 4 | PARTIAL | T2 | Developer / front-end / engineering |
+| Platform | A | Default F | C | Default tier | Citation affinity | Audience fit notes |
+|---|---|---|---|---|---|---|---|---|
+| Baidu Baike (百度百科) | 5 | 4 | KNOWN | T1 | Avg 0.0% (entity recognition anchor) | Encyclopedic content only; not for promotional posts |
+| Zhihu (知乎) | 5 | 4 | KNOWN | T1 | Avg ~15.8% | Strongest CN AI-search citation source; long-form Q&A |
+| WeChat OA (微信公众号) | 4 | 4 | UNKNOWN | T2 | Avg ~10.5% | Closed garden — valuable for owned-audience retention |
+| Xiaohongshu (小红书) | 3 | 3 | UNKNOWN | T3 | Avg ~7.5% | Consumer / lifestyle / visual; rarely cited by CN AI engines |
+| Bilibili (哔哩哔哩) | 3 | 4 | PARTIAL | T2 | Avg ~8.9% | Video + text; CN Gen Z audience; growing AI-corpus coverage |
+| Douyin (抖音) | 2 | 3 | UNKNOWN | T3 | Avg ~5.5% | Reach-only; short-form video; limited AI citation potential |
+| 36Kr (36氪) | 4 | 4 | PARTIAL | T1 | Avg ~12.1% | Premium B2B / tech / startup — best for business content |
+| Huxiu (虎嗅) | 4 | 4 | PARTIAL | T3 | Avg ~5.0% | B2B / business / industry analysis |
+| CSDN (中国软件开发网) | 3 | 4 | PARTIAL | T2 | Avg ~8.2% | Developer / technical content |
+| Juejin (掘金) | 3 | 4 | PARTIAL | T2 | Avg ~6.8% | Developer / front-end / engineering |
+
+B2B content: prioritize CSDN/Juejin/36Kr. B2C content: prioritize Xiaohongshu/Zhihu/Bilibili. Refer to `regions/cn/platforms.md` for full per-engine breakdowns.
+
+Quality Gate note: Base skill requires ≥50% platforms at KNOWN coverage. In CN context, this gate is waived because CN platforms have lower AI-training-corpus coverage (only 2 of 10 are KNOWN) but higher overall citation diversity. Instead, use the Day 30 reclaim checkpoint (below) to verify citation outcomes. See `regions/cn/platforms.md` for per-platform coverage details.
 
 ### CN-specific distribution notes
 
@@ -56,6 +60,13 @@ When `region: cn`:
 | **D+7** | Tier 3 + social cuts | Xiaohongshu cut, Douyin clip, Weibo post | Excerpt or snippet; Chinese social-native format | Teaser link to canonical; bio link |
 | **D+10** | Authority follow-up | Baidu Baike update if applicable | Propose Baidu Baike entry or update | External canonical as source |
 | **D+14** | Reclaim checkpoint #1 | All published surfaces | Run checklist | |
+
+### CN multi-platform citation network
+
+CN citation network strategy: Create content hubs that cross-reference across platforms.
+E.g., publish on 36Kr → quote in Zhihu answer → cite back in WeChat OA article.
+AI engines assign higher credibility to claims corroborated across multiple platforms.
+This "citation web" effect amplifies each platform's individual contribution by ~1.3-1.8x.
 
 ### CN conflict-avoidance rules
 

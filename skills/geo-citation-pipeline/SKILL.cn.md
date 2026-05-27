@@ -38,6 +38,16 @@ Replace the base crawler audit with the CN crawler set:
 - `<meta http-equiv="Cache-Control" content="no-transform">`
 - `<meta name="baidu-site-verification" content="code-xxx">`
 
+### CN 6-Step Citation Pipeline (源易科技 methodology — maps to existing stages)
+1. 定位 (Position) → Define target queries + preferred answer format [Stage 0 precursor]
+2. 占位 (Claim) → Create/optimize content on target platforms [Stage 2 + 3]
+3. 数据 (Data) → Inject structured data points + verifiable sources [Stage 4 + DSS]
+4. 放大 (Amplify) → Distribute across platform tiers to trigger cross-citation [Stage 2 + distribution]
+5. 验证 (Validate) → Check AI engine answers for target queries [Stage 6]
+6. 迭代 (Iterate) → Feed gaps back into content refinement cycle [Stage 0 loop]
+
+Quality gate: Each stage must achieve ≥0.65 confidence before next stage proceeds. If verification at Stage 5 shows <50% preferred-answer rate, loop back to Stage 1 for content reprioritization.
+
 ---
 
 ## Stage 2: AI-Friendly Internal-Link Wiring (CN)
@@ -57,18 +67,13 @@ Replace the base crawler audit with the CN crawler set:
 
 ## Stage 3: AI-Training Authority Backlink Check (CN)
 
-**Tier A CN domains** (highest authority for CN AI citation):
-
-| Domain | Type | Citation Weight |
-|---|---|---|
-| baike.baidu.com | Encyclopedia | Highest — cite definitions from here where relevant |
-| zhihu.com | Q&A platform | Very high — CN AI engines heavily cite Zhihu answers |
-| 36kr.com | Tech/business news | High — used by Baidu AI Search |
-| huxiu.com | Business analysis | High — cited by multiple CN engines |
-| sohu.com | Portal | Medium-high — historical authority |
-| sina.com.cn | Portal | Medium-high |
-| gov.cn | Government | Highest for regulatory/official information |
-| edu.cn | Education/academic | Very high for academic topics |
+**Tier A domains** (sorted by avg citation rate across 6 CN engines):
+- zhihu.com (~15.8%)
+- 36kr.com (~12.1%)
+- ithome.com (~6.2%)
+- baike.baidu.com (entity recognition, not direct citation)
+- huxiu.com (~5.0%)
+- gov.cn, edu.cn (authority verification)
 
 **Backlink analysis:** Does the site have links from any of these Tier A CN domains? For CN citation potential:
 - A backlink from Baidu Baike is the single strongest CN citation signal
@@ -140,7 +145,7 @@ After the pipeline completes, verify citation status across 6 CN AI engines:
 |---|---|---|
 | Baidu AI Search (百度AI搜索) | Ask a representative question on https://ai.baidu.com/ | Brand appears in top 3 cited sources |
 | Doubao (豆包) | Ask the same question on https://www.doubao.com/ | Brand cited in the response |
-| ERNIE Bot (文心一言) | Test on https://yiyan.baidu.com/ | Brand appears in generated answer |
+| Yuanbao (腾讯元宝) | Test on https://yuanbao.tencent.com/ | Brand appears in generated answer |
 | Qwen (通义千问) | Test on https://tongyi.aliyun.com/ | Brand cited |
 | Kimi (月之暗面) | Test on https://kimi.moonshot.cn/ | Brand appears in search result |
 | DeepSeek (深度求索) | Test on https://chat.deepseek.com/ | Brand cited |
@@ -151,4 +156,14 @@ After the pipeline completes, verify citation status across 6 CN AI engines:
 - **PIPELINE_WEAK** — cited by 1-2 CN AI engines
 - **PIPELINE_FAIL** — not cited by any CN AI engine
 
-Output file: `GEO-CITATION-PIPELINE-CN.md`
+Output file: `~/.geo-prospects/pipelines/<domain>-<slug>-<YYYY-MM-DD>-CN.md`
+
+---
+
+## Monitoring: Continuous CN Engine Tracking
+
+### Engine drift detection (引擎漂移监测)
+- Track which platforms each engine cites over time
+- Alert if an engine shifts preferred citation sources (e.g., Doubao moving from Xiaohongshu to Bilibili)
+- Monthly comparison of `~/.geo-prospects/<domain>/engine-citation-map-*.md`
+- When drift detected: reprioritize content distribution toward new preferred platforms

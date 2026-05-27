@@ -55,7 +55,7 @@ When `--region cn` is explicitly passed or auto-detected:
 
 ### Subagent 2: Platform Optimization (CN)
 
-- Assess Baidu AI Search, Doubao (豆包), ERNIE Bot (文心一言), Qwen (通义千问), Kimi (月之暗面), DeepSeek (深度求索)
+- Assess Baidu AI Search, Doubao (豆包), Yuanbao (腾讯元宝), Qwen (通义千问), Kimi (月之暗面), DeepSeek (深度求索)
 - Reference `regions/cn/ai-engines.md` for CN engine-specific rubrics
 
 ### Subagent 4: Content E-E-A-T (CN)
@@ -125,6 +125,43 @@ When `--region cn` is explicitly passed or auto-detected:
 6. Add Baidu-specific meta tags (`applicable-device`, `Cache-Control: no-transform`)
 7. Create Chinese-language versions of all key pages
 8. Register on Zhihu and post 1-2 relevant answers
+
+---
+
+## KPI Framework — CN GEO Performance Metrics
+
+### Baseline Measurement
+Before optimization begins, measure these KPIs:
+1. AI mention rate — % of target queries where brand is mentioned across 6 CN engines
+2. Competitor ranking — domain's position relative to N competitors for target queries
+3. Recommendation rate — % of AI responses including positive recommendation
+4. Citation rate — % of AI responses that cite brand-owned or -placed content
+5. KPI achievement rate — % of target KPI values achieved after optimization
+
+### Projection & Targets
+For each KPI, define:
+- Current baseline (Week 0 measurement)
+- 30-day target (intermediate milestone)
+- 90-day target (full optimization goal)
+- 180-day target (sustained leadership)
+- Historical benchmarks:
+  - AI mention rate: 0% → 93.3% (12 weeks, B2B tech)
+  - Competitor ranking: 15th → 1st (16 weeks, Enterprise SaaS)
+  - Recommendation rate: 0% → Top 8 overall (8 weeks, Consumer electronics)
+  - Citation rate: 3% → 51.4% (10 weeks, E-commerce)
+
+### Severity Weighting
+Weight KPI gaps by:
+- Coverage gaps (engine not citing at all): Critical — fix within 2 weeks
+- Weak citation (mentioned but not preferred): High — fix within 4 weeks
+- Platform gap (no presence on key platform): Medium — fix within 8 weeks
+- Content quality (cited but inaccurate): Low — continuous improvement
+
+### Quick-Win Impact Scoring
+Each quick win item in the action plan should include estimated KPI impact:
+- **High impact** — 15%+ projected increase in AI mention rate within 4 weeks
+- **Medium impact** — 5-15% projected increase within 8 weeks
+- **Setup** — Foundational setup, no direct KPI impact but enables future wins
 
 ---
 

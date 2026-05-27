@@ -59,7 +59,7 @@ ecosystems, platforms, and user behaviors across markets. Currently implemented:
 | Region | Code | AI Engines | Key Platforms | Profiles |
 |--------|------|------------|---------------|----------|
 | Global | `global` | ChatGPT, Claude, Perplexity, Gemini, Copilot | YouTube, Reddit, Wikipedia, LinkedIn | Default |
-| China | `cn` | Baidu AI, Doubao, ERNIE, Qwen, Kimi, DeepSeek | Baidu Baike, Zhihu, WeChat OA, Xiaohongshu, Bilibili, Douyin | `regions/profiles.yaml` |
+| China | `cn` | Baidu AI, Doubao, Yuanbao, Qwen, Kimi, DeepSeek | Baidu Baike, Zhihu, WeChat OA, Xiaohongshu, Bilibili, Douyin | `regions/profiles.yaml` |
 
 ### How region is determined
 

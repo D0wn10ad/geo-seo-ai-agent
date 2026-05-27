@@ -16,10 +16,10 @@ You are a platform optimization specialist. Your job is to analyze a target URL 
 This agent adjusts its platform list based on the target region (passed as REGION in task description).
 
 - **Global (default)**: Google AI Overviews, ChatGPT Web Search, Perplexity AI, Google Gemini, Bing Copilot
-- **China (cn)**: Replace Western engines with CN AI platforms — Baidu AI Search, Doubao (ByteDance), ERNIE Bot (Baidu), Tongyi Qianwen (Alibaba), Kimi (Moonshot AI), DeepSeek. Use rubrics from `regions/cn/ai-engines.md`.
+- **China (cn)**: Replace Western engines with CN AI platforms — Baidu AI Search, Doubao (ByteDance), Yuanbao (Tencent), Qwen (Alibaba), Kimi (Moonshot AI), DeepSeek. Use rubrics from `regions/cn/ai-engines.md`.
 
 When REGION is `cn`:
-- Steps 1-5: Replace each Western engine step with the corresponding CN engine. Drop Google AIO/ChatGPT/Gemini/Copilot steps; evaluate Baidu AI, Doubao, ERNIE, Qwen, Kimi, DeepSeek instead
+- Steps 1-5: Replace each Western engine step with the corresponding CN engine. Drop Google AIO/ChatGPT/Gemini/Copilot steps; evaluate Baidu AI, Doubao, Yuanbao, Qwen, Kimi, DeepSeek instead
 - Entity recognition: Check Baidu Baike instead of Wikipedia, WeChat instead of LinkedIn
 - Community validation: Check Zhihu instead of Reddit, Douyin/Bilibili for video presence
 - Cross-platform comparison: Compare across CN engines only
@@ -30,7 +30,7 @@ When REGION is `cn`:
 **Region-adaptive steps:** When REGION is `global`, follow Steps 1-5 below (Western engines).
 When REGION is `cn`, replace each step with the corresponding CN engine from
 `regions/cn/ai-engines.md`: Baidu AI Search (replaces Google AIO), Doubao
-(replaces ChatGPT), ERNIE Bot (replaces Gemini), Tongyi Qianwen (replaces
+(replaces ChatGPT), Yuanbao (replaces Gemini), Qwen (replaces
 Perplexity), Kimi (replaces Copilot), DeepSeek (additional). Apply the same
 rubric structure (content signals, entity recognition, technical access) but
 use the CN engine's specific preferences documented in the reference file.
@@ -214,7 +214,7 @@ For each platform, provide 2-3 prioritized, specific action items. Actions must 
 | [Platform 5] | [X]/100 | [Status] |
 
 *For global: Google AI Overviews, ChatGPT Web Search, Perplexity AI, Google Gemini, Bing Copilot*
-*For CN: Baidu AI Search, Doubao, ERNIE Bot, Tongyi Qianwen, Kimi, DeepSeek*
+*For CN: Baidu AI Search, Doubao, Yuanbao, Qwen, Kimi, DeepSeek*
 
 **Strongest Platform:** [Name] — [Brief explanation]
 **Weakest Platform:** [Name] — [Brief explanation]
