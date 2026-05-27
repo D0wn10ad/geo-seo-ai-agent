@@ -9,6 +9,10 @@ geo-seo-claude/
 ├── platform/                     # Platform adapter layer
 │   ├── SKILL.md                  # Platform detection + abstract tool mapping
 │   └── TOOL-MAP.md               # Abstract-to-real tool name reference table
+├── regions/                      # Region profiles (feature branch)
+│   ├── profiles.yaml             # Scoring weights, engines, platforms per region
+│   ├── README.md                 # Guide for adding new regions
+│   └── cn/                       # China market reference data
 ├── skills/                       # 20 specialized sub-skills
 │   ├── geo-audit/                # Full audit orchestration & scoring
 │   ├── geo-citability/           # AI citation readiness scoring
