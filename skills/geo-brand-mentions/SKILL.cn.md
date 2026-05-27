@@ -10,7 +10,7 @@ parent: geo-brand-mentions
 
 **Load this file alongside `SKILL.md` when REGION is `cn`.**
 Replace the Western platform importance ranking with CN-specific platforms below.
-Scoring methodology (presence, engagement, recency) mirrors the base skill.
+Scoring methodology (presence, engagement, recency) uses CN-specific weighted scoring.
 
 Reference: `regions/cn/platforms.md` for platform details and verification methods.
 
@@ -22,7 +22,7 @@ Reference: `regions/cn/platforms.md` for platform details and verification metho
 
 **Why Baidu Baike matters most:**
 - Baidu Baike is China's equivalent of Wikipedia — the #1 entity recognition signal for all CN AI engines
-- All major CN AI models (Baidu AI, ERNIE, Doubao, Tongyi, Kimi, DeepSeek) reference Baidu Baike for entity grounding
+- All major CN AI models (Baidu AI, Yuanbao, Doubao, Qwen, Kimi, DeepSeek) reference Baidu Baike for entity grounding
 - A verified Baidu Baike entry is the single strongest trust signal in CN AI search
 - Unlike Wikipedia, Baidu Baike entries can be created/edited by brands (with verification)
 
@@ -200,6 +200,6 @@ Max 100 points: Baidu Baike (30) + Zhihu (20) + WeChat OA (15) + Xiaohongshu (10
 
 Recommendation rate KPI: Track percentage of AI engine responses that include a positive recommendation.
 Baseline measurement: Run 20 target queries without GEO optimization.
-Post-optimization: Target Top 3 recommendation in ≥60% of queries (源易 case: 0% → Top 8 in 8 weeks).
+Post-optimization: Target Top 3 recommendation in ≥60% of queries (源易科技 case: 0% → Top 8 in 8 weeks).
 
 Output file: `GEO-BRAND-MENTIONS-CN.md`

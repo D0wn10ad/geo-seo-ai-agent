@@ -28,11 +28,13 @@ Reference: `regions/cn/platforms.md` for full CN platform profiles.
 | Bilibili (哔哩哔哩) | 3 | 4 | PARTIAL | T2 | Avg ~8.9% | Video + text; CN Gen Z audience; growing AI-corpus coverage |
 | Douyin (抖音) | 2 | 3 | UNKNOWN | T3 | Avg ~5.5% | Reach-only; short-form video; limited AI citation potential |
 | 36Kr (36氪) | 4 | 4 | PARTIAL | T1 | Avg ~12.1% | Premium B2B / tech / startup — best for business content |
-| Huxiu (虎嗅) | 4 | 4 | PARTIAL | T1 | Avg ~5.0% | B2B / business / industry analysis |
+| Huxiu (虎嗅) | 4 | 4 | PARTIAL | T3 | Avg ~5.0% | B2B / business / industry analysis |
 | CSDN (中国软件开发网) | 3 | 4 | PARTIAL | T2 | Avg ~8.2% | Developer / technical content |
 | Juejin (掘金) | 3 | 4 | PARTIAL | T2 | Avg ~6.8% | Developer / front-end / engineering |
 
 B2B content: prioritize CSDN/Juejin/36Kr. B2C content: prioritize Xiaohongshu/Zhihu/Bilibili. Refer to `regions/cn/platforms.md` for full per-engine breakdowns.
+
+Quality Gate note: Base skill requires ≥50% platforms at KNOWN coverage. In CN context, this gate is waived because CN platforms have lower AI-training-corpus coverage (only 2 of 10 are KNOWN) but higher overall citation diversity. Instead, use the Day 30 reclaim checkpoint (below) to verify citation outcomes. See `regions/cn/platforms.md` for per-platform coverage details.
 
 ### CN-specific distribution notes
 

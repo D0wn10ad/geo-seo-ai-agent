@@ -38,7 +38,7 @@ This skill accepts an optional `--region <code>` parameter. When `region: cn`:
 | Stage 3 (Authority) | Check backlinks from CN-authority domains (.cn, .com.cn) and Baidu-relevant sources |
 | Stage 4 (On-page) | Use CN citability rubric from `regions/cn/ai-engines.md` and CN schema from `regions/cn/schema.md` |
 | Stage 5 (Indexing) | Add Baidu Zhanzhang (百度站长平台) URL submission alongside IndexNow. Baidu's inclusion tool is the CN equivalent of Google URL Inspection |
-| Stage 6 (Verify) | Verify against CN AI engines (Baidu AI, Doubao, ERNIE, Qwen, Kimi, DeepSeek) instead of Western engines |
+| Stage 6 (Verify) | Verify against CN AI engines (Baidu AI, Doubao, Yuanbao, Qwen, Kimi, DeepSeek) instead of Western engines |
 
 Output file: `~/.geo-prospects/pipelines/<domain>-<slug>-<YYYY-MM-DD>-CN.md`
 

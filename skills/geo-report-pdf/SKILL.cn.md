@@ -72,6 +72,14 @@ import generate_pdf_report as base
 # throughout. After registration, map 'Helvetica' -> 'NotoSansSC' and
 # 'Helvetica-Bold' -> 'NotoSansSC-Bold'. This can be done post-import
 # by monkey-patching the paragraph styles and table styles.
+
+# Example: patch the base script's paragraph styles
+for name in dir(base):
+    obj = getattr(base, name)
+    if isinstance(obj, ParagraphStyle):
+        obj.fontName = 'NotoSansSC'
+        if 'Bold' in name:
+            obj.fontName = 'NotoSansSC-Bold'
 ```
 
 **Option C (Recommended)**: Run the script with an environment variable or CLI flag to tell it to use CJK fonts. If the base script does not support this, prefer Option A for simplicity.

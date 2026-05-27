@@ -55,7 +55,7 @@ When `--region cn` is explicitly passed or auto-detected:
 
 ### Subagent 2: Platform Optimization (CN)
 
-- Assess Baidu AI Search, Doubao (豆包), ERNIE Bot (文心一言), Qwen (通义千问), Kimi (月之暗面), DeepSeek (深度求索)
+- Assess Baidu AI Search, Doubao (豆包), Yuanbao (腾讯元宝), Qwen (通义千问), Kimi (月之暗面), DeepSeek (深度求索)
 - Reference `regions/cn/ai-engines.md` for CN engine-specific rubrics
 
 ### Subagent 4: Content E-E-A-T (CN)
@@ -159,9 +159,9 @@ Weight KPI gaps by:
 
 ### Quick-Win Impact Scoring
 Each quick win item in the action plan should include estimated KPI impact:
-- 🌟🌟 — 15%+ projected increase in AI mention rate within 4 weeks
-- 🌟 — 5-15% projected increase within 8 weeks
-- 📋 — Foundational setup, no direct KPI impact but enables future wins
+- **High impact** — 15%+ projected increase in AI mention rate within 4 weeks
+- **Medium impact** — 5-15% projected increase within 8 weeks
+- **Setup** — Foundational setup, no direct KPI impact but enables future wins
 
 ---
 

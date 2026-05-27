@@ -20,7 +20,7 @@ This agent adjusts its analysis based on the target region (passed as REGION in 
 - **China (cn)**: Uses CN-specific AI crawlers (Baidu Spider, Bytespider for Douyin/Doubao), CN platforms (Baidu Baike, Zhihu, WeChat OA, Xiaohongshu, Bilibili, Douyin), CN-specific citability rubrics from `regions/cn/ai-engines.md`, and brand mention targets from `regions/cn/platforms.md`
 
 When REGION is `cn`:
-- Step 2 citability: Reference CN AI engine rubrics (Baidu AI, Doubao, ERNIE, Qwen, Kimi, DeepSeek)
+- Step 2 citability: Reference CN AI engine rubrics (Baidu AI, Doubao, Yuanbao, Qwen, Kimi, DeepSeek)
 - Step 3 crawlers: Prioritize Baidu Spider, Bytespider; note that CN crawlers may have different robots.txt behavior
 - Step 5 brand mentions: Use `regions/cn/platforms.md` platform list instead of Western defaults
 

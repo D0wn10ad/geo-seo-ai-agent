@@ -154,7 +154,9 @@ Example: content with 80% E-E-A-T + DSS avg 7/10 = 80% + 7% = 87% final.
 | Trustworthiness (CN-adjusted) | 25% | 25 |
 | **Subtotal** | | **100** |
 | Topical Authority Modifier | | +10 to -5 |
-| **Final Score** | | **Capped at 100** |
+| **Final Score (before DSS)** | | **Capped at 100** |
+| DSS Bonus | | +0 to +10 |
+| **Overall GEO Content Score** | | **Capped at 100** |
 
 ### CN Score Interpretation
 

@@ -28,7 +28,7 @@ The base criteria apply, with these CN-specific considerations:
 
 **CN adjustment**: Answer blocks written in clear modern Chinese (现代汉语) score higher than those using classical Chinese patterns (文言文). Avoid excessive 专业术语 (jargon) without explanation.
 
-### Category 2: Self-Containment (20% → CN-adjusted)
+### Category 2: Self-Containment (25% → 20% — reduced for CN context)
 
 - Chinese content often assumes cultural context. Flag passages that assume CN-specific knowledge without explanation
 - For CN-audience content (e.g., `.cn` domain targeting CN users), CN cultural context is acceptable
@@ -44,14 +44,14 @@ The base criteria apply, with these CN-specific considerations:
 - Baidu AI favors: Well-structured content with clear hierarchical headings
 - Doubao favors: Mixed text + bullet point formatting
 
-### Category 4: Statistical Density (20% → CN-adjusted)
+### Category 4: Statistical Density (15% → 20% — increased for CN statistical density)
 
 - CN AI engines favor statistics from Chinese government sources, Chinese industry reports, and CN-accredited research
 - Sources from 国家统计局 (NBS), 艾瑞咨询 (iResearch), 易观 (Analysys),  QuestMobile carry weight
 - Dates should be in Chinese format (YYYY年MM月DD日) or ISO format
 - Currency values should be in RMB (人民币/¥) format for CN context
 
-### Category 5: Uniqueness (15% → No change)
+### Category 5: Uniqueness (10% → No change)
 
 Same criteria apply. CN AI engines also value original data and proprietary insights.
 
@@ -81,7 +81,7 @@ Same criteria apply. CN AI engines also value original data and proprietary insi
 ### Mention Rate Prediction
 
 Mention rate prediction: Content with citability ≥80 has ~4x higher probability of being cited
-by AI engines than content with citability <50 (est. from 源易 correlation data).
+by AI engines than content with citability <50 (est. from 源易科技 published case study data).
 KPI hook: Citability score directly predicts AI mention rate potential.
 When scoring, flag content items as:
 - 85+: "High citation probability — prioritize for GEO-critical pages"

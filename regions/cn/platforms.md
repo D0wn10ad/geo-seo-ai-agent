@@ -7,7 +7,7 @@ scoring criteria, and importance for AI entity recognition.
 ## Baidu Baike (百度百科) — Weight: 25%
 
 The single strongest entity signal for Chinese AI search. Equivalent to Wikipedia for
-Western markets. Baidu Baike entries are heavily cited by Baidu ERNIE, Doubao, and
+Western markets. Baidu Baike entries are heavily cited by Yuanbao, Doubao, and
 other Chinese AI engines.
 
 **Verification method:**

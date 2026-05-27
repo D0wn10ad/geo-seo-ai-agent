@@ -90,13 +90,13 @@ Write exactly ONE paragraph (4-6 sentences) in Chinese covering:
 
 | KPI | Baseline | 30-Day | 90-Day | 180-Day | Status |
 |-----|----------|--------|--------|---------|--------|
-| AI Mention Rate | 0% | 25% | 60% | 85% | 🟢 🟡 🔴 |
-| Competitor Rank | 15th | 10th | 3rd | 1st | 🟢 🟡 🔴 |
-| Recommendation Rate | 0% | 15% | 40% | 70% | 🟢 🟡 🔴 |
-| Citation Rate | 3% | 20% | 40% | 60% | 🟢 🟡 🔴 |
-| KPI Achievement | — | — | — | 140% | 🟢 🟡 🔴 |
+| AI Mention Rate | 0% | 25% | 60% | 85% | Good / At Risk / Critical |
+| Competitor Rank | 15th | 10th | 3rd | 1st | Good / At Risk / Critical |
+| Recommendation Rate | 0% | 15% | 40% | 70% | Good / At Risk / Critical |
+| Citation Rate | 3% | 20% | 40% | 60% | Good / At Risk / Critical |
+| KPI Achievement | — | — | — | 140% | Good / At Risk / Critical |
 
-Targets derived from 源易 case study benchmarks. Adjust per client vertical.
+Targets derived from 源易科技 published case study benchmarks. Adjust per client vertical.
 ```
 
 ### 第四部分：中国 AI 平台可见性概览 (CN AI Visibility Dashboard)
@@ -132,7 +132,7 @@ Add a CN explanation paragraph: "这些分数反映了您的内容被各中国 A
 | Googlebot | Google 搜索 | 允许/阻止 | 低(CN) | [行动] |
 ```
 
-Add CN-specific translation: "阻止 AI 爬虫访问您的网站，相当于在营业时间关闭店铺大门。如果爬虫无法访问您的网站，其背后的 AI 平台就无法引用您的内容。在中国市场，BaiduSpider 是所有爬虫中最关键的——它是百度 AI 搜索和文心一言的数据来源。"
+Add CN-specific translation: "阻止 AI 爬虫访问您的网站，相当于在营业时间关闭店铺大门。如果爬虫无法访问您的网站，其背后的 AI 平台就无法引用您的内容。在中国市场，BaiduSpider 是所有爬虫中最关键的——它是百度 AI 搜索和腾讯元宝的数据来源。"
 
 ### 第六部分：品牌权威性分析 (Brand Authority — CN)
 
@@ -230,7 +230,7 @@ This is the most important section. Organize by timeline and impact with CN-spec
 | # | 行动 | 影响 | 投入 | 影响平台 |
 |---|---|---|---|---|
 | 1 | 在 robots.txt 中允许 BaiduSpider 和 Bytespider | 高 | 1 小时 | 百度 AI、豆包 |
-| 2 | 在百度站长平台验证网站并提交 sitemap | 高 | 2 小时 | 百度 AI 搜索、文心一言 |
+| 2 | 在百度站长平台验证网站并提交 sitemap | 高 | 2 小时 | 百度 AI 搜索、腾讯元宝 |
 | 3 | 添加百度站点验证 meta 标签 | 中 | 30 分钟 | 百度 AI 搜索 |
 | 4 | 检查并设置 html lang=zh-CN | 中 | 1 小时 | 所有中国 AI 引擎 |
 | 5 | 为已有内容添加发布日期 | 中 | 2 小时 | 豆包、DeepSeek |
@@ -251,10 +251,10 @@ This is the most important section. Organize by timeline and impact with CN-spec
 
 | # | 行动 | 影响 | 投入 | 影响平台 |
 |---|---|---|---|---|
-| 1 | 申请或完善百度百科词条 | 极高 | 3-7 天 | 百度 AI、文心一言、DeepSeek |
+| 1 | 申请或完善百度百科词条 | 极高 | 3-7 天 | 百度 AI、腾讯元宝、DeepSeek |
 | 2 | 用中文问答式标题重构前 10 个页面 | 高 | 2-3 天 | 所有中国 AI 引擎 |
 | 3 | 在知乎上建立品牌问答存在 | 高 | 1-2 天 | 百度 AI、DeepSeek |
-| 4 | 实施完整的 Schema.org + 百度兼容标记 | 高 | 3-5 天 | 百度 AI、文心一言、Kimi |
+| 4 | 实施完整的 Schema.org + 百度兼容标记 | 高 | 3-5 天 | 百度 AI、腾讯元宝、Kimi |
 | 5 | 创建中文 llms.txt 文件 | 中 | 1 天 | 所有 AI 引擎 |
 ```
 
@@ -314,7 +314,7 @@ If competitor URLs were analyzed alongside the primary domain:
 | GEO 总分 | XX/100 | XX/100 | XX/100 |
 | 百度 AI 就绪度 | XX/100 | XX/100 | XX/100 |
 | 豆包就绪度 | XX/100 | XX/100 | XX/100 |
-| 文心一言就绪度 | XX/100 | XX/100 | XX/100 |
+| 腾讯元宝就绪度 | XX/100 | XX/100 | XX/100 |
 | 通义千问就绪度 | XX/100 | XX/100 | XX/100 |
 | Kimi 就绪度 | XX/100 | XX/100 | XX/100 |
 | DeepSeek 就绪度 | XX/100 | XX/100 | XX/100 |
@@ -341,7 +341,7 @@ If competitor URLs were analyzed alongside the primary domain:
 本次 GEO 审计采用以下方法:
 - **分析页面**: [具体 URL 列表]
 - **地区**: 中国 (CN)
-- **评估平台**: 百度 AI 搜索、豆包 (Doubao)、文心一言 (ERNIE Bot)、通义千问 (Qwen)、Kimi (月之暗面)、DeepSeek (深度求索)
+- **评估平台**: 百度 AI 搜索、豆包 (Doubao)、Yuanbao (腾讯元宝)、Qwen (通义千问)、Kimi (月之暗面)、DeepSeek (深度求索)
 - **技术检查**: HTTP 头部、robots.txt、HTML 源码分析、结构化数据验证
 - **内容评估**: E-E-A-T 框架（经验、专业、权威、信任）
 - **Schema 验证**: JSON-LD 解析与 Schema.org 标准合规性

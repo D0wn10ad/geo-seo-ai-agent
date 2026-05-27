@@ -104,6 +104,8 @@ Reference: `regions/profiles.yaml` for CN crawler profile.
 
 ### Maximum CN AI Visibility Configuration (robots.txt)
 
+> Hybrid note: The example below includes global AI crawlers for sites targeting both CN and global audiences. For pure China-market sites (`cn.` TLD, CN-only audience), omit the global crawler section (GPTBot/ClaudeBot/PerplexityBot).
+
 ```
 # CN AI Crawlers — ALLOWED for CN AI search visibility
 User-agent: BaiduSpider

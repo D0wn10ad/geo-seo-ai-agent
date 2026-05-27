@@ -188,7 +188,7 @@ When mapping gaps to upstream skills, adapt the remediation actions to CN ecosys
 | Citation gap on Baidu AI Search specifically | `geo-citation-pipeline`: Run CN pipeline with Baidu Zhanzhang submission |
 | You have the right content but BaiduSpider missed it | `geo-crawlers`: Check CN crawler access; `geo-citation-pipeline`: Baidu Zhanzhang push |
 
-### Phased displacement strategy (源易 methodology)
+### Phased displacement strategy (源易科技 GEO methodology)
 
 - **Phase 1 (Month 1-2):** Claim platforms with lowest bar — 百家号, 什么值得买, 头条号
 - **Phase 2 (Month 3-4):** Dominate 2nd-tier citation platforms — 知乎, 搜狐号, CSDN

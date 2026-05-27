@@ -38,7 +38,7 @@ Replace the base crawler audit with the CN crawler set:
 - `<meta http-equiv="Cache-Control" content="no-transform">`
 - `<meta name="baidu-site-verification" content="code-xxx">`
 
-### CN 6-Step Citation Pipeline (源易 methodology — maps to existing stages)
+### CN 6-Step Citation Pipeline (源易科技 methodology — maps to existing stages)
 1. 定位 (Position) → Define target queries + preferred answer format [Stage 0 precursor]
 2. 占位 (Claim) → Create/optimize content on target platforms [Stage 2 + 3]
 3. 数据 (Data) → Inject structured data points + verifiable sources [Stage 4 + DSS]
@@ -145,7 +145,7 @@ After the pipeline completes, verify citation status across 6 CN AI engines:
 |---|---|---|
 | Baidu AI Search (百度AI搜索) | Ask a representative question on https://ai.baidu.com/ | Brand appears in top 3 cited sources |
 | Doubao (豆包) | Ask the same question on https://www.doubao.com/ | Brand cited in the response |
-| ERNIE Bot (文心一言) | Test on https://yiyan.baidu.com/ | Brand appears in generated answer |
+| Yuanbao (腾讯元宝) | Test on https://yuanbao.tencent.com/ | Brand appears in generated answer |
 | Qwen (通义千问) | Test on https://tongyi.aliyun.com/ | Brand cited |
 | Kimi (月之暗面) | Test on https://kimi.moonshot.cn/ | Brand appears in search result |
 | DeepSeek (深度求索) | Test on https://chat.deepseek.com/ | Brand cited |
@@ -156,7 +156,7 @@ After the pipeline completes, verify citation status across 6 CN AI engines:
 - **PIPELINE_WEAK** — cited by 1-2 CN AI engines
 - **PIPELINE_FAIL** — not cited by any CN AI engine
 
-Output file: `GEO-CITATION-PIPELINE-CN.md`
+Output file: `~/.geo-prospects/pipelines/<domain>-<slug>-<YYYY-MM-DD>-CN.md`
 
 ---
 

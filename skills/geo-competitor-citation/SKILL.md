@@ -67,7 +67,7 @@ When `region: cn` is set (passed in task description), replace the 6 Western
 engines with CN AI engines from `regions/cn/ai-engines.md`:
 1. Baidu AI Search (百度AI搜索) — replaces Google AI Overviews
 2. Doubao (豆包) — replaces ChatGPT
-3. ERNIE Bot (文心一言) — replaces Claude
+3. Yuanbao (腾讯元宝) — replaces Claude
 4. Tongyi Qianwen (通义千问) — replaces Perplexity
 5. Kimi (月之暗面) — replaces Gemini
 6. DeepSeek (深度求索) — replaces Copilot

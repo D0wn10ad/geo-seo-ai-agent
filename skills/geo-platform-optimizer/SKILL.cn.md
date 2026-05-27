@@ -10,8 +10,9 @@ parent: geo-platform-optimizer
 
 **Load this file alongside `SKILL.md` when REGION is `cn`.**
 Replace the Western platform rubrics (Google AIO, ChatGPT, Perplexity, Gemini, Copilot)
-with the CN engine rubrics below. Scoring structure (content signals, entity recognition,
-technical access) mirrors the base skill but uses CN-specific criteria.
+with the CN engine rubrics below. Scoring uses CN-specific 3-bucket rubrics (entity signals, content signals,
+technical access) per platform — different methodology from the base skill's 10-item checklist,
+optimized for CN engine behavior patterns.
 
 Reference: `regions/cn/ai-engines.md` for detailed per-engine rubrics.
 
@@ -22,7 +23,7 @@ Reference: `regions/cn/ai-engines.md` for detailed per-engine rubrics.
 Replaces: Google AI Overviews
 
 ### How Baidu AI Selects Sources
-- Baidu's ERNIE-powered AI search pulls from its own index (80%+ CN market share)
+- Baidu's AI search (Yuanbao-powered) pulls from its own index (80%+ CN market share)
 - Strongly favors Baidu Baike entries, Baidu Zhidao (Q&A), and Baidu-owned properties
 - Prefers Chinese-language content with proper Baidu SEO (百度优化)
 - Baidu's AI summaries prioritize authoritative sources with ICP licenses
@@ -165,7 +166,7 @@ Referral info: Most-cited platforms for this engine: GitHub, CSDN, Zhihu, techni
 
 ---
 
-## 📋 Scene Knowledge Base Strategy (场景知识库)
+## Scene Knowledge Base Strategy (场景知识库)
 
 When REGION is cn, extend platform analysis with scene-KB binding:
 - Identify the user's scene/task type (购物对比/故障排查/学术研究/政策查询/行业分析)
@@ -180,5 +181,5 @@ When REGION is cn, extend platform analysis with scene-KB binding:
 After scoring all 6 CN platforms, identify:
 - **Strongest CN platform**: Highest score with explanation
 - **Weakest CN platform**: Lowest score with gap analysis
-- **CN platform synergies**: Actions that improve multiple CN platforms (e.g., Baidu Baike helps both Baidu AI Search and ERNIE)
+- **CN platform synergies**: Actions that improve multiple CN platforms (e.g., Baidu Baike helps Baidu AI Search and Yuanbao)
 - **Output file**: `GEO-PLATFORM-OPTIMIZATION-CN.md`
