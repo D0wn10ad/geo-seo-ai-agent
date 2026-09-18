@@ -55,6 +55,10 @@ def format_eur(value) -> str:
         return "—"
     return f"€{int(value):,}".replace(",", ".")
 
+
+def region_label(prospect: dict) -> str:
+    return prospect.get("region") or prospect.get("country") or "—"
+
 def crm_stats(prospects: list[dict]) -> dict:
     total = len(prospects)
     active = [p for p in prospects if p.get("status") == "active"]
@@ -84,6 +88,7 @@ def find_pdf(prospect: dict) -> Path | None:
 app.jinja_env.filters["score_tier"] = score_tier
 app.jinja_env.filters["score_label"] = score_label
 app.jinja_env.filters["format_eur"] = format_eur
+app.jinja_env.filters["format_region"] = region_label
 
 STATUS_META = {
     "lead":     {"icon": "⬜", "badge": "secondary",  "label": "Lead"},

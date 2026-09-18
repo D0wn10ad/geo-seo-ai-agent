@@ -70,6 +70,28 @@ These directories are created on first use by their respective skills. They are 
 
 ---
 
+## 2026-05-28 — Region-aware GEO audits (CN support)
+
+**Merged from fork branch:** `cb3f9c0` (PR #4), including base feature commit `d99a0f0` and CN canon alignment `e661ad8`
+
+### Added — region profile system and CN reference data
+
+- `regions/profiles.yaml` plus `regions/README.md` establish a data-driven region layer for weights, engines, platforms, crawlers, schema defaults, and technical checks.
+- `regions/cn/ai-engines.md`, `regions/cn/platforms.md`, and `regions/cn/schema.md` add China-market reference material for engine evaluation, brand presence, and structured data guidance.
+- `scripts/region_resolver.py` adds TLD/content-based region detection and profile loading.
+- `skills/geo-*/SKILL.cn.md` overrides were added for region-specific command behavior in CN audits.
+
+### Modified — orchestrator, agents, outputs, and CRM
+
+- `geo/SKILL.md` now accepts `--region <code>`, runs a Phase 0 region-detection step, and applies region-specific scoring weights.
+- `agents/geo-{ai-visibility,platform-analysis,technical,content,schema}.md` now include Region Awareness sections for CN-specific engines, platforms, technical checks, and schema guidance.
+- Fork workflow skills (`geo-intent-matrix`, `geo-distribution-plan`, `geo-citation-pipeline`, `geo-competitor-citation`) gained region-aware behavior so CN audits use the right engines, platforms, and output naming.
+- Output and client tooling were updated for region-tagged artifacts, including `scripts/generate_pdf_report.py`, `scripts/crm_dashboard.py`, the CRM web UI, `skills/geo-report/SKILL.md`, `skills/geo-proposal/SKILL.md`, and `skills/geo-compare/SKILL.md`.
+
+### Reason
+
+The upstream toolkit was effectively global/Western-only. This fork change makes the GEO workflow usable for China-market audits by replacing hardcoded global assumptions with explicit region profiles, CN-specific references, and region-aware scoring/output behavior.
+
 ## Future changes
 
 Append new entries here in reverse-chronological order. Each entry should include:

@@ -76,6 +76,7 @@
       <tr>
         <th>Azienda</th>
         <th>Dominio</th>
+        <th>Regione</th>
         <th>Status</th>
         <th>GEO Score</th>
         <th>Audit</th>
@@ -91,6 +92,7 @@
       <tr onclick="location.href='/prospect/{{ p.id }}'" class="tier-{{ tier }}">
         <td class="fw-semibold text-white">{{ p.company }}</td>
         <td class="text-secondary" style="font-size:.85rem">{{ p.domain }}</td>
+        <td class="text-secondary" style="font-size:.85rem">{{ p | format_region }}</td>
         <td>
           <span class="badge bg-{{ meta.badge }}">{{ meta.icon }} {{ meta.label }}</span>
         </td>

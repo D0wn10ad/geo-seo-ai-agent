@@ -83,6 +83,7 @@
           <tr><td class="text-secondary">ID</td><td>{{ p.id }}</td></tr>
           <tr><td class="text-secondary">Settore</td><td>{{ p.industry or '—' }}</td></tr>
           <tr><td class="text-secondary">Paese</td><td>{{ p.country or '—' }}</td></tr>
+          <tr><td class="text-secondary">Regione</td><td>{{ p | format_region }}</td></tr>
           <tr><td class="text-secondary">Audit</td><td>{{ p.audit_date or '—' }}</td></tr>
           <tr><td class="text-secondary">MRR</td>
               <td class="fw-semibold" style="color:#58a6ff">{{ p.monthly_value | format_eur }}</td></tr>
