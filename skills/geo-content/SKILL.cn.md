@@ -134,6 +134,7 @@ When REGION is cn, overlay these 3 DSS checks onto the E-E-A-T rubric. Each is s
 3. Authoritative Source (权威来源) — 0-10
    - Does content reference or originate from recognized authorities?
    - CN-specific: gov.cn/edu.cn domains, Baidu Baike verified entries, industry standards (GB/T)
+   - Canonical tiering (统一分层): classify each cited source with the `CN-T1` to `CN-T4` model plus its two cross-cutting gates defined in `regions/cn/source-tiering.md`; every tier and threshold is `UNVERIFIED`. Do not use bare external letter labels. Apply 三区分治 (事实库/观点库/营销表达库, see `regions/cn/engineering-playbooks.md`) to keep authoritative claims separate from opinion and marketing expression. This is a reference only; the tier table stays in source-tiering.md and is not duplicated here.
    - Score 8-10: official standards, academic papers, government sources
    - Score 5-7: industry reports, verified Baike entries, known expert citations
    - Score 0-4: anonymous, self-published, uncited claims
