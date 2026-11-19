@@ -36,7 +36,9 @@ Baidu's AI search integrates ERNIE LLM with Baidu's index. It prioritizes:
 
 **Scoring criteria:**
 - Entity recognition via Baidu Baike: 30 points
+  - 归因提示 (attributed, UNVERIFIED): EEAT6.0 实体信任阈值，低于 60 降权、高于 85 视为优质 (文章 ID `Tlmyhz_NWUHwGbEwYHIzLA`, provenance row 9, UNVERIFIED, 未抽查确认)。此为归因指导，非本工具评分参数，不改变上方分值。
 - Content authority signals (gov/edu links): 25 points
+  - 归因提示 (attributed, UNVERIFIED): 多源交叉验证，单一来源占比上限 ≤8%，且需 ≥3个独立主体 (independent subject) 交叉印证；"来源" 指独立实体而非同一渠道的多篇帖子 (见 cross-validation.md, provenance rows 11-13, 文章 ID `VmcGBtJ6Ex5cgeFuG3oxMQ` / `7TACnZLx3k5UhUCROVyzUQ` / `2qOjVj6BPtmZ1GqPASY6Pg`, UNVERIFIED)。纯官方新闻稿/通稿来源 -60% 折损 (UNVERIFIED, CN 算法规则集, 尚无独立 provenance 行)。以上为归因指导，非本工具评分参数，不改变上方分值。
 - Chinese language quality: 25 points
 - Technical access (BaiduSpider allowed): 20 points
 
@@ -61,10 +63,14 @@ Preferences:
 3. Zhihu (知乎)
 4. Bilibili (哔哩哔哩)
 
+内容来源构成层 (content-source composition, 与上方 源易 整体使用率排名分离，非第二张并列排名表): 另一组 74 问题实测 (文章 ID `nRq7-RG96GL2xvo_L4sAiw`, provenance row 16-17, UNVERIFIED) 给出不同的取源排序作为替代视角：抖音 (Douyin) 排 #1，108 次引用 (UNVERIFIED, nRq7)；今日头条 (头条号) 21 次引用 (UNVERIFIED, nRq7)；字节系生态合计 129 次引用 (UNVERIFIED, nRq7, row 17)。另有相互竞争的归因声称：字节系内容占比约 48.7% (UNVERIFIED, 文章 ID `fKgDW_YDjUYXG-Pst64D9Q`, provenance row 21, 未抽查确认)。129 次引用与 48.7% 单位与来源不同，不可合并为单一数值。此层只描述内容来源构成，不改动上方 源易 排名或 MAU 分层表。
+
 **Scoring criteria:**
 - Content conciseness and scanability: 30 points
 - Freshness (published within 90 days): 25 points
+  - 归因提示 (attributed, UNVERIFIED): 陈旧内容时效折损 0.2× (UNVERIFIED, CN 算法规则集, 尚无独立 provenance 行)。此为归因指导，非本工具评分参数，不改变上方分值。
 - Cross-platform presence on ByteDance properties: 25 points
+  - 归因提示 (attributed, UNVERIFIED): 跨平台取源需 ≥3个独立主体交叉印证、单一来源占比 ≤8% (见 cross-validation.md, provenance rows 11-12, UNVERIFIED)。此为归因指导，非本工具评分参数，不改变上方分值。
 - Multi-format content (text + images): 20 points
 
 ## Yuanbao (腾讯元宝, Tencent Yuanbao)
@@ -95,6 +101,7 @@ Preferences:
 
 **Scoring criteria:**
 - WeChat ecosystem presence: 30 points
+  - 归因提示 (attributed, UNVERIFIED): 微信生态内容同样需 ≥3个独立主体交叉印证、单一来源占比 ≤8%，避免把同一账号多篇帖子算作多源 (见 cross-validation.md, provenance rows 11-13, UNVERIFIED)。此为归因指导，非本工具评分参数，不改变上方分值。
 - Social share validation: 25 points
 - Tencent-friendly formatting: 25 points
 - Structured data completeness: 20 points
@@ -122,6 +129,7 @@ Preferences:
 
 **Scoring criteria:**
 - E-commerce/technical content quality: 30 points
+  - 归因提示 (attributed, UNVERIFIED): 纯官方新闻稿/通稿来源 -60% 折损 (UNVERIFIED, CN 算法规则集, 尚无独立 provenance 行)；实体信任参考 EEAT6.0 阈值，低于 60 降权、高于 85 视为优质 (文章 ID `Tlmyhz_NWUHwGbEwYHIzLA`, provenance row 9, UNVERIFIED)。此为归因指导，非本工具评分参数，不改变上方分值。
 - Logical content structure: 25 points
 - Alibaba ecosystem presence: 25 points
 - Server-side rendering (no JS dependency): 20 points
@@ -151,6 +159,7 @@ Preferences:
 - Content depth and comprehensiveness: 35 points
 - Clear heading hierarchy and organization: 25 points
 - Academic/research quality signals: 20 points
+  - 归因提示 (attributed, UNVERIFIED): 学术/研究主张需 ≥3个独立主体交叉印证、单一来源占比 ≤8% (见 cross-validation.md, provenance rows 11-12, UNVERIFIED)。此为归因指导，非本工具评分参数，不改变上方分值。
 - Proper citation and references: 20 points
 
 ## DeepSeek (深度求索)
@@ -174,8 +183,11 @@ Preferences:
 3. Zhihu (知乎)
 4. Technical documentation sites
 
+内容来源构成层 (content-source composition, 与上方 源易 整体使用率排名分离，非第二张并列排名表): 同一组 74 问题实测 (文章 ID `nRq7-RG96GL2xvo_L4sAiw`, provenance row 18, UNVERIFIED) 给出不同的取源排序作为替代视角：阿里云开发者社区 排 #1，77 次引用 (UNVERIFIED, nRq7)；抖音 (Douyin) 在该实测中 ABSENT，出现 0 次引用 (UNVERIFIED, nRq7)，并非 DeepSeek 的偏好来源，真实来源为开发者社区。此层只描述内容来源构成，不改动上方 源易 排名或 MAU 分层表。
+
 **Scoring criteria:**
 - Technical depth and accuracy: 30 points
+  - 归因提示 (attributed, UNVERIFIED): 纯官方新闻稿/通稿来源 -60% 折损；技术主张需 ≥3个独立主体交叉印证、单一来源占比 ≤8% (见 cross-validation.md, provenance rows 11-13, UNVERIFIED)。此为归因指导，非本工具评分参数，不改变上方分值。
 - Code/infographic formatting quality: 25 points
 - Developer ecosystem presence (GitHub, tech forums): 25 points
 - Content structure and clarity: 20 points
