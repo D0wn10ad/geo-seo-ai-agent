@@ -15,6 +15,7 @@ technical access) per platform — different methodology from the base skill's 1
 optimized for CN engine behavior patterns.
 
 Reference: `regions/cn/ai-engines.md` for detailed per-engine rubrics.
+For per-engine content-source behavior (内容来源占比) see `regions/cn/platform-behavior.md`; agentic-commerce claims (元宝接入京东购物) are attributed in `regions/cn/provenance.md` T6 — reported only, `UNVERIFIED`, do not change any scoring rubric above.
 
 ---
 

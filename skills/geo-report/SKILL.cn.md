@@ -13,6 +13,7 @@ Replace the English-language report template with the Chinese-language template 
 Use CN-specific scoring labels, platforms, crawlers, and brand authorities throughout.
 
 Reference: `regions/cn/ai-engines.md` and `regions/cn/platforms.md` for CN engine and platform details.
+When REGION is cn, add the "中国区补充观测 (CN supplementary KPIs)" block from `regions/cn/kpi-and-method.md` Part A to the report — region-tagged, reported only, no scoring weight change. Do not merge into global reports.
 
 ---
 
