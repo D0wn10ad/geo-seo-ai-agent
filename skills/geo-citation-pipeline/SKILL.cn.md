@@ -12,6 +12,7 @@ parent: geo-citation-pipeline
 Apply the following adjustments to the base 6-stage pipeline.
 
 Reference: `regions/cn/ai-engines.md`, `regions/cn/platforms.md`.
+Use the five rules in `regions/cn/cross-validation.md` to judge whether an entity claim is independently corroborated, and the 6-step question-KB method in `regions/cn/engineering-playbooks.md` for the target-query content in Stage 1. All figures `UNVERIFIED`, reported only — do not change the pipeline stages or scoring above.
 
 ---
 

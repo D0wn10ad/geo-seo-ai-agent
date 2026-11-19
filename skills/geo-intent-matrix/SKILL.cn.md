@@ -12,6 +12,7 @@ parent: geo-intent-matrix
 Apply the following adjustments to the base intent matrix workflow.
 
 Reference: `regions/cn/ai-engines.md`, `regions/cn/platforms.md`.
+For CN query-frame → platform mapping see `regions/cn/engineering-playbooks.md` §2 (all platform affinities `UNVERIFIED`); use it to route each generated question to a CN platform hook. Reference only — do not change the intent distribution or scoring above.
 
 ---
 

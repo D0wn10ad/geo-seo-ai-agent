@@ -13,6 +13,7 @@ Replace the Western platform importance ranking with CN-specific platforms below
 Scoring methodology (presence, engagement, recency) uses CN-specific weighted scoring.
 
 Reference: `regions/cn/platforms.md` for platform details and verification methods.
+Classify each cited source with the canonical `CN-T1`–`CN-T4` model in `regions/cn/source-tiering.md` (all tiers/thresholds `UNVERIFIED`); reputation and anti-abuse red lines are in `regions/cn/compliance-anti-abuse.md` (prohibitions only, never operating steps). Reference only — do not change the scoring above.
 
 ---
 

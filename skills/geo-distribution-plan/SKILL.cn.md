@@ -12,6 +12,7 @@ parent: geo-distribution-plan
 Use this CN-only platform inventory and rewrite constraints instead of the global defaults.
 
 Reference: `regions/cn/platforms.md` for full CN platform profiles.
+For query-frame → platform routing see `regions/cn/engineering-playbooks.md` §2 (an `UNVERIFIED` working draft); keep the tier matrix above as the default. Reference only — do not change the cadence or scoring above.
 
 ---
 
