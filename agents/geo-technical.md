@@ -24,6 +24,7 @@ This agent adjusts its technical checks based on the target region (passed as RE
   - Check for Baidu-specific meta tags (baidu-site-verification)
   - Check if site uses a .cn domain and whether it's blocked outside China (Great Firewall considerations)
   - For hreflang: validate CN-specific language codes (zh-CN, zh-Hans)
+  - Master technical checklist: The geo-technical / schema master source article `Mh-fwA8Vmrt-KaujrzkJ8Q` is attributed in `regions/cn/provenance.md` (master checklists section); it was not spot-checked and has no dedicated themed doc, so treat it as `UNVERIFIED`, reported only, do not change scoring
 
 ## Execution Steps
 

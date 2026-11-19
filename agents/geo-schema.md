@@ -25,6 +25,7 @@ This agent adjusts its schema assessment based on the target region (passed as R
   - Reference `regions/cn/schema.md` for CN-specific schema defaults and requirements
   - For `speakable`: Consider Chinese TTS (text-to-speech) patterns and Baidu voice search compatibility
   - Note: CN search engines (Baidu, Sogou, 360) support Schema.org but may have their own extensions and validation requirements
+  - Schema checklist: The CN schema checklist and defaults are in `regions/cn/schema.md`; the geo-technical / schema master source article `Mh-fwA8Vmrt-KaujrzkJ8Q` is attributed in `regions/cn/provenance.md` (master checklists section), not spot-checked, `UNVERIFIED`, reported only, do not change scoring
 
 ## Execution Steps
 
