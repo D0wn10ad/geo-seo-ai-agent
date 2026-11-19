@@ -322,6 +322,8 @@ Generate a file called `GEO-AUDIT-REPORT.md` (or `GEO-AUDIT-REPORT-CN.md` when
 | [url] | [title] | [issue count] |
 ```
 
+When REGION is `cn`, add a "CN supplementary KPIs" section to the report, populated by reference from `regions/cn/kpi-and-method.md` Part A. These KPIs are reported only: keep externally attributed values tagged `UNVERIFIED`, and do not change scoring weights or the GEO Score formula. Global (non-CN) audits omit this section.
+
 ---
 
 ## Quality Gates
