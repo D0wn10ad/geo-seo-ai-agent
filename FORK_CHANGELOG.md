@@ -6,6 +6,44 @@ The upstream LICENSE and all existing skill / agent / script files are **unmodif
 
 ---
 
+## 2026-11-19 — CN knowledge expansion (region-aware GEO CN)
+
+**Scope:** Documentation-only expansion of the China-market knowledge base. No upstream rebase or merge; no scoring weights, commands, Python dependencies, or ML code added.
+
+### Added — themed CN knowledge docs
+
+Eight new reference docs under `regions/cn/`. Every external figure is attributed to a source article ID and marked `UNVERIFIED`; none is promoted to a toolkit scoring parameter.
+
+| Doc | Role |
+| --- | --- |
+| `regions/cn/provenance.md` | Claim-to-source ledger (45 rows, all `UNVERIFIED`) plus a 28-source index across six themes |
+| `regions/cn/source-tiering.md` | One canonical source-authority model: four tiers `CN-T1` through `CN-T4` plus two cross-cutting gates |
+| `regions/cn/cross-validation.md` | Five multi-source corroboration rules R1 through R5, attributed and `UNVERIFIED` |
+| `regions/cn/platform-behavior.md` | Per-engine sourcing plus a separate content-composition % layer |
+| `regions/cn/engineering-playbooks.md` | 三区分治 governance, a 6-step question-knowledge-base, and query-frame mapping |
+| `regions/cn/compliance-anti-abuse.md` | Black-hat red lines, recorded as prohibitions only |
+| `regions/cn/kpi-and-method.md` | Part A reported-only supplementary CN KPIs; Part B a documentation-only method note (no ML port) |
+| `regions/cn/README.md` | Navigation index for the CN knowledge docs |
+
+### Modified — reconciliation, wiring, and outputs
+
+- `regions/cn/ai-engines.md`: per-engine referral-platform lists reconciled with attributed `UNVERIFIED` alternatives for Doubao and DeepSeek, and CN algorithm rules woven into the engine rubrics (single-source cap, at least three independent subjects, official-press penalty, stale-content multiplier), all `UNVERIFIED`.
+- `skills/geo-content/SKILL.cn.md`: canonical source tiering folded into the DSS "Authoritative Source" check by pointer, not by duplication.
+- `regions/profiles.yaml`: factual engine-id fix, `ernie` renamed to `yuanbao` in the CN `ai_engines` list.
+- Seven CN skill overrides (plus a new `skills/geo-compare/SKILL.cn.md`) and the Region Awareness CN blocks in five agents were wired to the new docs by reference.
+- `skills/geo-audit/SKILL.md`: a CN-gated pointer surfaces supplementary CN KPIs in audit and report output; global audits are unchanged.
+- `openspec/changes/extend-region-aware-geo-cn/`: new change entry with proposal, design, and tasks.
+
+### Reason
+
+The 2026-05-28 CN support added region profiles and three base reference docs but left the CN knowledge layer thin. This change gives auditors a provenance-first, attributed body of CN material covering source trust, cross-validation, per-engine behavior, engineering playbooks, compliance, and supplementary KPIs, and reconciles the earlier engine and tiering material against it.
+
+### Metric-layer rule and guardrails
+
+The 源易 overall-usage tables stay authoritative and byte-identical. Per-agent content-composition percentages are a separate, `UNVERIFIED` layer; competing attributed claims are never merged, and DeepSeek's 抖音 source is recorded as absent (0 citations). All new figures are attributed and `UNVERIFIED`. No global or CN scoring weights changed, and no new scoring dimension or weight key was added. Black-hat terms appear only as prohibitions in `compliance-anti-abuse.md`. The method track is documentation only, with no ML port.
+
+---
+
 ## 2026-05-16 — Fork inception
 
 **Forked from upstream commit:** `5d8c0afe3b44bf9123f6849e97541f85eefabaca` ("Feature/isolated python venv linux/mac" — PR #48)
