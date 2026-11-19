@@ -23,6 +23,8 @@ When REGION is `cn`:
 - Step 2 citability: Reference CN AI engine rubrics (Baidu AI, Doubao, Yuanbao, Qwen, Kimi, DeepSeek)
 - Step 3 crawlers: Prioritize Baidu Spider, Bytespider; note that CN crawlers may have different robots.txt behavior
 - Step 5 brand mentions: Use `regions/cn/platforms.md` platform list instead of Western defaults
+- Source trust: Classify each cited source with the canonical `CN-T1` to `CN-T4` model plus its two cross-cutting gates in `regions/cn/source-tiering.md`; every tier and threshold is `UNVERIFIED`, reported only, do not change scoring
+- Claim corroboration: Apply the five cross-validation rules R1 through R5 in `regions/cn/cross-validation.md` to judge whether an entity claim is independently corroborated; all figures `UNVERIFIED`, reported only, do not change scoring
 
 ## Execution Steps
 

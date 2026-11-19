@@ -24,6 +24,7 @@ This agent adjusts its content quality assessment based on the target region (pa
   - Experience: Assess for Chinese-market-specific case studies and first-hand accounts
   - AI content detection: Chinese AI content has different patterns (check for generic Chengyu usage, formulaic business writing)
   - Topical authority: Check against Chinese search intent patterns (different query formulation)
+  - Canonical source tiering: Classify authoritative sources with the `CN-T1` to `CN-T4` model plus its two cross-cutting gates in `regions/cn/source-tiering.md`; every tier and threshold is `UNVERIFIED`. Apply 三区分治 (事实库/观点库/营销表达库, see `regions/cn/engineering-playbooks.md` playbook 1) to keep authoritative claims separate from opinion and marketing expression. Reported only, do not change scoring
 
 ## Execution Steps
 

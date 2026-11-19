@@ -24,6 +24,7 @@ When REGION is `cn`:
 - Community validation: Check Zhihu instead of Reddit, Douyin/Bilibili for video presence
 - Cross-platform comparison: Compare across CN engines only
 - Output platform names accordingly in the report
+- Platform behavior: For per-engine sourcing behavior and the content-source-composition layer see `regions/cn/platform-behavior.md`; its percentages are content composition, not market usage, and competing attributed claims stay separate, all `UNVERIFIED`, reported only, do not change scoring
 
 ## Execution Steps
 
