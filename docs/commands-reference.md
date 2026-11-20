@@ -158,6 +158,7 @@ Analyzes which AI crawlers can access the site and provides a recommended robots
 **What it does**
 
 - Fetches and parses `robots.txt`, mapping every User-agent directive to the 14 known AI crawlers.
+- Detects Cloudflare's managed robots.txt, which silently prepends AI crawler blocks to the site's own file.
 - Checks a sample of key pages for `<meta name="robots">` overrides and `X-Robots-Tag` HTTP headers.
 - Checks for the presence of `/llms.txt` and `/.well-known/ai-plugin.json`.
 - Assesses whether key content requires JavaScript rendering (AI crawlers do not execute JS).
