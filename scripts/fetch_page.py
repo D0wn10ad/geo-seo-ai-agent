@@ -119,13 +119,22 @@ def fetch_page(url: str, timeout: int = 30) -> dict:
                 if level == 1:
                     result["h1_tags"].append(text)
 
-        # Structured data (JSON-LD) — extract before decompose() mutates the tree
+        # Structured data (JSON-LD) — extract before decompose() mutates the tree.
+        # Flatten @graph and top-level arrays so each entity is its own block with
+        # its own @type; otherwise a single {"@graph":[...]} block (what Next.js and
+        # most CMSs emit) reports as one block with @type None and looks empty.
         for script in soup.find_all("script", type="application/ld+json"):
             try:
-                data = json.loads(script.string)
-                result["structured_data"].append(data)
+                raw = script.string or script.get_text()
+                data = json.loads(raw)
             except (json.JSONDecodeError, TypeError):
                 result["errors"].append("Invalid JSON-LD detected")
+                continue
+            for node in (data if isinstance(data, list) else [data]):
+                if isinstance(node, dict) and isinstance(node.get("@graph"), list):
+                    result["structured_data"].extend(node["@graph"])
+                else:
+                    result["structured_data"].append(node)
 
         # SSR check — must run BEFORE decompose() mutates the tree
         js_app_roots = soup.find_all(
@@ -225,6 +234,7 @@ def fetch_robots_txt(url: str, timeout: int = 15) -> dict:
         "exists": False,
         "content": "",
         "ai_crawler_status": {},
+        "cloudflare_managed": False,
         "sitemaps": [],
         "errors": [],
     }
@@ -235,6 +245,9 @@ def fetch_robots_txt(url: str, timeout: int = 15) -> dict:
         if response.status_code == 200:
             result["exists"] = True
             result["content"] = response.text
+            result["cloudflare_managed"] = (
+                "# begin cloudflare managed content" in response.text.lower()
+            )
 
             # Parse for each AI crawler
             lines = response.text.split("\n")
