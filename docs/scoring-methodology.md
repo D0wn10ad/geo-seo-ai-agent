@@ -62,7 +62,7 @@ geo_score = sum(sub_scores[k] * w for k, w in weights.items())
 
 ## AI Citability & Visibility (25%)
 
-**Implemented by:** [`agents/geo-ai-visibility.md`](../agents/geo-ai-visibility.md) and [`scripts/citability_scorer.py`](../scripts/citability_scorer.py)
+**Implemented by:** [`agents/geo-ai-visibility.md`](../agents/geo-ai-visibility.md) and [`geo/scripts/citability_scorer.py`](../geo/scripts/citability_scorer.py)
 
 ### What the scorer looks at
 
@@ -75,7 +75,7 @@ The citability sub-score is itself a weighted composite of four components (weig
 | Crawler Access Score | 25% |
 | llms.txt Score | 10% |
 
-**Citability scoring** (`scripts/citability_scorer.py`) analyses every substantive content block on the page — sections bounded by headings — and scores each one across five dimensions:
+**Citability scoring** (`geo/scripts/citability_scorer.py`) analyses every substantive content block on the page — sections bounded by headings — and scores each one across five dimensions:
 
 | Dimension | Max points | Key signals |
 |---|---|---|
@@ -93,7 +93,7 @@ The passage score is the sum of all five dimensions (maximum 100). The page-leve
 - 10 points if no sitemap is referenced in robots.txt
 - Floor at 0
 
-**llms.txt Score** (`agents/geo-ai-visibility.md` and `scripts/llmstxt_generator.py`):
+**llms.txt Score** (`agents/geo-ai-visibility.md` and `geo/scripts/llmstxt_generator.py`):
 - 0 — absent
 - 30 — present but malformed
 - 50 — present, valid format, minimal content
@@ -108,7 +108,7 @@ A good AI Citability score (70+) means the page has multiple passages that are s
 
 ## Brand Authority Signals (20%)
 
-**Implemented by:** [`agents/geo-ai-visibility.md`](../agents/geo-ai-visibility.md) and [`scripts/brand_scanner.py`](../scripts/brand_scanner.py)
+**Implemented by:** [`agents/geo-ai-visibility.md`](../agents/geo-ai-visibility.md) and [`geo/scripts/brand_scanner.py`](../geo/scripts/brand_scanner.py)
 
 ### What the scorer looks at
 
@@ -116,13 +116,13 @@ Brand authority is assessed by checking the brand's presence on platforms that A
 
 | Platform | Points available | Method |
 |---|---|---|
-| Wikipedia | 30 | Wikipedia API search; Wikidata entity lookup (`scripts/brand_scanner.py`) |
+| Wikipedia | 30 | Wikipedia API search; Wikidata entity lookup (`geo/scripts/brand_scanner.py`) |
 | Industry / niche sources | 25 | Review platforms (G2, Trustpilot, Capterra), press mentions, authoritative industry sites |
 | Reddit | 20 | Presence, recency, and sentiment of brand discussions |
 | YouTube | 15 | Official channel existence and third-party video coverage |
 | LinkedIn | 10 | Company page presence and activity |
 
-The correlation values cited in `scripts/brand_scanner.py` come from an Ahrefs December 2025 study of 75,000 brands: YouTube shows the strongest correlation (0.737) with AI citations; domain rating / backlinks show a weak correlation (0.266).
+The correlation values cited in `geo/scripts/brand_scanner.py` come from an Ahrefs December 2025 study of 75,000 brands: YouTube shows the strongest correlation (0.737) with AI citations; domain rating / backlinks show a weak correlation (0.266).
 
 ### What good vs bad looks like
 
@@ -260,7 +260,7 @@ A strong platform score requires passing the crawler-access and entity-recogniti
 
 ## Caveats
 
-**Deterministic vs LLM-judged scoring.** The citability scorer (`scripts/citability_scorer.py`) and the llms.txt validator (`scripts/llmstxt_generator.py`) are fully deterministic: given the same HTML, they return the same numerical result every time. The Brand Authority, Content E-E-A-T, Technical, Schema, and Platform scores are produced by LLM subagents following documented rubrics; they are guided evaluations rather than reproducible computations. Two runs on the same URL may produce small differences in LLM-judged categories.
+**Deterministic vs LLM-judged scoring.** The citability scorer (`geo/scripts/citability_scorer.py`) and the llms.txt validator (`geo/scripts/llmstxt_generator.py`) are fully deterministic: given the same HTML, they return the same numerical result every time. The Brand Authority, Content E-E-A-T, Technical, Schema, and Platform scores are produced by LLM subagents following documented rubrics; they are guided evaluations rather than reproducible computations. Two runs on the same URL may produce small differences in LLM-judged categories.
 
 **Weights are opinionated.** The 25/20/20/15/10/10 weight distribution reflects the judgement of the tool's authors about the relative importance of each category for AI citation likelihood at the time of writing. These weights are not derived from a controlled study and are subject to change as AI search platforms evolve.
 
@@ -268,4 +268,4 @@ A strong platform score requires passing the crawler-access and entity-recogniti
 
 **Schema validation is structural, not semantic.** The schema agent checks that JSON-LD is syntactically valid, uses recognised Schema.org types and properties, and includes required fields. It does not verify that the values are accurate or that the described entity matches the actual organisation or person. A schema block that passes validation may still contain incorrect information.
 
-**llms.txt is an emerging standard.** The llms.txt specification referenced by `scripts/llmstxt_generator.py` and `agents/geo-ai-visibility.md` is not yet universally adopted by AI crawlers. Its presence or absence does not guarantee any specific crawler behaviour at this time.
+**llms.txt is an emerging standard.** The llms.txt specification referenced by `geo/scripts/llmstxt_generator.py` and `agents/geo-ai-visibility.md` is not yet universally adopted by AI crawlers. Its presence or absence does not guarantee any specific crawler behaviour at this time.

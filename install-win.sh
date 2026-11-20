@@ -4,7 +4,7 @@ set -euo pipefail
 # ============================================================
 # GEO-SEO AI Agent Toolkit Installer — Windows (Git Bash)
 # Run this script from Git Bash, NOT PowerShell or CMD.
-# Delegates file copying to scripts/update_toolkit.py.
+# Delegates file copying to geo/scripts/update_toolkit.py.
 # ============================================================
 
 REPO_URL="https://github.com/D0wn10ad/geo-seo-ai-agent.git"
@@ -119,7 +119,7 @@ main() {
 
     # ---- Deploy files via update_toolkit.py ----
     print_info "Deploying skills, agents, and platform adapter..."
-    "$PYTHON_CMD" "$SOURCE_DIR/scripts/update_toolkit.py" \
+    "$PYTHON_CMD" "$SOURCE_DIR/geo/scripts/update_toolkit.py" \
         --upstream "$REPO_URL" \
         --target "$SOURCE_DIR" \
         --all-platforms \

@@ -4,8 +4,15 @@ The repository is structured to seamlessly provide GEO+SEO support across both *
 
 ```
 geo-seo-claude/
-├── geo/                          # Main skill orchestrator
-│   └── SKILL.md                  # Primary skill file with commands & routing
+├── geo/                          # Main skill orchestrator + Python utilities
+│   ├── SKILL.md                  # Primary skill file with commands & routing
+│   └── scripts/                  # Python utilities (packaged with the geo skill)
+│       ├── fetch_page.py         # Page fetching & parsing
+│       ├── citability_scorer.py  # AI citability scoring engine
+│       ├── brand_scanner.py      # Brand mention detection
+│       ├── llmstxt_generator.py  # llms.txt validation & generation
+│       ├── generate_pdf_report.py # PDF report generator (ReportLab)
+│       └── update_toolkit.py     # Cross-platform installer/updater
 ├── platform/                     # Platform adapter layer
 │   ├── SKILL.md                  # Platform detection + abstract tool mapping
 │   └── TOOL-MAP.md               # Abstract-to-real tool name reference table
@@ -41,13 +48,6 @@ geo-seo-claude/
 ├── .opencode/                    # OpenCode-specific config
 │   ├── agents/                   # 5 subagents (OpenCode permission format)
 │   └── commands/                 # 21 command wrappers
-├── scripts/                      # Python utilities
-│   ├── fetch_page.py             # Page fetching & parsing
-│   ├── citability_scorer.py      # AI citability scoring engine
-│   ├── brand_scanner.py          # Brand mention detection
-│   ├── llmstxt_generator.py      # llms.txt validation & generation
-│   ├── generate_pdf_report.py    # PDF report generator (ReportLab)
-│   └── update_toolkit.py         # Cross-platform installer/updater
 ├── schema/                       # JSON-LD templates
 │   ├── organization.json         # Organization schema (with sameAs)
 │   ├── local-business.json       # LocalBusiness schema
@@ -92,7 +92,7 @@ The adapter is loaded first (via `AGENTS.md`), ensuring the tool mapping is avai
 
 ### Generate, Don't Duplicate
 
-Some platform-specific files in `.opencode/` are **generated at install time** by `scripts/update_toolkit.py`, never hand-edited:
+Some platform-specific files in `.opencode/` are **generated at install time** by `geo/scripts/update_toolkit.py`, never hand-edited:
 
 | Derived File | Source of Truth | Generator |
 |---|---|---|
@@ -102,7 +102,7 @@ Some platform-specific files in `.opencode/` are **generated at install time** b
 
 **Why:** Prevents divergence. Previously, `.opencode/agents/*` and `agents/*` were manually maintained copies that drifted apart — the OpenCode copies lacked Region Awareness sections introduced in the `feature/region-aware-geo` branch. By generating at install time, OpenCode agents always reflect the same body content as Claude Code agents, with only the frontmatter differing.
 
-**Rule:** If you need to change an OpenCode agent body, edit `agents/geo-<name>.md`. If you need to change an OpenCode command wrapper, edit the `_GEO_COMMANDS` dict in `scripts/update_toolkit.py`. Never edit `.opencode/` files directly.
+**Rule:** If you need to change an OpenCode agent body, edit `agents/geo-<name>.md`. If you need to change an OpenCode command wrapper, edit the `_GEO_COMMANDS` dict in `geo/scripts/update_toolkit.py`. Never edit `.opencode/` files directly.
 
 **Other derived relationships:**
 

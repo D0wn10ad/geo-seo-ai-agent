@@ -27,7 +27,7 @@ Structured data is the primary machine-readable signal that tells AI systems wha
 
 **IMPORTANT:** `` `fetch_url` `` converts HTML to markdown and strips `<head>` content, which removes JSON-LD blocks. Use `fetch_page.py` instead:
 ```bash
-python3 scripts/fetch_page.py <url> page
+python3 geo/scripts/fetch_page.py <url> page
 ```
 The output includes a `structured_data` array with all parsed JSON-LD blocks from the page.
 

@@ -10,4 +10,4 @@ Python utility scripts used by the GEO skills and agents.
 - `update_toolkit.py` — Cross-platform installer/updater
 - `webapp/app.py` — Flask + HTMX CRM web UI
 
-See [docs/](../docs/README.md) for full documentation.
+See [docs/](../../docs/README.md) for full documentation.

@@ -34,7 +34,7 @@ Yes, but you must use Git Bash, not PowerShell or Command Prompt. The Windows in
 
 ### What does `install.sh` actually do?
 
-It checks for Git and Python 3.8+, then delegates file copying to `scripts/update_toolkit.py` which copies files into the shared skill directory (`~/.claude/skills/geo/`), platform-specific agent directories, and OpenCode command wrappers. It then creates an isolated Python virtual environment and installs dependencies from `requirements.txt`. If you run it interactively, it also offers to install the Playwright Chromium browser for screenshot support. The installer works both from a cloned local directory and via a `curl | bash` pipe from the repository URL.
+It checks for Git and Python 3.8+, then delegates file copying to `geo/scripts/update_toolkit.py` which copies files into the shared skill directory (`~/.claude/skills/geo/`), platform-specific agent directories, and OpenCode command wrappers. It then creates an isolated Python virtual environment and installs dependencies from `requirements.txt`. If you run it interactively, it also offers to install the Playwright Chromium browser for screenshot support. The installer works both from a cloned local directory and via a `curl | bash` pipe from the repository URL.
 
 ### Do I need Playwright?
 
@@ -95,7 +95,7 @@ No. The tool audits signals that correlate with AI visibility and provides recom
 
 ### Can I use this with OpenCode?
 
-Yes. The project provides `.opencode/agents/` (5 agent definitions in OpenCode's `permission:` frontmatter format) and `.opencode/commands/` (21 command wrappers). Install with `python3 scripts/update_toolkit.py`. The `platform/` adapter layer resolves abstract tool names (`` `fetch_url` `` → `webfetch`) at runtime.
+Yes. The project provides `.opencode/agents/` (5 agent definitions in OpenCode's `permission:` frontmatter format) and `.opencode/commands/` (21 command wrappers). Install with `python3 geo/scripts/update_toolkit.py`. The `platform/` adapter layer resolves abstract tool names (`` `fetch_url` `` → `webfetch`) at runtime.
 
 ### Does it submit anything to third-party services?
 

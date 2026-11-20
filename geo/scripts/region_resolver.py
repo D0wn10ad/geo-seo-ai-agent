@@ -5,8 +5,8 @@ Detects target market region from URL and page content, loads region
 profiles from regions/profiles.yaml.
 
 Usage:
-    python3 scripts/region_resolver.py detect <url> [content_file]
-    python3 scripts/region_resolver.py profile <region_code>
+    python3 geo/scripts/region_resolver.py detect <url> [content_file]
+    python3 geo/scripts/region_resolver.py profile <region_code>
 """
 
 import sys
@@ -16,7 +16,7 @@ import yaml
 from urllib.parse import urlparse
 
 
-PROFILES_PATH = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "regions", "profiles.yaml")
+PROFILES_PATH = os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))), "regions", "profiles.yaml")
 
 
 def load_profiles():

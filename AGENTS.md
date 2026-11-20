@@ -4,14 +4,14 @@
 
 ## What this is
 
-A **multi-platform AI agent toolkit** for Generative Engine Optimization (GEO) audits. The code IS the Markdown — `geo/SKILL.md` is the entrypoint, `skills/geo-*/SKILL.md` are sub-commands, `agents/*.md` are parallel subagent definitions. Python scripts under `scripts/` are utility helpers invoked by skills.
+A **multi-platform AI agent toolkit** for Generative Engine Optimization (GEO) audits. The code IS the Markdown — `geo/SKILL.md` is the entrypoint, `skills/geo-*/SKILL.md` are sub-commands, `agents/*.md` are parallel subagent definitions. Python scripts under `geo/scripts/` are utility helpers invoked by skills.
 
 ## Essential commands
 
 ```
 pip install -r requirements.txt              # install Python deps (loose-range deps)
 pytest tests/                                 # run all tests (or `pytest tests/<file>.py`)
-python scripts/fetch_page.py page <url>       # test page fetching
+python geo/scripts/fetch_page.py page <url>   # test page fetching
 ```
 
 Requires Python 3.10+ (install.sh / install-win.sh probe python3.15..3.10; Pillow/lxml drop 3.9) — trust the installers over README.md.
@@ -37,10 +37,10 @@ Client-facing artifacts written to the repo root are gitignored on purpose: `/GE
 
 ## Python scripts
 
-- `scripts/fetch_page.py` — most-used utility. CLI modes: `page`, `robots`, `llms`, `sitemap`, `blocks`, `full`; `robots` mode returns `cloudflare_managed:true` when Cloudflare-managed robots is detected.
-- `scripts/generate_pdf_report.py` — 941 lines, heaviest script. Uses ReportLab directly with custom drawing primitives
-- `scripts/crm_dashboard.py` — CLI CRM (see quirk 4 below)
-- `scripts/webapp/app.py` — Flask + HTMX CRM web UI; its `region_label()` falls back from `region` to `country`
+- `geo/scripts/fetch_page.py` — most-used utility. CLI modes: `page`, `robots`, `llms`, `sitemap`, `blocks`, `full`; `robots` mode returns `cloudflare_managed:true` when Cloudflare-managed robots is detected.
+- `geo/scripts/generate_pdf_report.py` — 941 lines, heaviest script. Uses ReportLab directly with custom drawing primitives
+- `geo/scripts/crm_dashboard.py` — CLI CRM (see quirk 4 below)
+- `geo/scripts/webapp/app.py` — Flask + HTMX CRM web UI; its `region_label()` falls back from `region` to `country`
 
 ## Tests (`tests/`)
 
@@ -50,8 +50,8 @@ Client-facing artifacts written to the repo root are gitignored on purpose: `/GE
 
 ### 1. Runtime path rewriting in deployed markdown
 
-The deploy flow rewrites `python3` references in installed skill/agent `.md` files at deployment time (in `scripts/update_toolkit.py`, not `install.sh`) so runtime commands resolve to installed paths:
-- `python3 scripts/<name>.py` → `~/.claude/skills/geo/scripts/<name>.py` (self-executing shebang)
+The deploy flow rewrites `python3` references in installed skill/agent `.md` files at deployment time (in `geo/scripts/update_toolkit.py`, not `install.sh`) so runtime commands resolve to installed paths:
+- `python3 geo/scripts/<name>.py` → `~/.claude/skills/geo/scripts/<name>.py` (self-executing shebang)
 - `python3 -c <code>` → `<venv>/bin/python3 -c <code>`
 - `python3 -m <mod>` → `<venv>/bin/python3 -m <mod>`
 

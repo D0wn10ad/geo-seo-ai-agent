@@ -98,7 +98,7 @@ rg '`fetch_url`' \
 Core utility still works after install:
 
 ```bash
-python3 scripts/fetch_page.py page https://example.com --timeout 10 2>&1 | head -20
+python3 geo/scripts/fetch_page.py page https://example.com --timeout 10 2>&1 | head -20
 ```
 
 **Verify:** Returns HTTP status, title, meta description, and text content of example.com. No import errors.
@@ -161,7 +161,7 @@ In OpenCode CLI:
 
 ```bash
 # Launch the CRM web app
-python3 scripts/webapp/app.py
+python3 geo/scripts/webapp/app.py
 ```
 
 **Verify:** Flask starts without import errors. Visit `http://localhost:5000` — dashboard renders.

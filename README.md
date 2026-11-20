@@ -113,7 +113,18 @@ All 22 commands work identically in Claude Code (`/geo <cmd>`) and OpenCode (`/g
 
 ```
 geo-seo-ai-agent/
-├── geo/                        # Main orchestrator (SKILL.md)
+├── geo/                        # Main orchestrator (SKILL.md) + Python utilities
+│   ├── SKILL.md
+│   └── scripts/                # Python utilities
+│       ├── fetch_page.py
+│       ├── citability_scorer.py
+│       ├── brand_scanner.py
+│       ├── llmstxt_generator.py
+│       ├── generate_pdf_report.py
+│       ├── update_toolkit.py   ═ cross-platform installer
+│       ├── region_resolver.py
+│       ├── crm_dashboard.py
+│       └── webapp/
 ├── skills/                     # 19 specialized sub-skills
 │   ├── geo-audit/
 │   ├── geo-citability/
@@ -141,15 +152,6 @@ geo-seo-ai-agent/
 ├── .opencode/                  # OpenCode-specific files
 │   ├── agents/                 # 5 subagents (OpenCode format)
 │   └── commands/               # 21 /geo-* command wrappers
-├── scripts/                    # Python utilities
-│   ├── fetch_page.py
-│   ├── citability_scorer.py
-│   ├── brand_scanner.py
-│   ├── llmstxt_generator.py
-│   ├── generate_pdf_report.py
-│   ├── update_toolkit.py       ═ cross-platform installer
-│   ├── crm_dashboard.py
-│   └── webapp/
 ├── schema/                     # JSON-LD templates (6 files)
 ├── docs/                       # Full documentation
 │   ├── getting-started.md

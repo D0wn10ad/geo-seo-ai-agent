@@ -27,7 +27,7 @@ npm install -g @opencode-ai/cli
 
 ---
 
-**Note:** All `/geo` slash commands work in both platforms. The project provides platform-specific agent files in `.opencode/agents/` and command wrappers in `.opencode/commands/`. Use `scripts/update_toolkit.py` to install for both platforms.
+**Note:** All `/geo` slash commands work in both platforms. The project provides platform-specific agent files in `.opencode/agents/` and command wrappers in `.opencode/commands/`. Use `geo/scripts/update_toolkit.py` to install for both platforms.
 
 ## Installation
 
@@ -66,7 +66,7 @@ Right-click the cloned folder and choose "Open Git Bash here", or navigate to it
 ```bash
 git clone https://github.com/zubair-trabzada/geo-seo-claude.git
 cd geo-seo-claude
-python3 scripts/update_toolkit.py
+python3 geo/scripts/update_toolkit.py
 ```
 
 The script auto-detects which AI agent platform(s) are installed and installs skills (shared), Claude Code agents, OpenCode agents, and OpenCode command wrappers accordingly. Pass `--all-platforms` to install for both regardless of detection.

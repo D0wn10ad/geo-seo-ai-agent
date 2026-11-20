@@ -4,7 +4,7 @@ This directory defines region-specific profiles for the GEO audit pipeline. Each
 
 ## How region detection works
 
-The `scripts/region_resolver.py` script handles region resolution:
+The `geo/scripts/region_resolver.py` script handles region resolution:
 
 1. If `--region <code>` is passed explicitly, use that region
 2. Otherwise, auto-detect from the URL and page content:

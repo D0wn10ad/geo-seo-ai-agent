@@ -74,7 +74,7 @@ See [commands-reference.md](commands-reference.md) for `/geo crawlers`.
 
 **Outputs (generation mode):** A ready-to-deploy `llms.txt` file and `GEO-LLMSTXT-GENERATION.md` explaining page selection rationale.
 
-**Dependencies:** `scripts/llmstxt_generator.py` provides validation and generation helpers.
+**Dependencies:** `geo/scripts/llmstxt_generator.py` provides validation and generation helpers.
 
 See [commands-reference.md](commands-reference.md) for `/geo llmstxt`.
 
@@ -90,7 +90,7 @@ See [commands-reference.md](commands-reference.md) for `/geo llmstxt`.
 
 **Key insight:** YouTube mention correlation with AI citation is ~0.737; Domain Rating correlation is ~0.266 (Ahrefs, December 2025 study of 75,000 brands).
 
-**Dependencies:** `scripts/brand_scanner.py` provides the platform-check framework. Wikipedia checks use the Wikipedia API directly via Bash (web search alone produces false negatives).
+**Dependencies:** `geo/scripts/brand_scanner.py` provides the platform-check framework. Wikipedia checks use the Wikipedia API directly via Bash (web search alone produces false negatives).
 
 See [commands-reference.md](commands-reference.md) for `/geo brands`.
 
@@ -114,13 +114,13 @@ See [commands-reference.md](commands-reference.md) for `/geo platforms`.
 
 **Purpose:** Detects, validates, and generates Schema.org structured data (JSON-LD preferred). Structured data is the primary machine-readable signal AI models use to identify and trust entities.
 
-**Inputs:** A URL. Uses `scripts/fetch_page.py` to retrieve raw HTML including `<head>` content (WebFetch strips it).
+**Inputs:** A URL. Uses `geo/scripts/fetch_page.py` to retrieve raw HTML including `<head>` content (WebFetch strips it).
 
 **Outputs:** `GEO-SCHEMA-REPORT.md` — detected schemas with validation results, `sameAs` entity-linking audit, deprecated schema flags (HowTo removed Sep 2023, FAQPage restricted Aug 2023), and ready-to-paste JSON-LD code blocks.
 
 **GEO-critical schemas:** Organization + `sameAs`, Article + Author (Person), speakable property, BreadcrumbList, WebSite + SearchAction.
 
-**Dependencies:** `scripts/fetch_page.py` (raw HTML extraction); `schema/*.json` templates (used as generation references).
+**Dependencies:** `geo/scripts/fetch_page.py` (raw HTML extraction); `schema/*.json` templates (used as generation references).
 
 See [commands-reference.md](commands-reference.md) for `/geo schema`.
 
@@ -176,7 +176,7 @@ See [commands-reference.md](commands-reference.md) for `/geo report`.
 
 **Outputs:** `GEO-REPORT-[brand].pdf` — cover page with score gauge, score breakdown with bar chart, AI platform readiness chart, crawler access table (green/red coded), findings by severity, action plan, and methodology appendix.
 
-**Dependencies:** `scripts/generate_pdf_report.py` (requires `pip install reportlab`).
+**Dependencies:** `geo/scripts/generate_pdf_report.py` (requires `pip install reportlab`).
 
 See [commands-reference.md](commands-reference.md) for `/geo report-pdf`.
 
@@ -192,7 +192,7 @@ See [commands-reference.md](commands-reference.md) for `/geo report-pdf`.
 
 **Key sub-commands:** `new`, `list`, `show`, `audit`, `note`, `status`, `won`, `lost`, `pipeline`.
 
-**Dependencies:** `scripts/crm_dashboard.py` provides a rich terminal dashboard (requires `pip install rich`).
+**Dependencies:** `geo/scripts/crm_dashboard.py` provides a rich terminal dashboard (requires `pip install rich`).
 
 See [commands-reference.md](commands-reference.md) for `/geo prospect`.
 
@@ -312,12 +312,12 @@ These five agents run simultaneously during a `/geo audit` to reduce total runti
 
 | Script | Purpose | Used by |
 |--------|---------|---------|
-| `scripts/fetch_page.py` | Fetches a URL and returns structured data including raw HTML, meta tags, heading structure, word count, and parsed JSON-LD blocks. Bypasses the markdown conversion that WebFetch applies, preserving `<head>` content. | geo-schema (skill + agent), geo-technical |
-| `scripts/citability_scorer.py` | Scores individual text passages for AI citation readiness using five weighted dimensions (answer quality, self-containment, structure, statistical density, uniqueness). Provides `score_passage()` as a callable function. | geo-citability |
-| `scripts/brand_scanner.py` | Checks brand presence across AI-cited platforms (YouTube, Reddit, Wikipedia, LinkedIn). Provides per-platform check functions and instructions for WebFetch-based verification. Requires `requests` and `beautifulsoup4`. | geo-brand-mentions |
-| `scripts/llmstxt_generator.py` | Validates an existing `llms.txt` against the spec (H1 title, blockquote description, H2 sections, absolute URLs, descriptions) and generates a new file from site crawl data. | geo-llmstxt |
-| `scripts/generate_pdf_report.py` | Generates a multi-page PDF from a JSON audit data file using ReportLab. Renders score gauges, bar charts, color-coded tables, and an action plan. Accepts the JSON file path as a CLI argument or via stdin. Requires `reportlab`. | geo-report-pdf |
-| `scripts/crm_dashboard.py` | Renders a rich terminal dashboard for the prospect CRM. Reads `~/.geo-prospects/prospects.json` and displays pipeline stages, MRR, and prospect detail views. Requires `rich`. | geo-prospect |
+| `geo/scripts/fetch_page.py` | Fetches a URL and returns structured data including raw HTML, meta tags, heading structure, word count, and parsed JSON-LD blocks. Bypasses the markdown conversion that WebFetch applies, preserving `<head>` content. | geo-schema (skill + agent), geo-technical |
+| `geo/scripts/citability_scorer.py` | Scores individual text passages for AI citation readiness using five weighted dimensions (answer quality, self-containment, structure, statistical density, uniqueness). Provides `score_passage()` as a callable function. | geo-citability |
+| `geo/scripts/brand_scanner.py` | Checks brand presence across AI-cited platforms (YouTube, Reddit, Wikipedia, LinkedIn). Provides per-platform check functions and instructions for WebFetch-based verification. Requires `requests` and `beautifulsoup4`. | geo-brand-mentions |
+| `geo/scripts/llmstxt_generator.py` | Validates an existing `llms.txt` against the spec (H1 title, blockquote description, H2 sections, absolute URLs, descriptions) and generates a new file from site crawl data. | geo-llmstxt |
+| `geo/scripts/generate_pdf_report.py` | Generates a multi-page PDF from a JSON audit data file using ReportLab. Renders score gauges, bar charts, color-coded tables, and an action plan. Accepts the JSON file path as a CLI argument or via stdin. Requires `reportlab`. | geo-report-pdf |
+| `geo/scripts/crm_dashboard.py` | Renders a rich terminal dashboard for the prospect CRM. Reads `~/.geo-prospects/prospects.json` and displays pipeline stages, MRR, and prospect detail views. Requires `rich`. | geo-prospect |
 
 ---
 

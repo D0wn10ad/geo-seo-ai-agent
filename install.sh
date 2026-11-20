@@ -5,7 +5,7 @@ set -euo pipefail
 # GEO-SEO AI Agent Toolkit Installer
 # Installs the GEO-first SEO analysis tool for both
 # Claude Code and OpenCode with an isolated Python venv.
-# Delegates file copying to scripts/update_toolkit.py.
+# Delegates file copying to geo/scripts/update_toolkit.py.
 # ============================================================
 
 REPO_URL="https://github.com/D0wn10ad/geo-seo-ai-agent.git"
@@ -238,7 +238,7 @@ main() {
         DEPLOY_EXTRA="--runtime-scripts-root ${SCRIPTS_MD_ROOT}"
     fi
     # shellcheck disable=SC2086
-    "$PYTHON_CMD" "$SOURCE_DIR/scripts/update_toolkit.py" \
+    "$PYTHON_CMD" "$SOURCE_DIR/geo/scripts/update_toolkit.py" \
         --upstream "$REPO_URL" \
         --target "$SOURCE_DIR" \
         --all-platforms \

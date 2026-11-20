@@ -5,11 +5,11 @@ Claude Code and OpenCode platforms. Auto-detects which platform(s)
 are present on the system and installs accordingly.
 
 Usage:
-    python3 scripts/update_toolkit.py                          # detect & install
-    python3 scripts/update_toolkit.py --upstream <url>         # custom source
-    python3 scripts/update_toolkit.py --target <dir>           # custom install dir
-    python3 scripts/update_toolkit.py --all-platforms          # install for both
-    python3 scripts/update_toolkit.py --branch <branch>        # specific git branch
+    python3 geo/scripts/update_toolkit.py                          # detect & install
+    python3 geo/scripts/update_toolkit.py --upstream <url>         # custom source
+    python3 geo/scripts/update_toolkit.py --target <dir>           # custom install dir
+    python3 geo/scripts/update_toolkit.py --all-platforms          # install for both
+    python3 geo/scripts/update_toolkit.py --branch <branch>        # specific git branch
 """
 
 import argparse
@@ -24,7 +24,7 @@ from pathlib import Path
 
 REPO_URL = "https://github.com/D0wn10ad/geo-seo-ai-agent"
 SKILLS_DIR = "geo"
-SCRIPTS_DIR = "scripts"
+SCRIPTS_DIR = "geo/scripts"
 DOCS_DIR = "docs"
 AGENTS_DIR = "agents"
 REGIONS_DIR = "regions"
@@ -195,8 +195,8 @@ def rewrite_runtime_markdown(
     """Rewrite runtime Python/script references in an installed markdown file.
 
     Replaces:
-      - 'python3 scripts/<name>.py'  with  '<runtime_scripts_root>/<name>.py'
-      - 'python scripts/<name>.py'   with  '<runtime_scripts_root>/<name>.py'
+      - 'python3 geo/scripts/<name>.py'  with  '<runtime_scripts_root>/<name>.py'
+      - 'python geo/scripts/<name>.py'   with  '<runtime_scripts_root>/<name>.py'
       - 'python3 -c ...'             with  '<runtime_python> -c ...'
       - 'python3 -m ...'             with  '<runtime_python> -m ...'
       - 'python -c ...'              with  '<runtime_python> -c ...'
@@ -208,12 +208,12 @@ def rewrite_runtime_markdown(
 
     if runtime_scripts_root:
         text = re.sub(
-            r'\bpython3\s+scripts/([A-Za-z0-9_./-]+\.py)\b',
+            r'\bpython3\s+(?:geo/)?scripts/([A-Za-z0-9_./-]+\.py)\b',
             rf'{runtime_scripts_root}/\1',
             text,
         )
         text = re.sub(
-            r'\bpython\s+scripts/([A-Za-z0-9_./-]+\.py)\b',
+            r'\bpython\s+(?:geo/)?scripts/([A-Za-z0-9_./-]+\.py)\b',
             rf'{runtime_scripts_root}/\1',
             text,
         )
@@ -425,7 +425,7 @@ def install_for_platform(
         if sub.is_dir():
             copy_tree(sub, skills_dst / sub.name, f"Skill: {sub.name}")
     copy_tree(repo / "platform", skills_dst / "platform", "Platform adapter")
-    copy_tree(repo / SCRIPTS_DIR, skills_dst / "geo" / SCRIPTS_DIR, "Scripts")
+    copy_tree(repo / SCRIPTS_DIR, skills_dst / SKILLS_DIR / "scripts", "Scripts")
     copy_tree(repo / DOCS_DIR, skills_dst / "geo" / DOCS_DIR, "Documentation")
     copy_tree(repo / REGIONS_DIR, skills_dst / SKILLS_DIR / REGIONS_DIR, "Region profiles")
 

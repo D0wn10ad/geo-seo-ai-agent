@@ -20,7 +20,7 @@ from unittest.mock import patch, MagicMock, call, ANY
 
 import pytest
 
-sys.path.insert(0, os.path.join(os.path.dirname(__file__), "..", "scripts"))
+sys.path.insert(0, os.path.join(os.path.dirname(__file__), "..", "geo", "scripts"))
 
 from update_toolkit import (
     platform_info,
@@ -67,8 +67,8 @@ def repo(tmp_path):
     (plat / "SKILL.md").write_text("# platform")
     (plat / "TOOL-MAP.md").write_text("# tool map")
 
-    (r / "scripts").mkdir(parents=True)
-    (r / "scripts" / "fetch_page.py").write_text("print('ok')")
+    (r / "geo" / "scripts").mkdir(parents=True)
+    (r / "geo" / "scripts" / "fetch_page.py").write_text("print('ok')")
     (r / "docs").mkdir(parents=True)
     (r / "docs" / "README.md").write_text("# docs")
 
