@@ -78,13 +78,13 @@ main() {
     print_success "Git found: $(git --version)"
 
     PYTHON_CMD=""
-    for cmd in python3 python py; do
+    for cmd in python3 python py python3.15 python3.14 python3.13 python3.12 python3.11 python3.10; do
         if command -v "$cmd" &> /dev/null; then
             _ver=$("$cmd" --version 2>&1 | grep -oE '[0-9]+\.[0-9]+' | head -1 || true)
             if [ -n "$_ver" ]; then
                 _major=$(echo "$_ver" | cut -d. -f1)
                 _minor=$(echo "$_ver" | cut -d. -f2)
-                if [ "$_major" -ge 3 ] && [ "$_minor" -ge 8 ]; then
+                if [ "$_major" -gt 3 ] || { [ "$_major" -eq 3 ] && [ $_minor -ge 10 ]; }; then
                     PYTHON_CMD="$cmd"
                     break
                 fi
@@ -92,7 +92,7 @@ main() {
         fi
     done
     if [ -z "$PYTHON_CMD" ]; then
-        print_error "Python 3.8+ not found. Install: https://www.python.org/downloads/"
+        print_error "Python 3.10+ not found. Install: https://www.python.org/downloads/"
         exit 1
     fi
     print_success "Python found: $($PYTHON_CMD --version)"
