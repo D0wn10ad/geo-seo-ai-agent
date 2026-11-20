@@ -9,10 +9,12 @@ A **multi-platform AI agent toolkit** for Generative Engine Optimization (GEO) a
 ## Essential commands
 
 ```
-pip install -r requirements.txt              # install Python deps
-pytest tests/                                 # run tests (single test file)
+pip install -r requirements.txt              # install Python deps (loose-range deps)
+pytest tests/                                 # run all tests (or `pytest tests/<file>.py`)
 python scripts/fetch_page.py page <url>       # test page fetching
 ```
+
+Requires Python 3.10+ (install.sh / install-win.sh probe python3.15..3.10; Pillow/lxml drop 3.9) — trust the installers over README.md.
 
 No lint, typecheck, build, CI, or lockfile exists. No Makefile, no task runner.
 
@@ -21,7 +23,9 @@ No lint, typecheck, build, CI, or lockfile exists. No Makefile, no task runner.
 - **Orchestrator:** `geo/SKILL.md` — defines all 22 `/geo <command>` slash commands
 - **Full audit flow** (`/geo audit <url>`): phase 1 (discovery/crawl) → phase 2 (5 parallel subagents) → phase 3 (weighted scoring + action plan)
 - **Scoring formula:** `GEO_Score = Citability(25%) + Brand(20%) + EEAT(20%) + Technical(15%) + Schema(10%) + Platform(10%)`
+- **Non-scoring:** `geo-technical` Category 9 Agent-Readiness signals are explicitly NON-scoring and do NOT feed `GEO_Score` (skills/geo-technical/SKILL.md:368+, :439).
 - **Fork adds 4 closure-loop skills:** `matrix`, `distribute`, `pipeline`, `compete`
+- **Region-aware:** every command accepts `--region <code>` (e.g. `--region cn`); region auto-detects from URL/content when omitted, and China markets also use `skills/geo-*/SKILL.cn.md`. `regions/` root holds only `cn/`, `README.md`, `profiles.yaml`; the CN knowledge base (11 files, incl. `ai-engines.md`, `platforms.md`, `schema.md`) lives in `regions/cn/`. `openspec/changes/` holds region-aware change records.
 
 ## Data storage
 
@@ -29,12 +33,18 @@ No lint, typecheck, build, CI, or lockfile exists. No Makefile, no task runner.
 ~/.geo-prospects/     # CRM + all audit/proposal/report output
 ```
 
+Client-facing artifacts written to the repo root are gitignored on purpose: `/GEO-*.md`, `/GEO-*.pdf`, `*.pdf`, `/llms.txt`, `/llms-full.txt`, `/audit-data*.json` — do not commit them.
+
 ## Python scripts
 
-- `scripts/fetch_page.py` — most-used utility. CLI modes: `page`, `robots`, `llms`, `sitemap`, `blocks`, `full`
-- `scripts/generate_pdf_report.py` — 931 lines, heaviest script. Uses ReportLab directly with custom drawing primitives
+- `scripts/fetch_page.py` — most-used utility. CLI modes: `page`, `robots`, `llms`, `sitemap`, `blocks`, `full`; `robots` mode returns `cloudflare_managed:true` when Cloudflare-managed robots is detected.
+- `scripts/generate_pdf_report.py` — 941 lines, heaviest script. Uses ReportLab directly with custom drawing primitives
 - `scripts/crm_dashboard.py` — CLI CRM (see quirk 4 below)
-- `scripts/webapp/app.py` — Flask + HTMX CRM web UI
+- `scripts/webapp/app.py` — Flask + HTMX CRM web UI; its `region_label()` falls back from `region` to `country`
+
+## Tests (`tests/`)
+
+`test_update_toolkit.py` (deploy-path rewriting — largest), `test_fetch_page_ssr.py`, `test_webapp_region.py` (webapp region label + render), `test_fetch_robots_cloudflare.py` (3 tests: managed block detected, plain not flagged, missing not flagged). `agent-readiness-test-results.md` is a manual-record doc, not a pytest suite.
 
 ## Quirks
 
@@ -53,9 +63,9 @@ Of 22 documented `/geo` commands, 20 have `skills/geo-*/SKILL.md` files. Two don
 - `/geo quick` — implemented directly in the orchestrator `geo/SKILL.md` (no dedicated file)
 - `/geo page` — listed in the command table as producing `GEO-PAGE-ANALYSIS.md`, but **no implementation exists**. No skill file, no inline code. Likely unfinished/legacy.
 
-### 3. Unused `validators` dependency
+### 3. `.opencode/` is deploy-generated, not committed
 
-`requirements.txt` pins `validators>=0.22.0,<1.0.0`, but **no Python file in the repo imports it**. Installed for nothing. The repo does its own URL validation (e.g., `fetch_page.py:33`).
+README's architecture shows `.opencode/` (agents + 21 command wrappers), but the directory **does not exist** in the working tree — it's generated at deploy time by `update_toolkit.py`. `.gitignore` blocks all of `.opencode/*` except `!.opencode/agents/` and `!.opencode/commands/`. Don't edit or expect those files here.
 
 ### 4. Mixed Italian/English CRM
 
@@ -63,9 +73,9 @@ Two UIs, both incomplete:
 - **CLI** (`crm_dashboard.py`): docstring is Italian (`"Visualizza il CRM dei prospect con rich."`), all labels/code are English
 - **Web UI** templates: `<html lang="it">` with heavily Italian UI. `dashboard.html` has ~10 Italian strings (`Clienti Attivi`, `GEO Score Medio`, `Azienda`, `Scarica PDF`) mixed with English. `prospect.html` is ~15 Italian strings. The Flask backend (`app.py`) is entirely English. Someone started building in Italian, partially switched mid-development.
 
-### 5. Upstream remote missing (fork-specific)
+### 5. `/geo update` pulls from this fork, not upstream
 
-`/geo update` will **fail** on a fresh clone — requires `git remote add upstream https://github.com/zubair-trabzada/geo-seo-claude`. `FORK_CHANGELOG.md:53` incorrectly claims it "continues to work" without that step.
+`update_toolkit.py` defaults `--upstream` to `https://github.com/D0wn10ad/geo-seo-ai-agent` (`REPO_URL`), so `/geo update` self-updates this fork. It no longer needs the `zubair-trabzada/geo-seo-claude` remote that older docs (`FORK_CHANGELOG.md:53`, the `geo-update` skill) still reference — those claims are stale.
 
 ### 6. No lockfile
 
@@ -74,3 +84,7 @@ Two UIs, both incomplete:
 ### 7. Unmerged Content Signals PR
 
 `pr-draft-content-signals.md` describes an unmerged Content Signals feature. References `specs/` and `aeo-scan` directories that don't exist in the current tree — artifacts from upstream that were never included.
+
+### 8. Unused `validators` dependency
+
+requirements.txt lists `validators>=0.22.0,<1.0.0` but no .py file imports it (upstream added it while removing reportlab; this fork keeps reportlab AND adds validators). Harmless at runtime.
