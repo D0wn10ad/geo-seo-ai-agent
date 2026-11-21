@@ -96,6 +96,36 @@ ecosystems, platforms, and user behaviors across markets. Currently implemented:
 | Global | `global` | ChatGPT, Claude, Perplexity, Gemini, Copilot | YouTube, Reddit, Wikipedia, LinkedIn | Default |
 | China | `cn` | Baidu AI, Doubao, Yuanbao, Qwen, Kimi, DeepSeek | Baidu Baike, Zhihu, WeChat OA, Xiaohongshu, Bilibili, Douyin | `regions/profiles.yaml` |
 
+<!-- GEO-CN-VARIANT:v1 -->
+
+### CN variant loading (conditional)
+
+The registered `regions/` knowledge base is mirrored under this skill as
+`regions/profiles.yaml`, `regions/cn/*.md` and `regions/cn-variants.json` so an
+`npx skills@1.9.0` recursive copy ships it (a bare repo-root `regions/` dir has
+no `SKILL.md` and is NOT installed). `cn-variants.json` is the manifest: it
+enumerates all 17 `SKILL.cn.md` variants and every CN knowledge file.
+
+Resolve these files from the SKILL.md being read — never from a hardcoded path.
+Anchor `SKILL_DIR` as in [Script Path Resolution](#script-path-resolution-self-locating), then use `<PY> <GEO_SCRIPTS>/../resolve_regions.py "$SKILL_DIR"` (candidate roots:
+`"$SKILL_DIR/regions"`, `"$SKILL_DIR/../geo/regions"`, `"$SKILL_DIR/../../regions"`,
+`"$SKILL_DIR/../../../.claude/skills/geo/regions"`; it prints the first existing
+root and fails closed otherwise). The same ordered probe is implemented in
+`geo/scripts/region_resolver.py`, which is dependency-free and can be executed
+from the installed skill:
+
+```bash
+<PY> "$GEO_SCRIPTS/region_resolver.py" detect <url>       # cn / global / multi
+<PY> "$GEO_SCRIPTS/region_resolver.py" profile cn         # CN profile (BaiduSpider, baidu_baike)
+<PY> "$GEO_SCRIPTS/region_resolver.py" guidance cn        # CN-only files to load
+<PY> "$GEO_SCRIPTS/region_resolver.py" guidance global    # empty: no CN guidance
+```
+
+**Gate:** when `REGION` is `cn`, load the sibling `SKILL.cn.md` for the command
+being run plus the `regions/cn/` files and the profile. When `REGION` is
+`global` or any non-CN value, do NOT load `SKILL.cn.md` or any `regions/cn/`
+file — CN content is never folded inline into a primary `SKILL.md`.
+
 ### How region is determined
 
 1. **Explicit**: `--region cn` on any command
@@ -105,10 +135,10 @@ ecosystems, platforms, and user behaviors across markets. Currently implemented:
 
 ### Adding a new region
 
-See `regions/README.md` for the complete guide. Steps:
-1. Add profile to `regions/profiles.yaml`
-2. Create `regions/<code>/` with optional reference data files
-3. Create optional `SKILL.<code>.md` overrides for skill files
+See `regions/README.md` (mirrored at `regions/README.md` under this skill) for the complete guide. Steps:
+1. Add profile to `regions/profiles.yaml` (update both the repo-root copy and this skill's mirror)
+2. Create `regions/<code>/` with optional reference data files (mirror them here for npx installs)
+3. Create optional `SKILL.<code>.md` overrides for skill files; add each to `regions/cn-variants.json` when it is a CN variant
 4. Update subagent files with Region Awareness sections
 5. Update fork skills that accept `--region`
 

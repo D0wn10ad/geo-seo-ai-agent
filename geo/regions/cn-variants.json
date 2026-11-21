@@ -1,0 +1,39 @@
+{
+  "marker": "GEO-CN-VARIANTS:v1",
+  "region": "cn",
+  "variant_file": "SKILL.cn.md",
+  "knowledge_base": [
+    "regions/README.md",
+    "regions/profiles.yaml",
+    "regions/cn/README.md",
+    "regions/cn/ai-engines.md",
+    "regions/cn/compliance-anti-abuse.md",
+    "regions/cn/cross-validation.md",
+    "regions/cn/engineering-playbooks.md",
+    "regions/cn/kpi-and-method.md",
+    "regions/cn/platform-behavior.md",
+    "regions/cn/platforms.md",
+    "regions/cn/provenance.md",
+    "regions/cn/schema.md",
+    "regions/cn/source-tiering.md"
+  ],
+  "variants": [
+    "geo-audit",
+    "geo-brand-mentions",
+    "geo-citability",
+    "geo-citation-pipeline",
+    "geo-compare",
+    "geo-competitor-citation",
+    "geo-content",
+    "geo-crawlers",
+    "geo-distribution-plan",
+    "geo-intent-matrix",
+    "geo-platform-optimizer",
+    "geo-proposal",
+    "geo-prospect",
+    "geo-report-pdf",
+    "geo-report",
+    "geo-schema",
+    "geo-technical"
+  ]
+}

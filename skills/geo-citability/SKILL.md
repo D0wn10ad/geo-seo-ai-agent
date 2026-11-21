@@ -3,6 +3,10 @@ name: geo-citability
 description: AI citability scoring and optimization. Analyzes web page content to determine how likely AI systems (ChatGPT, Claude, Perplexity, Gemini) are to cite or quote passages from the page. Provides a citability score (0-100) with specific rewrite suggestions.
 ---
 
+<!-- GEO-CN-VARIANT:v1 -->
+
+**Conditional CN variant.** Only when `REGION` resolves to `cn`, read the sibling `SKILL.cn.md` alongside this file and apply its overrides; its CN knowledge files are enumerated in the geo skill's `regions/cn-variants.json` (self-locating resolution is documented in `geo/SKILL.md` → "CN variant loading"). For `global` or any non-CN region, do NOT load `SKILL.cn.md` or any `regions/cn/` file.
+
 # AI Citability Scoring Skill
 
 ## Core Insight

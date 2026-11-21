@@ -6,6 +6,10 @@ author: geo-seo-claude
 tags: [geo, ai-search, platform-optimization, chatgpt, perplexity, gemini, aio]
 ---
 
+<!-- GEO-CN-VARIANT:v1 -->
+
+**Conditional CN variant.** Only when `REGION` resolves to `cn`, read the sibling `SKILL.cn.md` alongside this file and apply its overrides; its CN knowledge files are enumerated in the geo skill's `regions/cn-variants.json` (self-locating resolution is documented in `geo/SKILL.md` → "CN variant loading"). For `global` or any non-CN region, do NOT load `SKILL.cn.md` or any `regions/cn/` file.
+
 # GEO Platform Optimizer
 
 ## Core Insight

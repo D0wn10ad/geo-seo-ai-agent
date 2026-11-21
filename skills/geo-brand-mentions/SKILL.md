@@ -3,6 +3,10 @@ name: geo-brand-mentions
 description: Brand mention and authority scanner for AI visibility. Analyzes brand presence across platforms that AI models rely on for entity recognition and citation decisions. Produces a Brand Authority Score (0-100) with platform-specific recommendations.
 ---
 
+<!-- GEO-CN-VARIANT:v1 -->
+
+**Conditional CN variant.** Only when `REGION` resolves to `cn`, read the sibling `SKILL.cn.md` alongside this file and apply its overrides; its CN knowledge files are enumerated in the geo skill's `regions/cn-variants.json` (self-locating resolution is documented in `geo/SKILL.md` → "CN variant loading"). For `global` or any non-CN region, do NOT load `SKILL.cn.md` or any `regions/cn/` file.
+
 # Brand Mention Scanner Skill
 
 <!-- GEO-SCRIPT-RESOLUTION:v1 -->
