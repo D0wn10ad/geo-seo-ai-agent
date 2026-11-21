@@ -7,7 +7,6 @@
 | Python 3.8+ | Runs the utility scripts (page fetching, citability scoring, PDF generation, etc.) |
 | Claude Code CLI (or OpenCode with superpowers) | The skills and agents are loaded and invoked through an AI agent CLI |
 | Git | Used by the installer to clone the repository |
-| Playwright (optional) | Enables screenshot capture; install separately after the main install |
 
 ### Claude Code
 
@@ -77,7 +76,6 @@ The script auto-detects which AI agent platform(s) are installed and installs sk
 - Copies 20 sub-skills to `~/.claude/skills/geo-*/`
 - Copies 5 subagent definitions to `~/.claude/agents/`
 - Installs Python dependencies via `pip install --user`
-- Optionally installs the Playwright Chromium browser for screenshots
 
 ---
 
@@ -157,14 +155,6 @@ The full audit takes several minutes depending on the site. See [scoring-methodo
 - Symptom: `curl` not recognized, or script syntax errors
 - Cause: running `install-win.sh` in PowerShell or Command Prompt
 - Fix: use Git Bash only — right-click the folder, "Open Git Bash here"
-
-**Playwright not available / screenshots missing**
-- Symptom: screenshot-related steps silently skip or error
-- Cause: Playwright was skipped during install (non-interactive or answered no)
-- Fix: install it manually:
-  ```bash
-  python3 -m playwright install chromium
-  ```
 
 **Python dependencies failed during install**
 - Symptom: installer prints `Some Python dependencies failed to install`

@@ -285,7 +285,7 @@ Even Googlebot, which does execute JavaScript, deprioritizes JS-rendered content
 
 ### Detection Method
 1. Fetch the page with curl (no JavaScript execution): `curl -s [URL]`
-2. Compare the raw HTML to the rendered DOM (via browser)
+2. Compare the raw HTML from curl to the rendered DOM that a browser would produce (no browser binary required)
 3. If key content (headings, paragraphs, product info, article text) is MISSING from the curl output, the site relies on client-side rendering
 
 ### What to Check

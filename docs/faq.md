@@ -34,11 +34,7 @@ Yes, but you must use Git Bash, not PowerShell or Command Prompt. The Windows in
 
 ### What does `install.sh` actually do?
 
-It checks for Git and Python 3.8+, then delegates file copying to `geo/scripts/update_toolkit.py` which copies files into the shared skill directory (`~/.claude/skills/geo/`), platform-specific agent directories, and OpenCode command wrappers. It then creates an isolated Python virtual environment and installs dependencies from `requirements.txt`. If you run it interactively, it also offers to install the Playwright Chromium browser for screenshot support. The installer works both from a cloned local directory and via a `curl | bash` pipe from the repository URL.
-
-### Do I need Playwright?
-
-Playwright is optional. The installer prompts you to install it (`python3 -m playwright install chromium`). Without it, screenshot-based features are unavailable but all other audit and analysis commands function normally. You can install it later at any time.
+It checks for Git and Python 3.8+, then delegates file copying to `geo/scripts/update_toolkit.py` which copies files into the shared skill directory (`~/.claude/skills/geo/`), platform-specific agent directories, and OpenCode command wrappers. It then creates an isolated Python virtual environment and installs dependencies from `requirements.txt`. The installer works both from a cloned local directory and via a `curl | bash` pipe from the repository URL.
 
 ---
 

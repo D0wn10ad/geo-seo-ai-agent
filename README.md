@@ -68,7 +68,6 @@ bash install.sh
 | Claude Code CLI | or OpenCode with [oh-my-opencode](https://opencode.ai) plugin |
 | Git | Required for installer |
 | `uv` (optional) | Faster pip — auto-detected by installer |
-| Playwright (optional) | For PDF screenshot generation |
 
 ### Isolated install
 

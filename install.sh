@@ -30,12 +30,6 @@ VENV_MD_PY="~/.claude/skills/geo/.venv/${VENV_PY_REL}"
 # shellcheck disable=SC2088
 SCRIPTS_MD_ROOT='~/.claude/skills/geo/scripts'
 
-# Detect if running via curl pipe (no interactive input available)
-INTERACTIVE=true
-if [ ! -t 0 ]; then
-    INTERACTIVE=false
-fi
-
 RED='\033[0;31m'
 GREEN='\033[0;32m'
 YELLOW='\033[1;33m'
@@ -97,7 +91,7 @@ main() {
     fi
     print_success "Git found: $(git --version)"
 
-    # Require Python >= 3.10 (requirements.txt pins Pillow/lxml that drop 3.9).
+    # Require Python >= 3.10 (requirements.txt pins lxml that drop 3.9).
     # Don't trust the first `python3` on PATH: macOS ships system python3 3.9.x,
     # and Homebrew often exposes a newer Python only as pythonX.Y with no
     # `python3` symlink, so probe versioned names too and pick the first that
@@ -294,21 +288,6 @@ main() {
         print_success "${SHEBANG_COUNT} script(s) pinned to venv"
     else
         print_info "Skipping shebang pinning (no venv — scripts use system python3)"
-    fi
-
-    # ---- Optional: Install Playwright ----
-    if [ "$INTERACTIVE" = true ]; then
-        echo ""
-        read -p "Install Playwright browsers for screenshots? (y/n): " -n 1 -r
-        echo ""
-        if [[ $REPLY =~ ^[Yy]$ ]]; then
-            print_info "Installing Playwright Chromium into venv..."
-            if "$VENV_PY" -m playwright install chromium 2>/dev/null; then
-                print_success "Playwright Chromium installed"
-            else
-                print_warning "Playwright install failed"
-            fi
-        fi
     fi
 
     # ---- Verify ----

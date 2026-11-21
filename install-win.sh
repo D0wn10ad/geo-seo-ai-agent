@@ -13,11 +13,6 @@ SKILLS_DIR="${CLAUDE_DIR}/skills"
 INSTALL_DIR="${SKILLS_DIR}/geo"
 TEMP_DIR=$(mktemp -d)
 
-INTERACTIVE=true
-if [ ! -t 0 ]; then
-    INTERACTIVE=false
-fi
-
 RED='\033[0;31m'
 GREEN='\033[0;32m'
 YELLOW='\033[1;33m'
@@ -135,21 +130,6 @@ main() {
             print_warning "Some deps failed. Run: $PYTHON_CMD -m pip install --user -r requirements.txt"
             cp "$SOURCE_DIR/requirements.txt" "$INSTALL_DIR/"
         }
-    fi
-
-    # ---- Optional: Install Playwright ----
-    if [ "$INTERACTIVE" = true ]; then
-        echo ""
-        read -r -p "Install Playwright for screenshots? (y/n): " REPLY
-        echo ""
-        if [[ $REPLY =~ ^[Yy]$ ]]; then
-            print_info "Installing Playwright Chromium..."
-            $PYTHON_CMD -m playwright install chromium 2>/dev/null && {
-                print_success "Playwright Chromium installed"
-            } || {
-                print_warning "Playwright install failed."
-            }
-        fi
     fi
 
     # ---- Verify ----
