@@ -210,17 +210,15 @@ This directory is **not removed** by `uninstall.sh` — delete manually if neede
 
 ## Uninstall
 
+For an **npx-managed** install, remove via npx (this leaves the lock/manifest and cache intact):
+
 ```bash
-bash uninstall.sh
+npx skills@1.9.0 remove    # select the geo / geo-* skills
 ```
 
-Removes from both `~/.claude/` (skills, agents, venv) and `~/.config/opencode/` (agents, commands).
+`bash uninstall.sh` is retained as a **legacy-cleanup fallback** for installs made by the old git-clone installer. It detects the npx layout and, when found, only prints the pinned command above — it never deletes npx-owned links, the cache, or symlink targets. On a legacy install it removes only `~/.claude/skills/geo*`, `~/.claude/agents/geo-*.md`, and the OpenCode agents/commands under `${XDG_CONFIG_HOME:-~/.config}` (legacy venv included), with symlink-safe handling.
 
-Manual cleanup:
-```bash
-rm -rf ~/.claude/skills/geo ~/.claude/skills/geo-* ~/.claude/agents/geo-*.md
-rm -rf ~/.config/opencode/agents/geo-*.md ~/.config/opencode/commands/geo-*.md
-```
+`~/.geo-prospects/` is always preserved. The bootstrap venv at `${XDG_CACHE_HOME:-~/.cache}/geo-seo-ai-agent` is a shared cache and is not removed. Windows installs use `install-win.sh`; run the npx command above from Git Bash. (Full docs rewrite is tracked separately.)
 
 ---
 
