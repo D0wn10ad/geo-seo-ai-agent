@@ -139,7 +139,7 @@ See `regions/README.md` (mirrored at `regions/README.md` under this skill) for t
 1. Add profile to `regions/profiles.yaml` (update both the repo-root copy and this skill's mirror)
 2. Create `regions/<code>/` with optional reference data files (mirror them here for npx installs)
 3. Create optional `SKILL.<code>.md` overrides for skill files; add each to `regions/cn-variants.json` when it is a CN variant
-4. Update subagent files with Region Awareness sections
+4. Update all 5 audit-worker SKILL.md files with Region Awareness sections
 5. Update fork skills that accept `--region`
 
 ---
@@ -185,16 +185,23 @@ See [Region Support](#region-support) below.
 2. Detect business type (SaaS, Local, E-commerce, Publisher, Agency, Other)
 3. Extract key pages from sitemap.xml or internal links (up to 50 pages)
 
-**Phase 2: Parallel Analysis (Delegate to Subagents)**
-Launch these 5 subagents simultaneously:
+**Phase 2: Parallel Analysis (5 skill-backed workers, dispatched in parallel)**
 
-| Subagent | File | Responsibility |
-|----------|------|---------------|
-| geo-ai-visibility | `agents/geo-ai-visibility.md` | GEO audit, citability, AI crawlers, llms.txt, brand mentions |
-| geo-platform-analysis | `agents/geo-platform-analysis.md` | Platform-specific optimization (ChatGPT, Perplexity, Google AIO) |
-| geo-technical | `agents/geo-technical.md` | Technical SEO, Core Web Vitals, crawlability, indexability |
-| geo-content | `agents/geo-content.md` | Content quality, E-E-A-T, readability, AI content detection |
-| geo-schema | `agents/geo-schema.md` | Schema markup detection, validation, generation |
+Invoke the 5 migrated audit-worker skills **in parallel** using the host's task/subagent
+mechanism. Load each worker's `SKILL.md` into its own task context so the full agent
+instruction body (Region Awareness, Execution Steps, Output Format) is available to
+that worker. Do NOT run them sequentially in the main conversation: a bare skill
+invocation runs in main context, so true 5-way parallelism requires a parallel
+task/subagent dispatch. From an npx install the same files resolve under the
+host's skills directory; the former agent definition files are not installed by npx.
+
+| Audit worker skill | Load this instruction file | Responsibility |
+|--------------------|----------------------------|----------------|
+| geo-ai-visibility | `skills/geo-ai-visibility/SKILL.md` | GEO audit, citability, AI crawlers, llms.txt, brand mentions |
+| geo-platform-analysis | `skills/geo-platform-analysis/SKILL.md` | Platform-specific optimization (ChatGPT, Perplexity, Google AIO) |
+| geo-technical | `skills/geo-technical/SKILL.md` | Technical SEO, Core Web Vitals, crawlability, indexability |
+| geo-content | `skills/geo-content/SKILL.md` | Content quality, E-E-A-T, readability, AI content detection |
+| geo-schema | `skills/geo-schema/SKILL.md` | Schema markup detection, validation, generation |
 
 **Phase 3: Synthesis (Sequential)**
 1. Collect all subagent reports (region-aware: subagents received REGION in task description)
@@ -268,18 +275,20 @@ Adjust recommendations based on detected type. Local businesses need LocalBusine
 
 ## Subagents (5 Parallel Workers)
 
-All subagents receive the REGION variable appended to their task description.
-Each agent file has a "Region Awareness" section that adjusts its scoring rubrics
-based on the target region (e.g. CN uses Baidu AI instead of ChatGPT, Baidu Baike
-instead of Wikipedia, etc.). See individual agent files for region-specific logic.
+Each of the 5 audit workers is now a SKILL.md-bearing skill. The phase-2 orchestrator
+dispatches all 5 in parallel via the host's task/subagent mechanism and loads each
+worker's SKILL.md into its own context. Every worker receives the REGION variable
+appended to its task description. Each worker SKILL.md retains its "Region Awareness"
+section, which adjusts its scoring rubrics based on the target region (e.g. CN uses
+Baidu AI instead of ChatGPT, Baidu Baike instead of Wikipedia, etc.).
 
-| Agent | File | Skills Used |
-|-------|------|-------------|
-| geo-ai-visibility | `agents/geo-ai-visibility.md` | geo-citability, geo-crawlers, geo-llmstxt, geo-brand-mentions |
-| geo-platform-analysis | `agents/geo-platform-analysis.md` | geo-platform-optimizer |
-| geo-technical | `agents/geo-technical.md` | geo-technical |
-| geo-content | `agents/geo-content.md` | geo-content |
-| geo-schema | `agents/geo-schema.md` | geo-schema |
+| Audit worker skill | Instruction file | Skills Used |
+|--------------------|-------------------|-------------|
+| geo-ai-visibility | `skills/geo-ai-visibility/SKILL.md` | geo-citability, geo-crawlers, geo-llmstxt, geo-brand-mentions |
+| geo-platform-analysis | `skills/geo-platform-analysis/SKILL.md` | geo-platform-optimizer |
+| geo-technical | `skills/geo-technical/SKILL.md` | geo-technical |
+| geo-content | `skills/geo-content/SKILL.md` | geo-content |
+| geo-schema | `skills/geo-schema/SKILL.md` | geo-schema |
 
 ---
 
