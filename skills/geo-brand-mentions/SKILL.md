@@ -5,6 +5,10 @@ description: Brand mention and authority scanner for AI visibility. Analyzes bra
 
 # Brand Mention Scanner Skill
 
+<!-- GEO-SCRIPT-RESOLUTION:v1 -->
+
+**Script resolution.** Set `SKILL_DIR` to this SKILL.md's directory. Resolve `GEO_SCRIPTS` as the first existing of `"$SKILL_DIR/scripts"`, `"$SKILL_DIR/../geo/scripts"`, `"$SKILL_DIR/../../geo/scripts"`, `"$SKILL_DIR/../../../.claude/skills/geo/scripts"` (full preamble in `geo/SKILL.md` → "Script Path Resolution"). Set `PY="$(command -v python3 || command -v python)"` before inline interpreter calls. Windows runs through Git Bash, which supplies these commands and forward-slash paths; native PowerShell/CMD is out of scope.
+
 ## Core Insight
 
 Brand mentions correlate approximately 3x more strongly with AI visibility than traditional backlinks. An Ahrefs study published in December 2025, analyzing 75,000 brands across AI search platforms, found that **unlinked brand mentions** -- references to a brand name without a hyperlink -- are a stronger predictor of whether AI systems cite and recommend a brand than Domain Rating or backlink count.
@@ -235,7 +239,7 @@ For each platform, use `fetch_url` to search and assess presence:
 
 **Method 1 — Python API check (MOST RELIABLE, do this FIRST):**
 ```bash
-python3 -c "
+"$PY" -c "
 import requests, json
 from urllib.parse import quote_plus
 brand = '[Brand_Name]'

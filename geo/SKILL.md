@@ -51,6 +51,41 @@ description: >
 
 ---
 
+## Script Path Resolution (Self-Locating)
+
+<!-- GEO-SCRIPT-RESOLUTION:v1 -->
+
+Helper scripts are located relative to the `SKILL.md` you are reading — never through a deploy-time rewritten absolute path. Set `SKILL_DIR` to the absolute directory containing that file, then probe these candidates **in order** and keep the first that contains `fetch_page.py`:
+
+1. `"$SKILL_DIR/scripts"` — scripts shipped beside this SKILL.md (the `geo` skill itself).
+2. `"$SKILL_DIR/../geo/scripts"` — npx-installed sibling `geo` skill, e.g. `.agents/skills/geo-<name>/` → `.agents/skills/geo/`; also covers the `.claude/skills/geo/` symlink view.
+3. `"$SKILL_DIR/../../geo/scripts"` — source tree, e.g. `skills/geo-<name>/` → repo-root `geo/`.
+4. `"$SKILL_DIR/../../../.claude/skills/geo/scripts"` — canonical Claude Code symlink path reached from an `.agents/skills/...` install.
+
+Use this preamble before any script invocation in an installed skill:
+
+```bash
+SKILL_DIR="$(cd "$(dirname "<PATH-TO-THIS-SKILL.md>")" && pwd)"
+GEO_SCRIPTS=""
+for candidate in \
+  "$SKILL_DIR/scripts" \
+  "$SKILL_DIR/../geo/scripts" \
+  "$SKILL_DIR/../../geo/scripts" \
+  "$SKILL_DIR/../../../.claude/skills/geo/scripts"; do
+  [ -f "$candidate/fetch_page.py" ] || continue
+  GEO_SCRIPTS="$(cd "$candidate" && pwd)"
+  break
+done
+: "${GEO_SCRIPTS:?GEO scripts root not found — verify the ordered fallback list}"
+PY="$(command -v python3 || command -v python)"
+```
+
+Replace `<PATH-TO-THIS-SKILL.md>` with the path of the SKILL.md you are reading, then invoke scripts as `"$PY" "$GEO_SCRIPTS/<script>.py" ...`.
+
+**Windows / Git Bash:** both installers require Git Bash, which supplies `cd`, `dirname`, `command -v`, forward-slash paths, and `python3`/`python` on PATH; all four candidates and the preamble therefore work unchanged on Windows. Native PowerShell/CMD is explicitly out of scope because Git Bash is the documented Windows installer entry point. The reference implementation of this probe is `resolve_scripts.py` beside this file (in `geo/`); invoke it with the resolved `PY` interpreter and a skill directory to print the root.
+
+---
+
 ## Region Support
 
 The tool supports region-specific analysis to account for different AI search
@@ -256,7 +291,7 @@ The `/geo report-pdf <url>` command generates a professional, branded PDF report
 ### How It Works
 1. Run the full audit or individual analyses first
 2. Collect all scores and findings into a JSON structure
-3. Execute the PDF generator: `python3 geo/scripts/generate_pdf_report.py data.json GEO-REPORT.pdf`
+3. Execute the PDF generator: `"$PY" "$GEO_SCRIPTS/generate_pdf_report.py" data.json GEO-REPORT.pdf`
 
 ### What the PDF Includes
 - **Cover page** with GEO score gauge visualization

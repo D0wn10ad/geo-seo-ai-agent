@@ -5,9 +5,13 @@ description: Pull the latest GEO-SEO skill updates from the upstream repository 
 
 # GEO-SEO Update Skill
 
+<!-- GEO-SCRIPT-RESOLUTION:v1 -->
+
+**Script resolution.** Set `SKILL_DIR` to this SKILL.md's directory. Resolve `GEO_SCRIPTS` as the first existing of `"$SKILL_DIR/scripts"`, `"$SKILL_DIR/../geo/scripts"`, `"$SKILL_DIR/../../geo/scripts"`, `"$SKILL_DIR/../../../.claude/skills/geo/scripts"` (full preamble in `geo/SKILL.md` → "Script Path Resolution"). Set `PY="$(command -v python3 || command -v python)"`, then invoke scripts as `"$PY" "$GEO_SCRIPTS/<script>.py" ...`. Windows runs through Git Bash, which supplies these commands and forward-slash paths; native PowerShell/CMD is out of scope.
+
 ## Purpose
 
-Updates the locally installed GEO-SEO skills, agents, scripts, and documentation to the latest version from the upstream repository. Delegates to `scripts/update_toolkit.py` for cross-platform installation.
+Updates the locally installed GEO-SEO skills, agents, scripts, and documentation to the latest version from the upstream repository. Delegates to `$GEO_SCRIPTS/update_toolkit.py` for cross-platform installation.
 
 ---
 
@@ -15,15 +19,15 @@ Updates the locally installed GEO-SEO skills, agents, scripts, and documentation
 
 ### Step 1: Verify Repository
 
-Check that `scripts/update_toolkit.py` exists in the current working directory. If not,
-determine installation path from `~/.claude/skills/geo/`.
+Resolve `GEO_SCRIPTS` with the ordered fallback list above, then check that
+`$GEO_SCRIPTS/update_toolkit.py` exists.
 
 ### Step 2: Run Update
 
 Run the update toolkit script:
 
 ```
-run_command python3 scripts/update_toolkit.py --upstream https://github.com/zubair-trabzada/geo-seo-claude
+run_command "$PY" "$GEO_SCRIPTS/update_toolkit.py" --upstream https://github.com/zubair-trabzada/geo-seo-claude
 ```
 
 If a custom upstream URL was configured, ask the user and pass `--upstream <url>`.

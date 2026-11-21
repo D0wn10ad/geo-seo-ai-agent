@@ -8,6 +8,10 @@ tags: [geo, schema, structured-data, json-ld, entity-recognition, ai-discoverabi
 
 # GEO Schema & Structured Data
 
+<!-- GEO-SCRIPT-RESOLUTION:v1 -->
+
+**Script resolution.** Set `SKILL_DIR` to this SKILL.md's directory. Resolve `GEO_SCRIPTS` as the first existing of `"$SKILL_DIR/scripts"`, `"$SKILL_DIR/../geo/scripts"`, `"$SKILL_DIR/../../geo/scripts"`, `"$SKILL_DIR/../../../.claude/skills/geo/scripts"` (full preamble in `geo/SKILL.md` → "Script Path Resolution"). Set `PY="$(command -v python3 || command -v python)"`, then invoke scripts as `"$PY" "$GEO_SCRIPTS/<script>.py" ...`. Windows runs through Git Bash, which supplies these commands and forward-slash paths; native PowerShell/CMD is out of scope.
+
 ## Purpose
 
 Structured data is the primary machine-readable signal that tells AI systems what an entity IS, what it does, and how it connects to other entities. While schema markup has traditionally been about earning Google rich results, its role in GEO is fundamentally different: **structured data is how AI models understand and trust your entity**. A complete entity graph in structured data dramatically increases citation probability across all AI search platforms.
@@ -27,7 +31,7 @@ Structured data is the primary machine-readable signal that tells AI systems wha
 
 **IMPORTANT:** `` `fetch_url` `` converts HTML to markdown and strips `<head>` content, which removes JSON-LD blocks. Use `fetch_page.py` instead:
 ```bash
-python3 geo/scripts/fetch_page.py <url> page
+"$PY" "$GEO_SCRIPTS/fetch_page.py" <url> page
 ```
 The output includes a `structured_data` array with all parsed JSON-LD blocks from the page.
 

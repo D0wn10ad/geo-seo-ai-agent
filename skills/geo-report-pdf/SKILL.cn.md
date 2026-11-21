@@ -11,11 +11,15 @@ parent: geo-report-pdf
 **Load this file alongside `SKILL.md` when REGION is `cn`.**
 Apply the following adjustments to the base PDF generation workflow.
 
+<!-- GEO-SCRIPT-RESOLUTION:v1 -->
+
+**Script resolution.** Set `SKILL_DIR` to this SKILL.md's directory. Resolve `GEO_SCRIPTS` as the first existing of `"$SKILL_DIR/scripts"`, `"$SKILL_DIR/../geo/scripts"`, `"$SKILL_DIR/../../geo/scripts"`, `"$SKILL_DIR/../../../.claude/skills/geo/scripts"` (full preamble in `geo/SKILL.md` → "Script Path Resolution"). Set `PY="$(command -v python3 || command -v python)"`, then invoke scripts as `"$PY" "$GEO_SCRIPTS/<script>.py" ...`. Windows runs through Git Bash, which supplies these commands and forward-slash paths; native PowerShell/CMD is out of scope.
+
 ---
 
 ## CJK Font Configuration
 
-The base script at `geo/scripts/generate_pdf_report.py` uses Helvetica for all text rendering. Helvetica does **not** support CJK characters. Before any other setup, ensure CJK fonts are available and registered.
+The base script at `$GEO_SCRIPTS/generate_pdf_report.py` uses Helvetica for all text rendering. Helvetica does **not** support CJK characters. Before any other setup, ensure CJK fonts are available and registered.
 
 ### 1. Install a CJK TTF Font
 
@@ -40,25 +44,24 @@ If Noto Sans SC is unavailable, alternatives (in order of preference):
 
 ### 2. Register CJK Font in ReportLab
 
-When calling `geo/scripts/generate_pdf_report.py`, first register the CJK font by passing a modified invocation. The script itself does not import `TTFont` — you must either:
+When calling `$GEO_SCRIPTS/generate_pdf_report.py`, first register the CJK font by passing a modified invocation. The script itself does not import `TTFont` — you must either:
 
 **Option A: Patch the script at call time** — Prepend font registration via Python:
 
 ```bash
-python3 -c "
+"$PY" -c "
 from reportlab.pdfbase import pdfmetrics
 from reportlab.pdfbase.ttfonts import TTFont
 pdfmetrics.registerFont(TTFont('NotoSansSC', 'fonts/NotoSansSC-Regular.ttf'))
 pdfmetrics.registerFont(TTFont('NotoSansSC-Bold', 'fonts/NotoSansSC-Bold.ttf'))
 import sys; sys.argv = ['generate_pdf_report.py', '/tmp/geo-audit-data.json', 'GEO-REPORT-CN-example.pdf']
-exec(open('geo/scripts/generate_pdf_report.py').read())
+exec(open('$GEO_SCRIPTS/generate_pdf_report.py').read())
 "
 ```
 
-**Option B: Create a thin wrapper script** (`geo/scripts/generate_pdf_report_cn.py`):
+**Option B: Create a thin wrapper script** (`$GEO_SCRIPTS/generate_pdf_report_cn.py`):
 
 ```python
-#!/usr/bin/env python3
 """CN-aware wrapper — registers CJK fonts before calling base generator."""
 from reportlab.pdfbase import pdfmetrics
 from reportlab.pdfbase.ttfonts import TTFont
@@ -202,7 +205,7 @@ Use `brand_name_cn` for the cover page title when the brand has both English and
 Generate the PDF with a CN-specific prefix:
 
 ```bash
-python3 geo/scripts/generate_pdf_report.py /tmp/geo-audit-data.json \
+"$PY" "$GEO_SCRIPTS/generate_pdf_report.py" /tmp/geo-audit-data.json \
     "GEO-REPORT-CN-[domain]-$(date +%Y-%m-%d).pdf"
 ```
 
@@ -227,7 +230,7 @@ cat > /tmp/geo-audit-data-cn.json << 'ENDJSON'
 ENDJSON
 
 # 2. Generate with CJK font registration prepended
-python3 << 'PYEOF'
+"$PY" << 'PYEOF'
 from reportlab.pdfbase import pdfmetrics
 from reportlab.pdfbase.ttfonts import TTFont
 
@@ -238,7 +241,7 @@ pdfmetrics.registerFont(TTFont('NotoSansSC-Bold', 'fonts/NotoSansSC-Bold.ttf'))
 import sys
 sys.argv = ['generate_pdf_report.py', '/tmp/geo-audit-data-cn.json',
             'GEO-REPORT-CN-example-2026-02-18.pdf']
-exec(open('geo/scripts/generate_pdf_report.py').read())
+exec(open('$GEO_SCRIPTS/generate_pdf_report.py').read())
 PYEOF
 ```
 
@@ -273,7 +276,7 @@ The CJK font must be registered **before** any ReportLab imports happen in the b
 
 ## Notes (CN)
 
-- The base script at `geo/scripts/generate_pdf_report.py` is **not modified** — all CN adaptations happen at invocation time via font registration and JSON data structure changes
+- The base script at `$GEO_SCRIPTS/generate_pdf_report.py` is **not modified** — all CN adaptations happen at invocation time via font registration and JSON data structure changes
 - If `reportlab` does not have `TTFont` support, ensure `pip install reportlab[ttfont]` or check that `reportlab.pdfbase.ttfonts` is available
 - Noto Sans SC covers all Chinese characters (Simplified), plus Latin, CJK symbols, and punctuation — it is the recommended single font for CN reports
 - For Traditional Chinese (Hong Kong / Taiwan), use `NotoSansTC` or `NotoSansHK` instead
