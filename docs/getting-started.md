@@ -69,7 +69,7 @@ to `bootstrap_env.sh`. The script is idempotent: it re-runs only when
 older setups; they no longer distribute or update skills. If you previously used
 one, clean up with `bash uninstall.sh` (it preserves `~/.geo-prospects/`) and then
 run the pinned `npx skills@1.9.0 add` command above. Do not pipe either LEGACY
-installer into `bash` for a new install.
+installer into `bash` for a new install. See [Upgrading an older install](#upgrading-an-older-install) below.
 
 ---
 
@@ -205,6 +205,8 @@ by the old git-clone installer. It detects the npx layout; when found it deletes
 nothing and only prints the pinned command above. On a LEGACY install it removes
 only the old `~/.claude/skills/geo*`, `~/.claude/agents/geo-*.md`, and the OpenCode
 agents/commands under `${XDG_CONFIG_HOME:-~/.config}`, with symlink-safe handling.
+If you are upgrading a LEGACY install (not removing it), see
+[Upgrading an older install](#upgrading-an-older-install).
 
 ### Runtime data
 
@@ -215,6 +217,72 @@ manually only if you no longer need the data:
 ```bash
 rm -rf ~/.geo-prospects
 ```
+
+---
+
+## Upgrading an older install
+
+If you are moving from a pre-npx (LEGACY git-clone) install to the pinned npx
+distribution, `uninstall.sh`-first is the **documented recommended default** for a
+clean state, but uninstall is optional. A direct in-place
+`npx skills@1.9.0 add` is also supported. `npx skills@1.9.0 add` overwrites
+same-named skill directories wholesale (it does not merge), but it does **not**
+remove artifacts it does not own. `~/.geo-prospects/` is preserved in **both**
+paths.
+
+### Path A (recommended): uninstall first, then clean npx add
+
+```bash
+# 1) Remove LEGACY artifacts (preserves ~/.geo-prospects/ and the shared cache venv)
+bash uninstall.sh
+
+# 2) Install with the pinned npx CLI (this fork, both agents)
+npx skills@1.9.0 add -a claude-code -a opencode -y https://github.com/D0wn10ad/geo-seo-ai-agent.git
+
+# 3) One-time bootstrap (Python 3.10+; installs pinned uv only if absent)
+bash ~/.claude/skills/geo/scripts/install_uv.sh
+bash ~/.claude/skills/geo/scripts/bootstrap_env.sh
+
+# 4) Verify
+npx skills@1.9.0 check
+ls ~/.claude/skills/geo/SKILL.md
+```
+
+Adjust the installed skill path in step 3 to match your agent's install root if it
+differs. Restart your AI client after verification.
+
+### Path B (in-place): direct add + manual legacy cleanup
+
+`npx skills@1.9.0 add` refreshes managed skill directories even over an older
+install, but it will **not** auto-clean legacy-only artifacts. Use this path when
+you want to avoid running `uninstall.sh`, then complete the cleanup checklist.
+
+```bash
+# 1) In-place pinned add (overwrites same-named skill directories)
+npx skills@1.9.0 add -a claude-code -a opencode -y https://github.com/D0wn10ad/geo-seo-ai-agent.git
+
+# 2) Manual cleanup of legacy-only artifacts npx does not own (only if present)
+rm -rf ~/.claude/skills/geo/.venv                  # legacy `.venv` (old per-skill venv; bootstrap now uses XDG cache venv)
+rm -f  ~/.claude/agents/geo-*.md                   # legacy agent files (agents/*.md)
+rm -f  "${XDG_CONFIG_HOME:-$HOME/.config}/opencode/agents/geo-*.md"
+rm -f  "${XDG_CONFIG_HOME:-$HOME/.config}/opencode/commands/geo-*.md"  # stale generated .opencode/commands wrappers
+# remove any stale symlinks pointing at removed legacy targets:
+find ~/.claude/skills ~/.claude/agents "${XDG_CONFIG_HOME:-$HOME/.config}/opencode" \
+  -maxdepth 2 -xtype l -name 'geo*' -delete 2>/dev/null || true
+
+# 3) One-time bootstrap (if not already bootstrapped)
+bash ~/.claude/skills/geo/scripts/install_uv.sh
+bash ~/.claude/skills/geo/scripts/bootstrap_env.sh
+
+# 4) Verify
+npx skills@1.9.0 check
+ls ~/.claude/skills/geo/SKILL.md
+```
+
+**Do not remove:** `~/.geo-prospects/` (preserved runtime data), the npx download
+cache, `skills-lock.json`, or any npx-managed cache/symlink targets. The bootstrap
+venv at `${XDG_CACHE_HOME:-~/.cache}/geo-seo-ai-agent` is a shared cache kept in
+both paths.
 
 ---
 
