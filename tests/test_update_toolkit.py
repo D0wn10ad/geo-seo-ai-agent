@@ -69,6 +69,11 @@ def repo(tmp_path):
 
     (r / "geo" / "scripts").mkdir(parents=True)
     (r / "geo" / "scripts" / "fetch_page.py").write_text("print('ok')")
+    canonical = r / "geo" / "commands"
+    canonical.mkdir(parents=True)
+    (canonical / "geo-audit.md").write_text(
+        '---\ndescription: "audit"\n---\n\naudit command\n', encoding="utf-8"
+    )
     (r / "docs").mkdir(parents=True)
     (r / "docs" / "README.md").write_text("# docs")
 
@@ -276,7 +281,7 @@ class TestInstallForPlatform:
         assert (agents_dst / "geo-content.md").exists()
         assert (agents_dst / "geo-schema.md").exists()
 
-    def test_opencode_agents_copied(self, repo, tmp_path):
+    def test_opencode_canonical_wrappers_copied_no_generated_artifacts(self, repo, tmp_path):
         skills_dst = tmp_path / "skills"
         oc_agents = tmp_path / "oc-agents"
         oc_commands = tmp_path / "oc-commands"
@@ -288,8 +293,9 @@ class TestInstallForPlatform:
         ):
             install_for_platform(repo, "opencode")
 
-        assert (oc_agents / "geo-content.md").exists()
-        assert (oc_commands / "geo-audit.md").exists()
+        assert (skills_dst / "geo" / "commands" / "geo-audit.md").is_file()
+        assert not (oc_agents / "geo-content.md").exists()
+        assert not (oc_commands / "geo-audit.md").exists()
 
     def test_platform_adapter_copied(self, repo, tmp_path):
         skills_dst = tmp_path / "skills"
@@ -601,7 +607,7 @@ class TestInstallWithRuntimePatching:
         assert "~/.claude/skills/geo/scripts/fetch_page.py" in text
         assert "python3 scripts/" not in text
 
-    def test_opencode_agent_markdown_rewritten(self, repo, tmp_path):
+    def test_opencode_no_generated_agent_markdown(self, repo, tmp_path):
         skills_dst = tmp_path / "skills"
         oc_agents = tmp_path / "oc-agents"
 
@@ -618,13 +624,13 @@ class TestInstallWithRuntimePatching:
                 runtime_python="~/.claude/skills/geo/.venv/bin/python3",
             )
 
-        schema_agent = oc_agents / "geo-schema.md"
-        text = schema_agent.read_text()
-        assert "~/.claude/skills/geo/scripts/fetch_page.py" in text
-        assert "python3 scripts/" not in text
+        assert not (oc_agents / "geo-schema.md").exists()
+        assert "~/.claude/skills/geo/scripts/fetch_page.py" in (
+            skills_dst / "geo-schema" / "SKILL.md"
+        ).read_text()
 
-    def test_opencode_command_not_patched(self, repo, tmp_path):
-        """Command wrappers don't have script references, so they should be unchanged."""
+    def test_opencode_canonical_wrapper_not_patched(self, repo, tmp_path):
+        """Committed wrappers copied with the geo skill stay byte-identical."""
         skills_dst = tmp_path / "skills"
         oc_commands = tmp_path / "oc-commands"
 
@@ -640,8 +646,10 @@ class TestInstallWithRuntimePatching:
                 runtime_scripts_root="~/.claude/skills/geo/scripts",
             )
 
-        text = (oc_commands / "geo-audit.md").read_text()
+        text = (skills_dst / "geo" / "commands" / "geo-audit.md").read_text()
+        assert text == '---\ndescription: "audit"\n---\n\naudit command\n'
         assert "scripts/" not in text
+        assert not oc_commands.exists()
 
     def test_requires_no_args_for_noop(self, repo, tmp_path):
         """Without runtime args, install should work and not rewrite."""

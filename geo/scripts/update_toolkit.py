@@ -37,15 +37,6 @@ CLAUDE_AGENTS = HOME / ".claude" / "agents"
 OPENCODE_AGENTS = XDG_CONFIG / "opencode" / "agents"
 OPENCODE_COMMANDS = XDG_CONFIG / "opencode" / "commands"
 
-# OpenCode frontmatter descriptions for agents generated from agents/*.md
-_OC_AGENT_DESCRIPTIONS: dict[str, str] = {
-    "geo-ai-visibility": "GEO geo-ai-visibility specialist. Subagent for parallel GEO audit execution.",
-    "geo-content": "GEO geo-content specialist. Subagent for parallel GEO audit execution.",
-    "geo-platform-analysis": "GEO geo-platform-analysis specialist. Subagent for parallel GEO audit execution.",
-    "geo-schema": "GEO geo-schema specialist. Subagent for parallel GEO audit execution.",
-    "geo-technical": "GEO geo-technical specialist. Subagent for parallel GEO audit execution.",
-}
-
 # ── Command definitions ──────────────────────────────────────
 # {name: (description, body)}
 # `name` maps to geo-{name}.md. `$1` / `$ARGUMENTS` are positional.
@@ -330,72 +321,6 @@ def copy_files(src_dir, dst_dir, pattern, desc=""):
     print(f"  OK: {desc} -> {dst_dir} ({count} files)")
 
 
-def strip_frontmatter(text):
-    """Remove YAML frontmatter (--- ... ---) and return the body."""
-    m = re.match(r'^---\s*\n.*?\n---\s*\n', text, re.DOTALL)
-    if m:
-        return text[m.end():]
-    return text
-
-
-def generate_opencode_agents(src_dir, dst_dir):
-    """Generate OpenCode agent files from Claude Code agent sources.
-
-    Strips the Claude Code frontmatter from each .md in src_dir,
-    prepends OpenCode-specific frontmatter, writes to dst_dir.
-    """
-    if not src_dir.is_dir():
-        print(f"  SKIP: Agent source not found at {src_dir}")
-        return
-    dst_dir.mkdir(parents=True, exist_ok=True)
-    count = 0
-    for src in sorted(src_dir.glob("geo-*.md")):
-        name = src.stem
-        body = strip_frontmatter(src.read_text())
-
-        desc = _OC_AGENT_DESCRIPTIONS.get(
-            name, f"GEO {name} specialist. Subagent for parallel GEO audit execution.",
-        )
-
-        frontmatter = (
-            "---\n"
-            f"description: >\n"
-            f"  {desc}\n"
-            f"mode: subagent\n"
-            f"permission:\n"
-            f"  read: allow\n"
-            f"  edit: deny\n"
-            f"  bash: allow\n"
-            f"  webfetch: allow\n"
-            f"  glob: allow\n"
-            f"  grep: allow\n"
-            "---\n"
-            "\n"
-        )
-
-        dst = dst_dir / src.name
-        dst.write_text(frontmatter + body)
-        count += 1
-    print(f"  OK: OpenCode agents -> {dst_dir} ({count} files)")
-
-
-def generate_opencode_commands(dst_dir):
-    """Generate OpenCode command files from the _GEO_COMMANDS dict."""
-    dst_dir.mkdir(parents=True, exist_ok=True)
-    count = 0
-    for name, (description, body) in _GEO_COMMANDS.items():
-        content = (
-            "---\n"
-            f'description: "{description}"\n'
-            "---\n"
-            "\n"
-            f"{body}\n"
-        )
-        (dst_dir / f"geo-{name}.md").write_text(content)
-        count += 1
-    print(f"  OK: OpenCode commands -> {dst_dir} ({count} files)")
-
-
 # ── Install logic ─────────────────────────────────────────────────
 
 def install_for_platform(
@@ -432,9 +357,6 @@ def install_for_platform(
 
     if platform_name == "claude-code":
         copy_files(agents_src, agents_dst, "*.md", f"Agents ({platform_name})")
-    elif platform_name == "opencode":
-        generate_opencode_agents(agents_src, agents_dst)
-        generate_opencode_commands(OPENCODE_COMMANDS)
 
     # Rewrite runtime references in installed markdown
     markdown_files: list[Path] = [
