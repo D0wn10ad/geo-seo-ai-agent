@@ -2,153 +2,30 @@
 set -euo pipefail
 
 # ============================================================
-# GEO-SEO AI Agent Toolkit Installer — Windows (Git Bash)
-# Run this script from Git Bash, NOT PowerShell or CMD.
-# LEGACY installer: skills are distributed only by pinned `npx skills@1.9.0 add`.
-# Todo 16 will fully rewrite this script; no skill files are deployed here.
+# GEO-SEO AI Agent Toolkit — LEGACY Windows installer (RETIRED)
+# Run this script from Git Bash, not PowerShell or CMD.
+# This script intentionally deploys nothing. Skills are distributed
+# only by the pinned npx command below. It performs no repository
+# download, no dependency installation, and no environment setup.
+# Kept solely as an honest signpost for older setups.
 # ============================================================
 
-REPO_URL="https://github.com/D0wn10ad/geo-seo-ai-agent.git"
-CLAUDE_DIR="${HOME}/.claude"
-SKILLS_DIR="${CLAUDE_DIR}/skills"
-INSTALL_DIR="${SKILLS_DIR}/geo"
-TEMP_DIR=$(mktemp -d)
+cat <<'EOF'
 
-RED='\033[0;31m'
-GREEN='\033[0;32m'
-YELLOW='\033[1;33m'
-BLUE='\033[0;34m'
-NC='\033[0m'
+  GEO-SEO AI Agent Toolkit — LEGACY Windows installer (RETIRED)
 
-print_header() {
-    echo ""
-    echo -e "${BLUE}+------------------------------------------+${NC}"
-    echo -e "${BLUE}|   GEO-SEO AI Agent Toolkit Installer     |${NC}"
-    echo -e "${BLUE}|   Windows / Git Bash Edition             |${NC}"
-    echo -e "${BLUE}|   Claude Code + OpenCode                 |${NC}"
-    echo -e "${BLUE}+------------------------------------------+${NC}"
-    echo ""
-}
-print_success() { echo -e "${GREEN}[OK] $1${NC}"; }
-print_warning() { echo -e "${YELLOW}[!!] $1${NC}"; }
-print_error()   { echo -e "${RED}[XX] $1${NC}"; }
-print_info()    { echo -e "${BLUE}[>>] $1${NC}"; }
+  This legacy script no longer deploys skills. It does not download,
+  clone, or install anything. From Git Bash, install with the pinned
+  command:
 
-cleanup() { rm -rf "$TEMP_DIR"; }
-trap cleanup EXIT
+    npx skills@1.9.0 add -a claude-code -a opencode -y https://github.com/D0wn10ad/geo-seo-ai-agent.git
 
-main() {
-    # ---- Parse arguments ----
-    BRANCH="main"
-    while [[ $# -gt 0 ]]; do
-        case "$1" in
-            -b|--branch)
-                BRANCH="$2"
-                shift 2
-                ;;
-            *)
-                print_error "Unknown option: $1"
-                echo "  Usage: bash install-win.sh [-b|--branch <branch>]"
-                exit 1
-                ;;
-        esac
-    done
+  Cleaning up an older LEGACY install:
 
-    print_header
+    bash uninstall.sh
 
-    # ---- Verify Git Bash environment ----
-    if [[ "$(uname -s 2>/dev/null)" != MINGW* ]] && \
-       [[ "$(uname -s 2>/dev/null)" != CYGWIN* ]] && \
-       [[ "$(uname -s 2>/dev/null)" != MSYS* ]] && \
-       [[ -z "${WINDIR:-}" ]]; then
-        print_info "Non-Windows detected — use install.sh instead on Linux/macOS."
-    fi
+  uninstall.sh removes legacy-only artifacts and preserves
+  ~/.geo-prospects/ — your prospects, proposals and reports are
+  never deleted.
 
-    # ---- Check Prerequisites ----
-    print_info "Checking prerequisites..."
-
-    if ! command -v git &> /dev/null; then
-        print_error "Git is required. Install: https://git-scm.com/downloads"
-        exit 1
-    fi
-    print_success "Git found: $(git --version)"
-
-    PYTHON_CMD=""
-    for cmd in python3 python py python3.15 python3.14 python3.13 python3.12 python3.11 python3.10; do
-        if command -v "$cmd" &> /dev/null; then
-            _ver=$("$cmd" --version 2>&1 | grep -oE '[0-9]+\.[0-9]+' | head -1 || true)
-            if [ -n "$_ver" ]; then
-                _major=$(echo "$_ver" | cut -d. -f1)
-                _minor=$(echo "$_ver" | cut -d. -f2)
-                if [ "$_major" -gt 3 ] || { [ "$_major" -eq 3 ] && [ $_minor -ge 10 ]; }; then
-                    PYTHON_CMD="$cmd"
-                    break
-                fi
-            fi
-        fi
-    done
-    if [ -z "$PYTHON_CMD" ]; then
-        print_error "Python 3.10+ not found. Install: https://www.python.org/downloads/"
-        exit 1
-    fi
-    print_success "Python found: $($PYTHON_CMD --version)"
-
-    # ---- Clone or Copy Repository ----
-    print_info "Fetching source files..."
-
-    SCRIPT_DIR=""
-    if [ -n "${BASH_SOURCE[0]:-}" ] && [ "${BASH_SOURCE[0]}" != "bash" ]; then
-        SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" 2>/dev/null && pwd)" || true
-    fi
-
-    if [ -n "$SCRIPT_DIR" ] && [ -f "$SCRIPT_DIR/geo/SKILL.md" ]; then
-        print_info "Installing from local directory..."
-        SOURCE_DIR="$SCRIPT_DIR"
-    else
-        print_info "Cloning from repository (branch: ${BRANCH})..."
-        git clone --depth 1 --branch "$BRANCH" "$REPO_URL" "$TEMP_DIR/repo" || {
-            print_error "Failed to clone repository."
-            exit 1
-        }
-        SOURCE_DIR="${TEMP_DIR}/repo"
-    fi
-
-    # ---- Legacy distribution disabled ----
-    print_warning "This legacy installer no longer deploys skills."
-    print_warning "Install with: npx skills@1.9.0 add -a claude-code -a opencode -y ${REPO_URL}"
-
-    # ---- Install Python Dependencies (--user, no venv on Windows) ----
-    print_info "Installing Python dependencies..."
-    if [ -f "$SOURCE_DIR/requirements.txt" ]; then
-        $PYTHON_CMD -m pip install --user -r "$SOURCE_DIR/requirements.txt" -q 2>/dev/null && {
-            print_success "Python dependencies installed"
-        } || {
-            print_warning "Some deps failed. Run: $PYTHON_CMD -m pip install --user -r requirements.txt"
-            cp "$SOURCE_DIR/requirements.txt" "$INSTALL_DIR/"
-        }
-    fi
-
-    # ---- Verify ----
-    echo ""
-    print_info "Verifying installation..."
-    [ -f "$INSTALL_DIR/SKILL.md" ] && print_success "Main skill" || print_error "Main skill missing"
-    [ -d "$SKILLS_DIR/geo-audit" ] && print_success "Sub-skills" || print_error "Sub-skills missing"
-    [ -d "$INSTALL_DIR/scripts" ]  && print_success "Scripts"    || print_error "Scripts missing"
-
-    # ---- Summary ----
-    echo ""
-    echo -e "${GREEN}+------------------------------------------+${NC}"
-    echo -e "${GREEN}|        Installation Complete!            |${NC}"
-    echo -e "${GREEN}+------------------------------------------+${NC}"
-    echo ""
-    echo "  Skills:   ${INSTALL_DIR}"
-    echo ""
-    echo -e "${BLUE}Quick Start:${NC}"
-    echo "  Claude Code:  /geo audit https://example.com"
-    echo "  OpenCode:     /geo-audit https://example.com"
-    echo ""
-    echo "  See docs/ for full command reference."
-    echo ""
-}
-
-main "$@"
+EOF

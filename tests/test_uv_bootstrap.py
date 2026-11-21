@@ -4,6 +4,13 @@ Baseline characterization records the pre-migration state observed on HEAD
 ca2c67b0da4cc7325489e030bc599bea5bba1d77: no skills/uv/SKILL.md, no pinned
 installer helper, and install.sh carrying only the raw unpinned hint.
 
+F2-01 reconciliation: the baseline snapshot below originally asserted that
+install.sh still carried that raw unpinned hint. install.sh is now a fully
+retired LEGACY signpost that performs no bootstrap at all (see
+tests/test_legacy_installers_retired.py), so the snapshot asserts the retired
+reality and verifies that pinned uv/npx bootstrap guidance lives in the
+canonical helper and README instead.
+
 The behaviour tests below fail first, then pass once the vendored skill and the
 guarded installer are added. All PATH-sensitive tests use an isolated scratch
 bin so the system uv at ~/.local/bin/uv cannot satisfy the presence guard.
@@ -41,13 +48,23 @@ def test_baseline_pre_migration_absence_snapshot():
     }
 
 
-def test_baseline_install_sh_carries_only_unpinned_hint():
+def test_retired_install_sh_has_no_bootstrap_and_canonical_guidance_exists():
     text = INSTALL_SH.read_text(encoding="utf-8")
-    assert "curl -LsSf https://astral.sh/uv/install.sh | sh" in text
+    assert "curl -LsSf https://astral.sh/uv/install.sh | sh" not in text
     assert "install_uv.sh" not in text
     assert "UV_VERSION" not in text
     assert "astral.sh/uv/0." not in text
     assert "astral.sh/uv/$" not in text
+    assert "pip install" not in text
+    assert "npx skills@1.9.0 add" in text
+    assert "bash uninstall.sh" in text
+
+    helper = INSTALLER.read_text(encoding="utf-8")
+    assert f'UV_VERSION="{EXPECTED_PIN}"' in helper
+    assert f'"https://astral.sh/uv/${{UV_VERSION}}/install.sh"' in helper
+    readme = (ROOT / "README.md").read_text(encoding="utf-8")
+    assert "bash geo/scripts/install_uv.sh" in readme
+    assert "bash geo/scripts/bootstrap_env.sh" in readme
 
 
 def test_vendored_skill_has_frontmatter_and_intact_upstream_teaching():
