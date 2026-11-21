@@ -1,6 +1,8 @@
 # Skills, Agents, Scripts, and Schemas
 
-This reference describes every moving part in the `geo-seo-claude` skill bundle. The bundle optimizes websites for Generative Engine Optimization (GEO) — making content discoverable and citable by AI search platforms (ChatGPT, Perplexity, Google AI Overviews, Gemini, Bing Copilot) — while maintaining traditional SEO foundations. It is structured as one orchestrator skill, 20 sub-skills, 5 parallel subagents (with platform-specific copies for Claude Code and OpenCode), 7 Python helper scripts, and 6 JSON-LD schema templates.
+This reference describes every moving part in this fork's skill bundle. The bundle optimizes websites for Generative Engine Optimization (GEO) — making content discoverable and citable by AI search platforms (ChatGPT, Perplexity, Google AI Overviews, Gemini, Bing Copilot) — while maintaining traditional SEO foundations. It is structured as one orchestrator skill, 21 `geo-*` skills plus the vendored `uv` skill, 5 parallel subagents (with platform-specific copies for Claude Code and OpenCode), 7 Python helper scripts, and 6 JSON-LD schema templates.
+
+Skills are installed from this fork with the pinned `npx skills@1.9.0 add -a claude-code -a opencode -y https://github.com/D0wn10ad/geo-seo-ai-agent.git` command; the committed tree is copied verbatim and nothing is generated at install time. Python dependencies are installed separately by `geo/scripts/bootstrap_env.sh` (using the pinned `geo/scripts/install_uv.sh` helper). See [getting-started.md](getting-started.md) for the full flow.
 
 See [commands-reference.md](commands-reference.md) for the full slash-command reference and [architecture.md](architecture.md) for how the parallel subagent flow works during a full audit.
 
@@ -176,7 +178,7 @@ See [commands-reference.md](commands-reference.md) for `/geo report`.
 
 **Outputs:** `GEO-REPORT-[brand].pdf` — cover page with score gauge, score breakdown with bar chart, AI platform readiness chart, crawler access table (green/red coded), findings by severity, action plan, and methodology appendix.
 
-**Dependencies:** `geo/scripts/generate_pdf_report.py` (requires `pip install reportlab`).
+**Dependencies:** `geo/scripts/generate_pdf_report.py` (ReportLab is installed by `bash geo/scripts/bootstrap_env.sh`; if still missing, use `uv pip install --python <venv>/bin/python3 reportlab` — not bare `pip install`).
 
 See [commands-reference.md](commands-reference.md) for `/geo report-pdf`.
 
@@ -192,7 +194,7 @@ See [commands-reference.md](commands-reference.md) for `/geo report-pdf`.
 
 **Key sub-commands:** `new`, `list`, `show`, `audit`, `note`, `status`, `won`, `lost`, `pipeline`.
 
-**Dependencies:** `geo/scripts/crm_dashboard.py` provides a rich terminal dashboard (requires `pip install rich`).
+**Dependencies:** `geo/scripts/crm_dashboard.py` provides a rich terminal dashboard (`rich` is installed by `bash geo/scripts/bootstrap_env.sh`; use `uv pip install --python <venv>/bin/python3 rich` if needed, not bare `pip install`).
 
 See [commands-reference.md](commands-reference.md) for `/geo prospect`.
 

@@ -26,15 +26,29 @@ No. It complements existing tools. The `/geo technical` command covers technical
 
 ### Why do I need Claude Code CLI or OpenCode?
 
-The skill bundle is implemented as AI agent slash commands. All commands (`/geo audit`, `/geo quick`, etc.) are routed through the host platform's skill and agent system. The CLI is the runtime; without it, there is nothing to execute the skill files. For Claude Code: `npm install -g @anthropic-ai/claude-code`. For OpenCode: `npm install -g @opencode-ai/cli` plus the superpowers plugin.
+The skill bundle is implemented as AI agent slash commands. All commands (`/geo audit`, `/geo quick`, etc.) are routed through the host platform's skill and agent system. The CLI is the runtime; without it, there is nothing to execute the skill files. For Claude Code: `npm install -g @anthropic-ai/claude-code`. For OpenCode: `npm install -g @opencode-ai/cli` plus the superpowers plugin. Installing skills requires Node.js + npx for the pinned `skills@1.9.0` CLI.
 
 ### Can I run this on Windows without WSL?
 
-Yes, but you must use Git Bash, not PowerShell or Command Prompt. The Windows installer is `install-win.sh` and requires Git for Windows (which bundles Git Bash). Right-click the repo folder and select "Open Git Bash here", then run `./install-win.sh`. WSL is not required.
+Yes. Run the pinned npx command from **Git Bash** (bundled with Git for Windows), not PowerShell or Command Prompt. WSL is not required:
 
-### What does `install.sh` actually do?
+```bash
+npx skills@1.9.0 add -a claude-code -a opencode -y https://github.com/D0wn10ad/geo-seo-ai-agent.git
+```
 
-It checks for Git and Python 3.8+, then delegates file copying to `geo/scripts/update_toolkit.py` which copies files into the shared skill directory (`~/.claude/skills/geo/`), platform-specific agent directories, and OpenCode command wrappers. It then creates an isolated Python virtual environment and installs dependencies from `requirements.txt`. The installer works both from a cloned local directory and via a `curl | bash` pipe from the repository URL.
+### How are the skills actually installed?
+
+Skills are distributed only through the pinned CLI:
+
+```bash
+npx skills@1.9.0 add -a claude-code -a opencode -y https://github.com/D0wn10ad/geo-seo-ai-agent.git
+```
+
+It copies every `SKILL.md` directory from this fork verbatim into the target agents' config dirs (including the committed `geo/commands/` wrappers and nested `geo/scripts/` and `geo/regions/` files) and records the pin in `skills-lock.json`. It does not install Python dependencies: run `bash geo/scripts/install_uv.sh` then `bash geo/scripts/bootstrap_env.sh` once for that (Python 3.10+ required). `install.sh` and `install-win.sh` are **LEGACY** installers that no longer distribute or update skills.
+
+### How do I check for and apply updates?
+
+From the install root (the directory holding `skills-lock.json`), run `npx skills@1.9.0 check` and then `npx skills@1.9.0 update`. Always use the pinned prefix: the lock format and CLI surface change between releases, and an unpinned `npx skills` can silently rewrite the install. Bump the pin only as a deliberate repo-wide change across the skill, README, and docs. See `skills/geo-update/SKILL.md`.
 
 ---
 
@@ -63,7 +77,7 @@ Data from `/geo prospect`, `/geo proposal`, and `/geo compare` is written to `~/
 └── reports/<domain>-monthly-<YYYY-MM>.md
 ```
 
-This directory is intentionally not removed by `uninstall.sh`. Delete it manually with `rm -rf ~/.geo-prospects` if you want to discard your prospect data.
+This directory is intentionally preserved by both `npx skills@1.9.0 remove` and the LEGACY `uninstall.sh` fallback. Delete it manually with `rm -rf ~/.geo-prospects` if you want to discard your prospect data.
 
 ---
 
@@ -75,7 +89,7 @@ Create a new directory under `skills/` following the naming pattern `geo-<skill-
 
 ### How do I test my changes before opening a PR?
 
-Run `./install.sh` from a local clone — the script detects a local `geo/SKILL.md` and installs from the working directory rather than cloning from GitHub. Open your AI agent CLI (Claude Code or OpenCode) and exercise the affected commands against a real URL. Verify that all status checks pass before submitting your pull request, as noted in `CONTRIBUTING.md`.
+Run `npx skills@1.9.0 add -a claude-code -a opencode -y https://github.com/D0wn10ad/geo-seo-ai-agent.git` to install from this fork, then `bash geo/scripts/bootstrap_env.sh` for Python dependencies. Run `pytest tests/ -q`, open your AI agent CLI (Claude Code or OpenCode), and exercise the affected commands against a real URL. Verify that all status checks pass before submitting your pull request, as noted in `CONTRIBUTING.md`.
 
 ### Where do I report bugs or request features?
 
@@ -91,7 +105,7 @@ No. The tool audits signals that correlate with AI visibility and provides recom
 
 ### Can I use this with OpenCode?
 
-Yes. The project provides `.opencode/agents/` (5 agent definitions in OpenCode's `permission:` frontmatter format) and `.opencode/commands/` (21 command wrappers). Install with `python3 geo/scripts/update_toolkit.py`. The `platform/` adapter layer resolves abstract tool names (`` `fetch_url` `` → `webfetch`) at runtime.
+Yes. Install for both agents in one command: `npx skills@1.9.0 add -a claude-code -a opencode -y https://github.com/D0wn10ad/geo-seo-ai-agent.git`. The 5 agent definitions and 21 canonical `geo/commands/geo-*.md` wrappers come from the committed tree; a `.opencode/` directory may appear locally as a deploy artifact. The `platform/` adapter layer resolves abstract tool names (`` `fetch_url` `` → `webfetch`) at runtime.
 
 ### Does it submit anything to third-party services?
 

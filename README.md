@@ -34,44 +34,83 @@ Upstream skills, agents, scripts, and schemas remain unchanged. See [FORK_CHANGE
 
 ## Quick Start
 
-### macOS / Linux
+### Install (macOS / Linux) — pinned npx, both agents
+
+Install the skills for Claude Code and OpenCode from this fork with the pinned
+`skills` CLI. This is the default and only supported distribution path:
 
 ```bash
-# Default branch (main)
-curl -fsSL https://raw.githubusercontent.com/D0wn10ad/geo-seo-ai-agent/main/install.sh | bash
-
-# Specific branch (for testing)
-curl -fsSL https://raw.githubusercontent.com/D0wn10ad/geo-seo-ai-agent/<branch>/install.sh | bash /dev/stdin -b <branch>
+npx skills@1.9.0 add -a claude-code -a opencode -y https://github.com/D0wn10ad/geo-seo-ai-agent.git
 ```
 
-### Windows (Git Bash)
+To target a single agent, keep only the corresponding `-a` flag. The `1.9.0` pin
+is deliberate: `skills-lock.json` in the install root records the pinned source
+and version, and both the lock format and CLI surface change between releases.
+Do **not** substitute an unpinned `npx skills`.
+
+### Windows
+
+The same pinned command works on Windows when run from **Git Bash** (bundled with
+[Git for Windows](https://git-scm.com/downloads)). PowerShell and Command Prompt
+are not supported.
 
 ```bash
-curl -fsSL https://raw.githubusercontent.com/D0wn10ad/geo-seo-ai-agent/main/install-win.sh | bash
+npx skills@1.9.0 add -a claude-code -a opencode -y https://github.com/D0wn10ad/geo-seo-ai-agent.git
 ```
 
-> Run from Git Bash, not PowerShell or CMD. Requires [Git for Windows](https://git-scm.com/downloads).
+### Python dependencies — one-time bootstrap
 
-### Manual
+`npx` installs skills only; it does **not** install Python dependencies. The
+utility scripts require Python 3.10+ (the pinned `lxml` release requires 3.10+). From a clone of
+this repo, bootstrap the shared cache venv:
 
 ```bash
-git clone https://github.com/D0wn10ad/geo-seo-ai-agent.git
-cd geo-seo-ai-agent
-bash install.sh
+bash geo/scripts/install_uv.sh     # installs pinned uv 0.13.9 only if absent
+bash geo/scripts/bootstrap_env.sh  # creates ${XDG_CACHE_HOME:-~/.cache}/geo-seo-ai-agent/venv
 ```
+
+Pass a different `requirements.txt` path as the first argument to
+`bootstrap_env.sh` if you are running it outside the repo. The bootstrap is
+checksum-keyed and idempotent: re-running it is a no-op until `requirements.txt`
+changes. Your system Python is untouched, and `~/.geo-prospects/` is never
+removed.
+
+### Check and update
+
+From the install root (the directory holding `skills-lock.json` / `.agents/skills/`):
+
+```bash
+npx skills@1.9.0 check
+npx skills@1.9.0 update
+```
+
+`check` exits non-zero when an installed skill is behind its pinned source — that
+is the expected signal to run `update`, not an error to ignore. Re-run `check`
+afterwards to confirm a clean state. If the install must be rebuilt for both
+agents, re-run the pinned `add` command above. Changes take effect in new
+sessions, so restart your AI client.
+
+See [skills/geo-update/SKILL.md](skills/geo-update/SKILL.md) for the full update
+workflow. Bump the pin only as a deliberate repo-wide change: update that skill,
+this Quick Start, and the docs together, then re-run the full suite and a fresh
+`npx skills@1.9.0 add` verification.
 
 ### Requirements
 
 | Dependency | Notes |
 |------------|-------|
-| Python 3.8+ | Debian/Ubuntu also needs `python3-venv` |
-| Claude Code CLI | or OpenCode with [oh-my-opencode](https://opencode.ai) plugin |
-| Git | Required for installer |
-| `uv` (optional) | Faster pip — auto-detected by installer |
+| Python 3.10+ | Required for utility scripts (pinned `lxml` needs 3.10+) |
+| Node.js + npx | Runs the pinned `skills@1.9.0` CLI |
+| Claude Code CLI and/or OpenCode | Target agents; at least one must be installed |
+| `uv` | Installed by `geo/scripts/install_uv.sh` (pinned 0.13.9) for the dep bootstrap |
+| Internet access | Required: audits fetch live URLs and AI-cited platforms |
 
-### Isolated install
+### LEGACY installers (not the default)
 
-Python deps go into `~/.claude/skills/geo/.venv/` — your system Python is untouched. Uninstalling removes the venv too.
+`install.sh` and `install-win.sh` are retained as **LEGACY** installers for older
+setups. They no longer distribute or update skills. If you used one, clean up
+with `bash uninstall.sh` (it preserves `~/.geo-prospects/`) and then run the
+pinned `npx skills@1.9.0 add` command above. See [Uninstall](#uninstall).
 
 ---
 
@@ -112,9 +151,13 @@ All 22 commands work identically in Claude Code (`/geo <cmd>`) and OpenCode (`/g
 
 ```
 geo-seo-ai-agent/
-├── geo/                        # Main orchestrator (SKILL.md) + Python utilities
-│   ├── SKILL.md
-│   └── scripts/                # Python utilities
+├── geo/                        # Orchestrator + committed canonical wrappers
+│   ├── SKILL.md                # Orchestrator and /geo command table
+│   ├── commands/               # 21 canonical geo-*.md wrappers (committed; npx copies them)
+│   ├── regions/                # Region profiles + CN knowledge base (cn/)
+│   ├── resolve_regions.py
+│   ├── resolve_scripts.py
+│   └── scripts/                # Python utilities (travel nested with the geo skill)
 │       ├── fetch_page.py
 │       ├── citability_scorer.py
 │       ├── brand_scanner.py
@@ -122,8 +165,10 @@ geo-seo-ai-agent/
 │       ├── generate_pdf_report.py
 │       ├── region_resolver.py
 │       ├── crm_dashboard.py
+│       ├── bootstrap_env.sh    # idempotent, checksum-keyed dep bootstrap
+│       ├── install_uv.sh       # pinned uv 0.13.9 installer helper
 │       └── webapp/
-├── skills/                     # 19 specialized sub-skills
+├── skills/                     # 21 geo-* skills + vendored uv skill
 │   ├── geo-audit/
 │   ├── geo-citability/
 │   ├── geo-crawlers/
@@ -138,31 +183,33 @@ geo-seo-ai-agent/
 │   ├── geo-prospect/
 │   ├── geo-proposal/
 │   ├── geo-compare/
+│   ├── geo-ai-visibility/      ═ phase-2 worker skill
+│   ├── geo-platform-analysis/  ═ phase-2 worker skill
 │   ├── geo-intent-matrix/      ═ fork-added
 │   ├── geo-citation-pipeline/  ═ fork-added
 │   ├── geo-distribution-plan/  ═ fork-added
 │   ├── geo-competitor-citation/═ fork-added
-│   └── geo-update/
+│   ├── geo-update/
+│   └── uv/                     ═ vendored pinned installer helper
 ├── platform/                   # Cross-platform tool mapping adapter
 │   ├── SKILL.md
 │   └── TOOL-MAP.md
 ├── agents/                     # 5 parallel subagents (Claude Code)
-├── .opencode/                  # OpenCode-specific files
-│   ├── agents/                 # 5 subagents (OpenCode format)
-│   └── commands/               # 21 /geo-* command wrappers
 ├── schema/                     # JSON-LD templates (6 files)
 ├── docs/                       # Full documentation
-│   ├── getting-started.md
-│   ├── commands-reference.md
-│   ├── architecture.md
-│   ├── skills-and-agents.md
-│   ├── scoring-methodology.md
-│   ├── faq.md
-│   └── test-plan.md
-├── install.sh                  # Cross-platform installer
-├── uninstall.sh                # Cross-platform uninstaller
+├── install.sh                  # LEGACY installer
+├── install-win.sh              # LEGACY Windows installer
+├── uninstall.sh                # LEGACY cleanup fallback (npx-aware)
 └── requirements.txt
 ```
+
+`npx skills@1.9.0 add` discovers directories containing a `SKILL.md` and copies
+their hierarchy verbatim. `geo/SKILL.md`, the committed `geo/commands/` wrappers,
+the vendored `skills/uv/` skill, and the nested `geo/scripts/` and `geo/regions/`
+files are the source of truth — nothing is generated or rewritten at install
+time. Agent-facing wrappers are installed into each target agent's config dir by
+npx; `.opencode/` is a local deploy artifact, not committed source. Runtime
+`--region <code>` data (including `--region cn`) lives in `geo/regions/cn/`.
 
 ---
 
@@ -216,9 +263,9 @@ For an **npx-managed** install, remove via npx (this leaves the lock/manifest an
 npx skills@1.9.0 remove    # select the geo / geo-* skills
 ```
 
-`bash uninstall.sh` is retained as a **legacy-cleanup fallback** for installs made by the old git-clone installer. It detects the npx layout and, when found, only prints the pinned command above — it never deletes npx-owned links, the cache, or symlink targets. On a legacy install it removes only `~/.claude/skills/geo*`, `~/.claude/agents/geo-*.md`, and the OpenCode agents/commands under `${XDG_CONFIG_HOME:-~/.config}` (legacy venv included), with symlink-safe handling.
+`bash uninstall.sh` is retained as a **LEGACY-cleanup fallback** for installs made by the old git-clone installer. It detects the npx layout and, when found, only prints the pinned command above — it never deletes npx-owned links, the cache, or symlink targets. On a LEGACY install it removes only `~/.claude/skills/geo*`, `~/.claude/agents/geo-*.md`, and the OpenCode agents/commands under `${XDG_CONFIG_HOME:-~/.config}` (LEGACY venv included), with symlink-safe handling.
 
-`~/.geo-prospects/` is always preserved. The bootstrap venv at `${XDG_CACHE_HOME:-~/.cache}/geo-seo-ai-agent` is a shared cache and is not removed. Windows installs use `install-win.sh`; run the npx command above from Git Bash. (Full docs rewrite is tracked separately.)
+`~/.geo-prospects/` is always preserved. The bootstrap venv at `${XDG_CACHE_HOME:-~/.cache}/geo-seo-ai-agent` is a shared cache and is not removed. Windows installs use the LEGACY `install-win.sh`; run the npx command above from Git Bash. See [Getting Started](docs/getting-started.md) for the full install, update, and uninstall walkthrough.
 
 ---
 

@@ -8,14 +8,25 @@ Manual verification checklist for multi-platform (Claude Code + OpenCode) instal
 
 ---
 
-## T1 — Installation (full flow)
+## T1 — Installation (npx-first flow)
 
 ```bash
-# Run from repo root — tests detection, file deploy, venv, shebangs
-bash install.sh
+npx skills@1.9.0 add -a claude-code -a opencode -y https://github.com/D0wn10ad/geo-seo-ai-agent.git
+npx skills@1.9.0 check
+bash geo/scripts/install_uv.sh
+bash geo/scripts/bootstrap_env.sh
 ```
 
-**Verify:** Output shows "Detected platforms: claude-code, opencode" (or whichever are installed). All copy operations report OK. Venv is created. Shebangs are pinned. No errors.
+**Verify:** `check` exits 0; `skills-lock.json` in the install root records the
+pinned source; both target agents report the installed `geo-*` skills; the
+bootstrap prints the venv path with no import errors.
+
+### LEGACY installer check (not the default path)
+
+`bash install.sh` (or `bash install-win.sh` from Git Bash on Windows) is retained
+only as a **LEGACY** manual-check path for older installs. It no longer
+distributes or updates skills. If exercised, follow it with the pinned npx `add`
+and bootstrap commands above.
 
 ---
 
@@ -24,7 +35,7 @@ bash install.sh
 ```bash
 # Shared skills (both platforms)
 ls ~/.claude/skills/geo/SKILL.md
-ls ~/.claude/skills/geo-*/SKILL.md | wc -l      # expect 19
+ls ~/.claude/skills/geo-*/SKILL.md | wc -l      # expect 21 geo-* skills (+ vendored uv)
 ls ~/.claude/skills/platform/SKILL.md            # platform adapter
 ls ~/.claude/skills/platform/TOOL-MAP.md
 
@@ -171,16 +182,19 @@ python3 geo/scripts/webapp/app.py
 ## T12 — Uninstall/Reinstall Cycle (destructive)
 
 ```bash
-# Remove all installed artifacts
-bash uninstall.sh
+# Remove npx-managed skills (select the geo / geo-* skills)
+npx skills@1.9.0 remove
 
-# Verify cleanup
-ls ~/.claude/skills/geo/*.md 2>&1   # should fail/empty
-ls ~/.config/opencode/agents/geo-*.md 2>&1  # should fail/empty
-ls ~/.config/opencode/commands/geo-*.md 2>&1  # should fail/empty
+# LEGACY fallback only: bash uninstall.sh cleans old git-clone artifacts
+# (it detects npx layout and deletes nothing when found)
 
-# Reinstall full flow
-bash install.sh
+# Reinstall with the pinned add form, then re-bootstrap deps if needed
+npx skills@1.9.0 add -a claude-code -a opencode -y https://github.com/D0wn10ad/geo-seo-ai-agent.git
+bash geo/scripts/bootstrap_env.sh
 
-# Re-run T2 to verify everything is restored
+# Re-run T2 to verify everything is restored, and confirm the pin
+npx skills@1.9.0 check
 ```
+
+**Verify:** `~/.geo-prospects/` is intact before and after; the bootstrap venv
+under `${XDG_CACHE_HOME:-~/.cache}/geo-seo-ai-agent` is not deleted.

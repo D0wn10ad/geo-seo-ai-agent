@@ -1,8 +1,8 @@
 # Commands Reference
 
-This file documents every command in the `geo-seo-claude` skill bundle. Commands are invoked inside Claude Code or OpenCode using the `/geo` prefix. The main skill at `geo/SKILL.md` acts as a router: it reads the first argument after `/geo` and delegates to the matching sub-skill under `skills/`. All commands accept a URL as their primary argument; CRM commands operate on domain names or prospect IDs instead. Every command that produces a score references the weighting model described in [scoring-methodology.md](scoring-methodology.md). The parallel subagent architecture used by `/geo audit` is described in [architecture.md](architecture.md).
+This file documents every command in this fork's skill bundle. Commands are invoked inside Claude Code or OpenCode using the `/geo` prefix. The main skill at `geo/SKILL.md` acts as a router: it reads the first argument after `/geo` and delegates to the matching sub-skill under `skills/`. All commands accept a URL as their primary argument; CRM commands operate on domain names or prospect IDs instead. Every command that produces a score references the weighting model described in [scoring-methodology.md](scoring-methodology.md). The parallel subagent architecture used by `/geo audit` is described in [architecture.md](architecture.md).
 
-**OpenCode note:** The `.opencode/commands/` directory provides command wrapper files that delegate to the `geo` skill. These are registered automatically when installed via `geo/scripts/update_toolkit.py`.
+**OpenCode note:** The 21 canonical `geo/commands/geo-*.md` wrappers are committed source of truth and are copied into the agent's command directory by `npx skills@1.9.0 add -a claude-code -a opencode -y https://github.com/D0wn10ad/geo-seo-ai-agent.git`. A `.opencode/commands/` directory may appear locally as a deploy artifact; nothing is generated or rewritten at install time. See [getting-started.md](getting-started.md) for install and update commands.
 
 ---
 
@@ -435,7 +435,7 @@ Converts GEO audit data into a professionally formatted PDF with charts, score g
 - Checks the working directory for existing `GEO-CLIENT-REPORT.md` or `GEO-AUDIT-REPORT.md`; if none are found, runs a full audit first.
 - Parses the Markdown report to extract scores, platform readiness numbers, crawler status, findings, and action items.
 - Assembles the data into the JSON schema expected by the PDF generation script.
-- Calls `python3 ~/.claude/skills/geo/scripts/generate_pdf_report.py` (requires `pip install reportlab`).
+- Resolves the helper-scripts root from the installed skill directory (`$GEO_SCRIPTS/generate_pdf_report.py`) and invokes it with the bootstrap venv's Python. ReportLab is installed by `bash geo/scripts/bootstrap_env.sh`; if it is still missing, use `uv pip install --python <venv>/bin/python3 reportlab` rather than a bare `pip install` (PEP 668).
 - The PDF uses US Letter size with a navy/blue/coral color palette; score gauges use traffic-light colors (green 80+, blue 60–79, yellow 40–59, red below 40).
 
 **Inputs**
