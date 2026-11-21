@@ -4,7 +4,8 @@ set -euo pipefail
 # ============================================================
 # GEO-SEO AI Agent Toolkit Installer — Windows (Git Bash)
 # Run this script from Git Bash, NOT PowerShell or CMD.
-# Delegates file copying to geo/scripts/update_toolkit.py.
+# LEGACY installer: skills are distributed only by pinned `npx skills@1.9.0 add`.
+# Todo 16 will fully rewrite this script; no skill files are deployed here.
 # ============================================================
 
 REPO_URL="https://github.com/D0wn10ad/geo-seo-ai-agent.git"
@@ -112,14 +113,9 @@ main() {
         SOURCE_DIR="${TEMP_DIR}/repo"
     fi
 
-    # ---- Deploy files via update_toolkit.py ----
-    print_info "Deploying skills, agents, and platform adapter..."
-    "$PYTHON_CMD" "$SOURCE_DIR/geo/scripts/update_toolkit.py" \
-        --upstream "$REPO_URL" \
-        --target "$SOURCE_DIR" \
-        --all-platforms \
-        --branch "$BRANCH" 2>&1 | sed 's/^/  /'
-    print_success "File deployment complete"
+    # ---- Legacy distribution disabled ----
+    print_warning "This legacy installer no longer deploys skills."
+    print_warning "Install with: npx skills@1.9.0 add -a claude-code -a opencode -y ${REPO_URL}"
 
     # ---- Install Python Dependencies (--user, no venv on Windows) ----
     print_info "Installing Python dependencies..."

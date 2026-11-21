@@ -29,7 +29,6 @@ SCRIPT_INVOKING_FILES: frozenset[str] = frozenset(
         "skills/geo-report-pdf/SKILL.md",
         "skills/geo-report-pdf/SKILL.cn.md",
         "skills/geo-schema/SKILL.md",
-        "skills/geo-update/SKILL.md",
     }
 )
 

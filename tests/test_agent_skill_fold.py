@@ -132,15 +132,6 @@ def test_newflow_phase2_dispatch_uses_skills_in_parallel() -> None:
     assert "agents/geo-" not in subagent_block
     assert "parallel" in subagent_block.lower()
 
-    updater = (REPO_ROOT / "geo" / "scripts" / "update_toolkit.py").read_text(
-        encoding="utf-8"
-    )
-    audit_start = updater.index('"audit": (')
-    audit_body = updater[audit_start : updater.index('"brands": (', audit_start)]
-    assert "delegate to all 5 subagents" not in audit_body
-    assert "parallel" in audit_body
-    assert "skills" in audit_body
-
 
 def _run_helper(*args: str) -> subprocess.CompletedProcess[str]:
     return subprocess.run(

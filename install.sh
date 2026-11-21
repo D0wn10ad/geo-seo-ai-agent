@@ -2,10 +2,10 @@
 set -euo pipefail
 
 # ============================================================
-# GEO-SEO AI Agent Toolkit Installer
-# Installs the GEO-first SEO analysis tool for both
-# Claude Code and OpenCode with an isolated Python venv.
-# Delegates file copying to geo/scripts/update_toolkit.py.
+# GEO-SEO AI Agent Toolkit Installer (LEGACY)
+# Skills are distributed only by pinned `npx skills@1.9.0 add`.
+# This script no longer deploys skills; Todo 16 will fully rewrite it
+# as an npx-first quick start. Kept here only as a legacy skeleton.
 # ============================================================
 
 REPO_URL="https://github.com/D0wn10ad/geo-seo-ai-agent.git"
@@ -21,14 +21,6 @@ case "${OSTYPE:-}" in
 esac
 VENV_PY="${VENV_DIR}/${VENV_PY_REL}"
 TEMP_DIR=$(mktemp -d)
-
-# Tilde-form paths for runtime markdown rewriting.
-# The tilde is intentionally kept literal — Claude Code's Bash
-# expands it when running the command later.
-# shellcheck disable=SC2088
-VENV_MD_PY="~/.claude/skills/geo/.venv/${VENV_PY_REL}"
-# shellcheck disable=SC2088
-SCRIPTS_MD_ROOT='~/.claude/skills/geo/scripts'
 
 RED='\033[0;31m'
 GREEN='\033[0;32m'
@@ -223,22 +215,10 @@ main() {
         USER_INSTALL=false
     fi
 
-    # ---- Deploy files via update_toolkit.py ----
-    print_info "Deploying skills, agents, and platform adapter..."
-    DEPLOY_EXTRA=""
-    if [ "$USER_INSTALL" = false ]; then
-        DEPLOY_EXTRA="--runtime-python ${VENV_MD_PY} --runtime-scripts-root ${SCRIPTS_MD_ROOT}"
-    else
-        DEPLOY_EXTRA="--runtime-scripts-root ${SCRIPTS_MD_ROOT}"
-    fi
-    # shellcheck disable=SC2086
-    "$PYTHON_CMD" "$SOURCE_DIR/geo/scripts/update_toolkit.py" \
-        --upstream "$REPO_URL" \
-        --target "$SOURCE_DIR" \
-        --all-platforms \
-        --branch "$BRANCH" \
-        $DEPLOY_EXTRA 2>&1 | sed 's/^/  /'
-    print_success "File deployment complete"
+    # ---- Legacy distribution disabled ----
+    print_warning "This legacy installer no longer deploys skills."
+    print_warning "Install with: npx skills@1.9.0 add -a claude-code -a opencode -y ${REPO_URL}"
+    print_warning "Todo 16 will replace this script with the npx-first quick start."
 
     # ---- Install Python Dependencies ----
     DEPS_OK=true
@@ -274,21 +254,6 @@ main() {
         print_warning "requirements.txt missing — skipping dependency install."
     fi
     cp "$SOURCE_DIR/requirements.txt" "$INSTALL_DIR/" 2>/dev/null || true
-
-    # ---- Rewrite script shebangs ----
-    if [ "$USER_INSTALL" = false ]; then
-        print_info "Pinning script shebangs to venv interpreter..."
-        SHEBANG_COUNT=0
-        for f in "$INSTALL_DIR/scripts/"*.py; do
-            [ -f "$f" ] || continue
-            sed_inplace "1s|^#!.*|#!${VENV_PY}|" "$f"
-            chmod +x "$f"
-            SHEBANG_COUNT=$((SHEBANG_COUNT + 1))
-        done
-        print_success "${SHEBANG_COUNT} script(s) pinned to venv"
-    else
-        print_info "Skipping shebang pinning (no venv — scripts use system python3)"
-    fi
 
     # ---- Verify ----
     echo ""

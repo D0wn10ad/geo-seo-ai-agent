@@ -43,7 +43,7 @@ description: >
 | `/geo prospect <cmd>` | CRM-lite: manage prospects through the sales pipeline |
 | `/geo proposal <domain>` | Auto-generate client proposal from audit data |
 | `/geo compare <domain>` | Monthly delta report: show score improvements to client |
-| `/geo update` | Pull latest GEO skill updates from upstream |
+| `/geo update` | Check/update this fork's skills via pinned `npx skills@1.9.0` (Claude Code + OpenCode) |
 | `/geo matrix <core-topic> [--region <code>]` | (fork+) Build 4-quadrant intent matrix and 12-week schedule |
 | `/geo pipeline <url> [--region <code>]` | (fork+) Run 5-stage AI citation pipeline + 6-engine preferred-answer verify |
 | `/geo distribute <topic> [--region <code>]` | (fork+) Generate tiered 14-day multi-platform distribution plan |
@@ -265,7 +265,7 @@ Adjust recommendations based on detected type. Local businesses need LocalBusine
 | 12 | geo-prospect | `skills/geo-prospect/` | CRM-lite prospect and client pipeline management |
 | 13 | geo-proposal | `skills/geo-proposal/` | Auto-generate client proposals from audit data |
 | 14 | geo-compare | `skills/geo-compare/` | Monthly delta tracking and progress reports |
-| 15 | geo-update | `skills/geo-update/` | Pull latest updates from upstream repository |
+| 15 | geo-update | `skills/geo-update/` | Check/update pinned npx skills from this fork |
 | 16 | geo-intent-matrix | `skills/geo-intent-matrix/` | (fork+) 4-quadrant intent angle matrix + 12-week schedule |
 | 17 | geo-citation-pipeline | `skills/geo-citation-pipeline/` | (fork+) 5-stage AI citation pipeline + 6-engine preferred-answer verify |
 | 18 | geo-distribution-plan | `skills/geo-distribution-plan/` | (fork+) Tier 1/2/3 platform distribution plan with 14-day cadence |

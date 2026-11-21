@@ -97,7 +97,7 @@ All 22 commands work identically in Claude Code (`/geo <cmd>`) and OpenCode (`/g
 | `/geo prospect <cmd>` | CRM-lite: manage prospects pipeline |
 | `/geo proposal <domain>` | Auto-generate client proposal |
 | `/geo compare <domain>` | Monthly delta / progress report |
-| `/geo update` | Pull latest updates from upstream |
+| `/geo update` | Check/update pinned npx skills for this fork |
 | `/geo matrix <topic>` | Intent matrix + editorial schedule |
 | `/geo pipeline <url>` | 5-stage AI citation pipeline |
 | `/geo distribute <topic>` | Multi-platform distribution plan |
@@ -120,7 +120,6 @@ geo-seo-ai-agent/
 │       ├── brand_scanner.py
 │       ├── llmstxt_generator.py
 │       ├── generate_pdf_report.py
-│       ├── update_toolkit.py   ═ cross-platform installer
 │       ├── region_resolver.py
 │       ├── crm_dashboard.py
 │       └── webapp/

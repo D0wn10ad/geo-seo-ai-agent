@@ -88,7 +88,7 @@ The fork adds four new skills that wire the existing audit/optimization skills i
 - All `scripts/*.py` files — unchanged.
 - All `schema/*.json` files — unchanged.
 - All `docs/`, `examples/`, `tests/` files — unchanged.
-- `geo-update` skill — unchanged. `git pull upstream main` continues to work because the `upstream` remote still points at `zubair-trabzada/geo-seo-claude`.
+- `geo-update` skill — rewritten for the npx-first flow. Updates come from this fork (`D0wn10ad/geo-seo-ai-agent`) via pinned `npx skills@1.9.0 check` / `npx skills@1.9.0 update`; there is no `git pull upstream` step and no legacy updater script. The former upstream name is retained only as provenance in `README.md` and `NOTICE`.
 
 ### Runtime data layout (new directories under `~/.geo-prospects/`)
 
