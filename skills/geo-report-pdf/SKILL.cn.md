@@ -277,7 +277,7 @@ The CJK font must be registered **before** any ReportLab imports happen in the b
 ## Notes (CN)
 
 - The base script at `$GEO_SCRIPTS/generate_pdf_report.py` is **not modified** — all CN adaptations happen at invocation time via font registration and JSON data structure changes
-- If `reportlab` does not have `TTFont` support, ensure `pip install reportlab[ttfont]` or check that `reportlab.pdfbase.ttfonts` is available
+- If `reportlab` does not have `TTFont` support, run `bash geo/scripts/bootstrap_env.sh` once then use `uv pip install --python <venv>/bin/python3 "reportlab[ttfont]"` (never bare `pip install`), or check that `reportlab.pdfbase.ttfonts` is available
 - Noto Sans SC covers all Chinese characters (Simplified), plus Latin, CJK symbols, and punctuation — it is the recommended single font for CN reports
 - For Traditional Chinese (Hong Kong / Taiwan), use `NotoSansTC` or `NotoSansHK` instead
 - The font files are **not committed to the repo** — the user must download them; the SKILL.md should link to [Google Noto Fonts](https://fonts.google.com/noto) for download instructions

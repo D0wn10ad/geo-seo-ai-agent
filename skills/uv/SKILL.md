@@ -216,3 +216,7 @@ The helper is a no-op when `uv` is already present at any version, and otherwise
 installs exactly that pinned release using Astral's version-locked installer at
 `https://astral.sh/uv/<pin>/install.sh`. It never downgrades or reinstalls an
 existing `uv`.
+
+For the environment/dependencies step (venv + requirements.txt), run
+`bash geo/scripts/bootstrap_env.sh` once; it is idempotent and keyed to a
+requirements.txt checksum so it survives skill reinstalls.
