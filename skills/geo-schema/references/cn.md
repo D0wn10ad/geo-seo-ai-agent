@@ -1,5 +1,4 @@
 ---
-name: geo-schema-cn
 description: CN-specific schema overrides — Baidu extensions, CN entity defaults, ICP requirements
 version: 1.0.0
 region: cn

@@ -1,5 +1,4 @@
 ---
-name: geo-prospect-cn
 description: CN-region CRM overrides — Chinese labels, RMB deal values, CN pipeline stages
 version: 1.0.0
 region: cn

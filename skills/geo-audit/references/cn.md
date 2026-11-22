@@ -1,5 +1,4 @@
 ---
-name: geo-audit-cn
 description: CN-specific GEO audit orchestration — Baidu AI engines, CN brand platforms, Chinese-language exec summary
 version: 1.0.0
 region: cn

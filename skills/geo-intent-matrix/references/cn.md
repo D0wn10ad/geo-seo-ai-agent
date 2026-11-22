@@ -1,5 +1,4 @@
 ---
-name: geo-intent-matrix-cn
 description: CN-specific intent-angle matrix — Chinese question generation, Baidu Index/WeChat Index SV sources, CN platform hooks
 version: 1.0.0
 region: cn

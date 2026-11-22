@@ -1,5 +1,4 @@
 ---
-name: geo-crawlers-cn
 description: CN-specific AI crawler access analysis — BaiduSpider, Bytespider, Sogou, 360Spider, YisouSpider classification and scoring
 version: 1.0.0
 region: cn

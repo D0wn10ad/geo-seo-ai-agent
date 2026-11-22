@@ -1,5 +1,4 @@
 ---
-name: geo-citation-pipeline-cn
 description: CN-specific AI citation pipeline — BaiduSpider/ByteSpider discovery, CN authority domains, Baidu Zhanzhang submission
 version: 1.0.0
 region: cn

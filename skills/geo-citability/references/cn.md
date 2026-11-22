@@ -1,5 +1,4 @@
 ---
-name: geo-citability-cn
 description: CN-specific citability scoring adjustments — Chinese language, CN AI engine preferences
 version: 1.0.0
 region: cn

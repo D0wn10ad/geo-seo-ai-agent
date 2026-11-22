@@ -1,5 +1,4 @@
 ---
-name: geo-compare-cn
 description: CN region override for GEO monthly delta report — CN scores, CN platforms, supplementary CN KPIs
 version: 1.0.0
 region: cn

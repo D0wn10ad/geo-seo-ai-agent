@@ -1,5 +1,4 @@
 ---
-name: geo-report-cn
 description: CN region override for GEO client report — Chinese-language template, CN scores, CN platforms
 version: 1.0.0
 region: cn

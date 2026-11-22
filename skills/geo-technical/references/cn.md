@@ -1,5 +1,4 @@
 ---
-name: geo-technical-cn
 description: CN-specific technical SEO overrides — ICP, Baidu crawlers, China CDN, Baidu verification
 version: 1.0.0
 region: cn

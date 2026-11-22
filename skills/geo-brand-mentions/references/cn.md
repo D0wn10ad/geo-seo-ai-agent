@@ -1,5 +1,4 @@
 ---
-name: geo-brand-mentions-cn
 description: CN-specific brand mention scanning — Baidu Baike, Zhihu, WeChat OA, Xiaohongshu, Bilibili, Douyin
 version: 1.0.0
 region: cn

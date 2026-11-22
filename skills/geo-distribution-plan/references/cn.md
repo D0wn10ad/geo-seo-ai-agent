@@ -1,5 +1,4 @@
 ---
-name: geo-distribution-plan-cn
 description: CN-only multi-platform content distribution plan — Baidu Baike, Zhihu, WeChat OA, Xiaohongshu, Bilibili, Douyin, 36Kr, Huxiu, CSDN, Juejin
 version: 1.0.0
 region: cn

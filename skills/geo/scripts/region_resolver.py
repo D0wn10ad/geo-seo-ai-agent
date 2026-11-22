@@ -19,8 +19,8 @@ import sys
 from urllib.parse import urlparse
 
 # Region files ship inside the SKILL.md-bearing geo skill so npx copies them.
-# Ordered from the script's own directory; the first existing candidate wins.
-REGION_SEARCH_DIRS = ("..", "../..", "../../..")
+# From skills/geo/scripts/ the region data lives at ../references/regions/...
+REGION_SEARCH_DIRS = ("../references",)
 MANIFEST_REL = os.path.join("regions", "cn-variants.json")
 
 
@@ -265,11 +265,14 @@ def guidance_files(region_code):
 
 
 def geo_root():
-    """Return the geo skill root that owns the located profiles.yaml."""
+    """Return the geo skill root that owns the located profiles.yaml.
+
+    This is the base that guidance_files() paths are relative to.
+    """
     profiles = resolve_profiles_path()
     if profiles is None:
         return None
-    return os.path.dirname(os.path.dirname(profiles))
+    return os.path.dirname(os.path.dirname(os.path.dirname(profiles)))
 
 
 def format_ask_message(url, detected_status):

@@ -1,5 +1,4 @@
 ---
-name: geo-platform-optimizer-cn
 description: CN-specific platform optimization overrides — Baidu AI, Doubao, Yuanbao, Qwen, Kimi, DeepSeek
 version: 1.0.0
 region: cn

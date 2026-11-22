@@ -1,5 +1,4 @@
 ---
-name: geo-content-cn
 description: CN-specific content quality and E-E-A-T assessment — Chinese authority signals, Baidu Baike cross-reference, CJK readability
 version: 1.0.0
 region: cn

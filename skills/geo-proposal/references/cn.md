@@ -1,5 +1,4 @@
 ---
-name: geo-proposal-cn
 description: CN-specific proposal template overrides — Chinese-language template, RMB pricing, CN service packages, fapiao tax notes, CN timeline
 version: 1.0.0
 region: cn

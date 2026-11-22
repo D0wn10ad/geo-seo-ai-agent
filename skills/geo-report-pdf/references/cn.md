@@ -1,5 +1,4 @@
 ---
-name: geo-report-pdf-cn
 description: CN-specific PDF report generator overrides — CJK font rendering, CN platform/engine naming, Chinese field labels, CN output file
 version: 1.0.0
 region: cn

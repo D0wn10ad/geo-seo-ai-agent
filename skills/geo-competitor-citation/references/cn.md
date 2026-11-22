@@ -1,5 +1,4 @@
 ---
-name: geo-competitor-citation-cn
 description: >
   Cross-engine competitor GEO gap analysis for China market. Runs a representative
   Chinese-language question set against 6 CN AI engines (Baidu AI Search, Doubao,

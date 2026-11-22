@@ -55,34 +55,18 @@ description: >
 
 <!-- GEO-SCRIPT-RESOLUTION:v1 -->
 
-Helper scripts are located relative to the `SKILL.md` you are reading — never through a deploy-time rewritten absolute path. Set `SKILL_DIR` to the absolute directory containing that file, then probe these candidates **in order** and keep the first that contains `fetch_page.py`:
-
-1. `"$SKILL_DIR/scripts"` — scripts shipped beside this SKILL.md (the `geo` skill itself).
-2. `"$SKILL_DIR/../geo/scripts"` — npx-installed sibling `geo` skill, e.g. `.agents/skills/geo-<name>/` → `.agents/skills/geo/`; also covers the `.claude/skills/geo/` symlink view.
-3. `"$SKILL_DIR/../../geo/scripts"` — source tree, e.g. `skills/geo-<name>/` → repo-root `geo/`.
-4. `"$SKILL_DIR/../../../.claude/skills/geo/scripts"` — canonical Claude Code symlink path reached from an `.agents/skills/...` install.
-
-Use this preamble before any script invocation in an installed skill:
+Helper scripts are located relative to the `SKILL.md` you are reading — never through a deploy-time rewritten absolute path. Set `SKILL_DIR` to the absolute directory containing that file, then use the single canonical script path:
 
 ```bash
 SKILL_DIR="$(cd "$(dirname "<PATH-TO-THIS-SKILL.md>")" && pwd)"
-GEO_SCRIPTS=""
-for candidate in \
-  "$SKILL_DIR/scripts" \
-  "$SKILL_DIR/../geo/scripts" \
-  "$SKILL_DIR/../../geo/scripts" \
-  "$SKILL_DIR/../../../.claude/skills/geo/scripts"; do
-  [ -f "$candidate/fetch_page.py" ] || continue
-  GEO_SCRIPTS="$(cd "$candidate" && pwd)"
-  break
-done
-: "${GEO_SCRIPTS:?GEO scripts root not found — verify the ordered fallback list}"
+GEO_SCRIPTS="$(cd "$SKILL_DIR/../geo/scripts" && pwd)"
+: "${GEO_SCRIPTS:?GEO scripts root not found}"
 PY="$(command -v python3 || command -v python)"
 ```
 
 Replace `<PATH-TO-THIS-SKILL.md>` with the path of the SKILL.md you are reading, then invoke scripts as `"$PY" "$GEO_SCRIPTS/<script>.py" ...`.
 
-**Windows / Git Bash:** both installers require Git Bash, which supplies `cd`, `dirname`, `command -v`, forward-slash paths, and `python3`/`python` on PATH; all four candidates and the preamble therefore work unchanged on Windows. Native PowerShell/CMD is explicitly out of scope because Git Bash is the documented Windows installer entry point. The reference implementation of this probe is `resolve_scripts.py` beside this file (in `geo/`); invoke it with the resolved `PY` interpreter and a skill directory to print the root.
+**Windows / Git Bash:** both installers require Git Bash, which supplies `cd`, `dirname`, `command -v`, forward-slash paths, and `python3`/`python` on PATH; the preamble therefore works unchanged on Windows. Native PowerShell/CMD is explicitly out of scope because Git Bash is the documented Windows installer entry point.
 
 ---
 
@@ -104,7 +88,7 @@ The registered `regions/` knowledge base is mirrored under this skill as
 `regions/profiles.yaml`, `regions/cn/*.md` and `regions/cn-variants.json` so an
 `npx skills@1.9.0` recursive copy ships it (a bare repo-root `regions/` dir has
 no `SKILL.md` and is NOT installed). `cn-variants.json` is the manifest: it
-enumerates all 17 `SKILL.cn.md` variants and every CN knowledge file.
+enumerates all 17 `references/cn.md` variants and every CN knowledge file.
 
 Resolve these files from the SKILL.md being read — never from a hardcoded path.
 Anchor `SKILL_DIR` as in [Script Path Resolution](#script-path-resolution-self-locating), then use `<PY> <GEO_SCRIPTS>/../resolve_regions.py "$SKILL_DIR"` (candidate roots:
@@ -121,9 +105,9 @@ from the installed skill:
 <PY> "$GEO_SCRIPTS/region_resolver.py" guidance global    # empty: no CN guidance
 ```
 
-**Gate:** when `REGION` is `cn`, load the sibling `SKILL.cn.md` for the command
+**Gate:** when `REGION` is `cn`, load `references/cn.md` for the command
 being run plus the `regions/cn/` files and the profile. When `REGION` is
-`global` or any non-CN value, do NOT load `SKILL.cn.md` or any `regions/cn/`
+`global` or any non-CN value, do NOT load `references/cn.md` or any `regions/cn/`
 file — CN content is never folded inline into a primary `SKILL.md`.
 
 ### How region is determined
