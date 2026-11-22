@@ -55,39 +55,28 @@ def _legacy_fixture(tmp_path: Path) -> tuple[dict[str, tuple[str, str]], Path]:
     return mapping, legacy
 
 
-def test_baseline_five_agents_exist_with_distinctive_markers() -> None:
+def test_newflow_legacy_agent_files_absent() -> None:
     for name in preservation.AGENTS:
         source = REPO_ROOT / "agents" / f"{name}.md"
-        assert source.is_file(), f"missing source agent: {source}"
-        markers = preservation.extract_markers(source.read_text(encoding="utf-8"))
-        assert markers[0] == EXPECTED_H1[name]
+        assert not source.exists(), f"legacy agent file still present: {source}"
+    assert not (REPO_ROOT / "agents").exists(), "legacy agents/ directory still present"
+
+
+def test_newflow_canonical_skill_markers_present() -> None:
+    for name in preservation.AGENTS:
+        target = REPO_ROOT / "skills" / name / "SKILL.md"
+        assert target.is_file(), f"missing canonical skill: {target}"
+        markers = preservation.extract_markers(target.read_text(encoding="utf-8"))
+        assert EXPECTED_H1[name] in markers, f"{name} missing agent H1 {EXPECTED_H1[name]}"
+        agent_start = markers.index(EXPECTED_H1[name])
+        agent_markers = markers[agent_start:]
         for fixed in preservation.FIXED_MARKERS:
-            assert fixed in markers, f"{name} missing {fixed}"
-        steps = [m for m in markers if m.startswith("### Step")]
+            assert fixed in agent_markers, f"{name} missing {fixed}"
+        steps = [m for m in agent_markers if m.startswith("### Step")]
         assert len(steps) == EXPECTED_STEPS[name]
         assert steps[0].startswith("### Step 1:")
         assert steps[-1].startswith(f"### Step {EXPECTED_STEPS[name]}:")
-        assert len(markers) == 4 + EXPECTED_STEPS[name]
-
-
-def test_baseline_naive_mapping_fails_preservation(tmp_path: Path) -> None:
-    mapping, _ = _legacy_fixture(tmp_path)
-    rows = preservation.check_mapping(mapping, REPO_ROOT)
-    assert not preservation.all_preserved(rows)
-
-    absent = [row["agent"] for row in rows if row["absent"]]
-    assert set(absent) == set(NO_COUNTERPART)
-
-    present = [row for row in rows if not row["absent"]]
-    assert len(present) == 3
-    for row in present:
-        missing = row["missing"]
-        assert EXPECTED_H1[row["agent"]] in missing
-        for fixed in preservation.FIXED_MARKERS:
-            assert fixed in missing
-        assert len([m for m in missing if m.startswith("### Step")]) == EXPECTED_STEPS[
-            row["agent"]
-        ]
+        assert len(agent_markers) == 4 + EXPECTED_STEPS[name]
 
 
 def test_newflow_five_target_skill_dirs_exist() -> None:
@@ -103,7 +92,7 @@ def test_newflow_all_unique_markers_preserved() -> None:
     for row in rows:
         assert row["ok"], f"{row['agent']} lost sections: {row['missing']}"
         assert row["missing"] == []
-        assert row["total"] == 4 + EXPECTED_STEPS[row["agent"]]
+        assert row["total"] >= 4 + EXPECTED_STEPS[row["agent"]]
 
 
 def test_newflow_no_counterpart_agents_now_discoverable() -> None:
@@ -117,7 +106,7 @@ def test_newflow_no_counterpart_agents_now_discoverable() -> None:
 
 
 def test_newflow_phase2_dispatch_uses_skills_in_parallel() -> None:
-    orchestrator = (REPO_ROOT / "geo" / "SKILL.md").read_text(encoding="utf-8")
+    orchestrator = (REPO_ROOT / "skills" / "geo" / "SKILL.md").read_text(encoding="utf-8")
     start = orchestrator.index("**Phase 2:")
     end = orchestrator.index("**Phase 3:")
     phase2 = orchestrator[start:end]

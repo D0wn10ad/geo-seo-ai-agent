@@ -3,7 +3,7 @@ import json
 from pathlib import Path
 
 
-MODULE_PATH = Path(__file__).resolve().parents[1] / "geo" / "scripts" / "webapp" / "app.py"
+MODULE_PATH = Path(__file__).resolve().parents[1] / "skills" / "geo" / "scripts" / "webapp" / "app.py"
 
 
 spec = importlib.util.spec_from_file_location("geo_webapp", MODULE_PATH)

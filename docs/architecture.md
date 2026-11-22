@@ -1,35 +1,31 @@
 # Architecture & Design
 
 The repository is structured to provide GEO+SEO support across both **Claude Code**
-and **OpenCode**. Abstract tool names (`` `fetch_url` ``, `` `run_command` ``) are
-used in instruction text and resolved at runtime by the platform adapter layer
-(`platform/SKILL.md`). Skills are distributed by the pinned `npx skills@1.9.0`
+and **OpenCode**. Skills are distributed by the pinned `npx skills@1.9.0`
 CLI; the committed tree is the source of truth and nothing is generated or
-rewritten at install time.
+rewritten at install time. npx distributes skills only — it does not install
+command files.
 
 ```
 geo-seo-ai-agent/
-├── geo/                          # Orchestrator + committed canonical wrappers
-│   ├── SKILL.md                  # /geo command table and routing
-│   ├── commands/                 # 21 canonical geo-*.md OpenCode wrappers
-│   ├── regions/                  # Shipped region profiles + CN knowledge base (cn/)
-│   ├── resolve_regions.py
-│   ├── resolve_scripts.py
-│   └── scripts/                  # Python utilities (travel nested with the skill)
-│       ├── fetch_page.py         # Page fetching & parsing
-│       ├── citability_scorer.py  # AI citability scoring engine
-│       ├── brand_scanner.py      # Brand mention detection
-│       ├── llmstxt_generator.py  # llms.txt validation & generation
-│       ├── generate_pdf_report.py # PDF report generator (ReportLab)
-│       ├── region_resolver.py
-│       ├── crm_dashboard.py
-│       ├── bootstrap_env.sh      # idempotent, checksum-keyed dep bootstrap
-│       └── install_uv.sh         # pinned uv 0.13.9 installer helper
-├── platform/                     # Platform adapter layer
-│   ├── SKILL.md                  # Platform detection + abstract tool mapping
-│   └── TOOL-MAP.md               # Abstract-to-real tool name reference table
-├── regions/                      # Region authoring source (cn/ + profiles.yaml)
-├── skills/                       # 21 geo-* skills + vendored uv skill
+├── skills/                       # single skills root: 21 geo-* skills + vendored uv
+│   ├── geo/                      # orchestrator + nested utilities and region KB
+│   │   ├── SKILL.md              # /geo command table and routing
+│   │   ├── scripts/              # Python utilities (travel nested with the skill)
+│   │   │   ├── fetch_page.py     # Page fetching & parsing
+│   │   │   ├── citability_scorer.py  # AI citability scoring engine
+│   │   │   ├── brand_scanner.py  # Brand mention detection
+│   │   │   ├── llmstxt_generator.py  # llms.txt validation & generation
+│   │   │   ├── generate_pdf_report.py # PDF report generator (ReportLab)
+│   │   │   ├── region_resolver.py
+│   │   │   ├── crm_dashboard.py
+│   │   │   ├── bootstrap_env.sh  # idempotent, checksum-keyed dep bootstrap
+│   │   │   └── install_uv.sh     # pinned uv 0.13.9 installer helper
+│   │   ├── assets/schema/        # 6 JSON-LD templates
+│   │   └── references/regions/   # region profiles + CN knowledge base (cn/)
+│   │       ├── profiles.yaml
+│   │       ├── cn-variants.json
+│   │       └── cn/
 │   ├── geo-audit/                # Full audit orchestration & scoring
 │   ├── geo-citability/           # AI citation readiness scoring
 │   ├── geo-crawlers/             # AI crawler access analysis
@@ -52,17 +48,8 @@ geo-seo-ai-agent/
 │   ├── geo-competitor-citation/  # (fork+) Cross-engine gap analysis
 │   ├── geo-update/               # Pinned npx check/update policy
 │   └── uv/                       # Vendored pinned uv installer skill
-├── agents/                       # 5 parallel subagents (Claude Code)
-│   ├── geo-ai-visibility.md
-│   ├── geo-platform-analysis.md
-│   ├── geo-technical.md
-│   ├── geo-content.md
-│   └── geo-schema.md
-├── schema/                       # 6 JSON-LD templates
 ├── docs/                         # Full documentation
-├── install.sh                    # LEGACY installer
-├── install-win.sh                # LEGACY Windows installer
-├── uninstall.sh                  # LEGACY cleanup fallback (npx-aware)
+├── uninstall.sh                  # cleanup fallback for pre-npx installs
 ├── requirements.txt              # Python dependencies
 └── README.md                     # Main project view
 ```
@@ -80,31 +67,31 @@ The source of truth is entirely in the committed tree:
 
 | Committed source | Role after install |
 |---|---|
-| `geo/SKILL.md` | Orchestrator and `/geo` command table |
-| `geo/commands/geo-*.md` (21 files) | Canonical OpenCode command wrappers — committed, never generated at install time |
-| `skills/geo-*/SKILL.md` (including `skills/uv/`) | Skill tree copied verbatim by npx |
-| `geo/scripts/`, `geo/regions/` | Nested utilities and region profiles; CN knowledge base in `geo/regions/cn/` |
+| `skills/geo/SKILL.md` | Orchestrator and `/geo` command table |
+| `skills/geo-*/SKILL.md` (21 files) + vendored `skills/uv/SKILL.md` | Skill tree copied verbatim by npx; two `geo-*` files are internal phase-2 workers |
+| `skills/geo/scripts/`, `skills/geo/assets/schema/`, `skills/geo/references/regions/` | Nested utilities, JSON-LD templates and region profiles; CN knowledge base in `skills/geo/references/regions/cn/` |
+| `skills/<geo-x>/references/cn.md` (17 files) | CN companions for the region-aware skills |
 
 There is no deploy-time rewriting, no generated `.opencode/` source, and no
 copy-tree updater script. The `.opencode/` directory seen on some machines is a
-local deploy artifact produced by the agent tooling, not committed source. To
-change an OpenCode wrapper, edit the committed `geo/commands/geo-*.md` file; to
-change an agent body, edit the matching `agents/geo-*.md` file.
+local deploy artifact produced by the agent tooling, not committed source. npx
+distributes skills only; it does not install command files. To change a skill,
+edit its committed `skills/geo-*/SKILL.md` file.
 
 **Other derived relationships:**
 
 | Relationship | How linked |
 |---|---|
-| `SKILL.<code>.md` (region overrides) ↔ `regions/profiles.yaml` | Files named `SKILL.<code>.md` alongside a `SKILL.md` are loaded when targeting that region; `/geo` command wrappers append `--region <code>` |
+| `skills/<geo-x>/references/cn.md` (region overrides) ↔ `skills/geo/references/regions/profiles.yaml` | CN companions are loaded when targeting that region; the orchestrator appends `--region <code>` |
 | `docs/*.md` ↔ `skills/*/SKILL.md` | Docs describe usage patterns that must match orchestrator behavior; verify by diffing docs against the orchestrator's `/geo <command>` table |
-| `regions/cn/ai-engines.md` → `agents/geo-platform-analysis.md` | CN engine rubrics are referenced by the region-awareness logic in the agent file |
-| `regions/cn/schema.md` → `agents/geo-schema.md` | CN-specific schema defaults and Baidu extensions are applied via conditional logic |
-| `regions/cn/platforms.md` → `agents/geo-ai-visibility.md` | CN brand platforms feed the region-aware brand scoring section |
+| `skills/geo/references/regions/cn/ai-engines.md` → `skills/geo-platform-analysis/SKILL.md` | CN engine rubrics are referenced by the region-awareness logic in the worker skill |
+| `skills/geo/references/regions/cn/schema.md` → `skills/geo-schema/SKILL.md` | CN-specific schema defaults and Baidu extensions are applied via conditional logic |
+| `skills/geo/references/regions/cn/platforms.md` → `skills/geo-ai-visibility/SKILL.md` | CN brand platforms feed the region-aware brand scoring section |
 
 ### Python environment bootstrap
 
 npx installs skills only. Python dependencies are bootstrapped separately with
-`geo/scripts/install_uv.sh` (pinned uv 0.13.9) and `geo/scripts/bootstrap_env.sh`.
+`skills/geo/scripts/install_uv.sh` (pinned uv 0.13.9) and `skills/geo/scripts/bootstrap_env.sh`.
 The bootstrap creates `${XDG_CACHE_HOME:-~/.cache}/geo-seo-ai-agent/venv`, installs
 `requirements.txt` with `uv pip`, and writes a checksum sentinel so repeated runs
 are no-ops until the requirements file changes. Python 3.10+ is required because the pinned `lxml` release requires 3.10+.
@@ -123,25 +110,6 @@ When you run `/geo audit https://example.com`:
 3. **Synthesis** — Aggregates scores, generates composite GEO Score (0-100)
 4. **Report** — Outputs prioritized action plan with quick wins
 
-### Platform Adapter Layer
-
-The `platform/` directory provides runtime platform detection and abstract tool
-name resolution. When a skill or agent uses `` `fetch_url` `` or `` `run_command` ``
-in its instruction text, the platform adapter maps these to the real tool names
-for the current platform:
-
-| Abstract Name | Claude Code | OpenCode |
-|---------------|-------------|----------|
-| `` `fetch_url` `` | `WebFetch` | `webfetch` |
-| `` `run_command` `` | `Bash` | `bash` |
-| `` `read_file` `` | `Read` | `read` |
-| `` `write_file` `` | `Write` | `write` |
-| `` `search_files` `` | `Glob` | `glob` |
-| `` `search_content` `` | `Grep` | `grep` |
-
-The adapter is loaded first (via `AGENTS.md`), ensuring the tool mapping is
-available from session start.
-
 ### Data Storage
 
 The CRM and reporting skills (`/geo prospect`, `/geo proposal`, `/geo compare`)
@@ -156,5 +124,5 @@ store runtime data outside the installed skill directories:
     └── <domain>-monthly-<YYYY-MM>.md
 ```
 
-This directory is never removed by an update or by the LEGACY uninstaller —
+This directory is never removed by an update or by `uninstall.sh` —
 delete it manually if you no longer need your prospect data.

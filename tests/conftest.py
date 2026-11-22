@@ -3,7 +3,7 @@ import sys
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
-SCRIPTS = ROOT / "geo" / "scripts"
+SCRIPTS = ROOT / "skills" / "geo" / "scripts"
 CHAR_MODULE_FILE = "test_surviving_behavior_characterization.py"
 
 

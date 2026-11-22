@@ -2,7 +2,7 @@
 
 This reference describes every moving part in this fork's skill bundle. The bundle optimizes websites for Generative Engine Optimization (GEO) — making content discoverable and citable by AI search platforms (ChatGPT, Perplexity, Google AI Overviews, Gemini, Bing Copilot) — while maintaining traditional SEO foundations. It is structured as one orchestrator skill, 21 `geo-*` skills plus the vendored `uv` skill, 5 parallel subagents (with platform-specific copies for Claude Code and OpenCode), 7 Python helper scripts, and 6 JSON-LD schema templates.
 
-Skills are installed from this fork with the pinned `npx skills@1.9.0 add -a claude-code -a opencode -y https://github.com/D0wn10ad/geo-seo-ai-agent.git` command; the committed tree is copied verbatim and nothing is generated at install time. Python dependencies are installed separately by `geo/scripts/bootstrap_env.sh` (using the pinned `geo/scripts/install_uv.sh` helper). See [getting-started.md](getting-started.md) for the full flow.
+Skills are installed from this fork with the pinned `npx skills@1.9.0 add -a claude-code -a opencode -y https://github.com/D0wn10ad/geo-seo-ai-agent.git` command; the committed tree is copied verbatim and nothing is generated at install time. Python dependencies are installed separately by `skills/geo/scripts/bootstrap_env.sh` (using the pinned `skills/geo/scripts/install_uv.sh` helper). See [getting-started.md](getting-started.md) for the full flow.
 
 See [commands-reference.md](commands-reference.md) for the full slash-command reference and [architecture.md](architecture.md) for how the parallel subagent flow works during a full audit.
 
@@ -10,7 +10,7 @@ See [commands-reference.md](commands-reference.md) for the full slash-command re
 
 ## Orchestrator
 
-- **geo** (`geo/SKILL.md`) — Entry point for all GEO commands. Detects business type, dispatches sub-skills for individual commands, and coordinates the three-phase full-audit flow: discovery, parallel subagent delegation, and score synthesis. Produces a composite GEO Score (0–100) weighted across six categories.
+- **geo** (`skills/geo/SKILL.md`) — Entry point for all GEO commands. Detects business type, dispatches sub-skills for individual commands, and coordinates the three-phase full-audit flow: discovery, parallel subagent delegation, and score synthesis. Produces a composite GEO Score (0–100) weighted across six categories.
 
 ---
 
@@ -76,7 +76,7 @@ See [commands-reference.md](commands-reference.md) for `/geo crawlers`.
 
 **Outputs (generation mode):** A ready-to-deploy `llms.txt` file and `GEO-LLMSTXT-GENERATION.md` explaining page selection rationale.
 
-**Dependencies:** `geo/scripts/llmstxt_generator.py` provides validation and generation helpers.
+**Dependencies:** `skills/geo/scripts/llmstxt_generator.py` provides validation and generation helpers.
 
 See [commands-reference.md](commands-reference.md) for `/geo llmstxt`.
 
@@ -92,7 +92,7 @@ See [commands-reference.md](commands-reference.md) for `/geo llmstxt`.
 
 **Key insight:** YouTube mention correlation with AI citation is ~0.737; Domain Rating correlation is ~0.266 (Ahrefs, December 2025 study of 75,000 brands).
 
-**Dependencies:** `geo/scripts/brand_scanner.py` provides the platform-check framework. Wikipedia checks use the Wikipedia API directly via Bash (web search alone produces false negatives).
+**Dependencies:** `skills/geo/scripts/brand_scanner.py` provides the platform-check framework. Wikipedia checks use the Wikipedia API directly via Bash (web search alone produces false negatives).
 
 See [commands-reference.md](commands-reference.md) for `/geo brands`.
 
@@ -116,13 +116,13 @@ See [commands-reference.md](commands-reference.md) for `/geo platforms`.
 
 **Purpose:** Detects, validates, and generates Schema.org structured data (JSON-LD preferred). Structured data is the primary machine-readable signal AI models use to identify and trust entities.
 
-**Inputs:** A URL. Uses `geo/scripts/fetch_page.py` to retrieve raw HTML including `<head>` content (WebFetch strips it).
+**Inputs:** A URL. Uses `skills/geo/scripts/fetch_page.py` to retrieve raw HTML including `<head>` content (WebFetch strips it).
 
 **Outputs:** `GEO-SCHEMA-REPORT.md` — detected schemas with validation results, `sameAs` entity-linking audit, deprecated schema flags (HowTo removed Sep 2023, FAQPage restricted Aug 2023), and ready-to-paste JSON-LD code blocks.
 
 **GEO-critical schemas:** Organization + `sameAs`, Article + Author (Person), speakable property, BreadcrumbList, WebSite + SearchAction.
 
-**Dependencies:** `geo/scripts/fetch_page.py` (raw HTML extraction); `schema/*.json` templates (used as generation references).
+**Dependencies:** `skills/geo/scripts/fetch_page.py` (raw HTML extraction); `skills/geo/assets/schema/*.json` templates (used as generation references).
 
 See [commands-reference.md](commands-reference.md) for `/geo schema`.
 
@@ -178,7 +178,7 @@ See [commands-reference.md](commands-reference.md) for `/geo report`.
 
 **Outputs:** `GEO-REPORT-[brand].pdf` — cover page with score gauge, score breakdown with bar chart, AI platform readiness chart, crawler access table (green/red coded), findings by severity, action plan, and methodology appendix.
 
-**Dependencies:** `geo/scripts/generate_pdf_report.py` (ReportLab is installed by `bash geo/scripts/bootstrap_env.sh`; if still missing, use `uv pip install --python <venv>/bin/python3 reportlab` — not bare `pip install`).
+**Dependencies:** `skills/geo/scripts/generate_pdf_report.py` (ReportLab is installed by `bash skills/geo/scripts/bootstrap_env.sh`; if still missing, use `uv pip install --python <venv>/bin/python3 reportlab` — not bare `pip install`).
 
 See [commands-reference.md](commands-reference.md) for `/geo report-pdf`.
 
@@ -194,7 +194,7 @@ See [commands-reference.md](commands-reference.md) for `/geo report-pdf`.
 
 **Key sub-commands:** `new`, `list`, `show`, `audit`, `note`, `status`, `won`, `lost`, `pipeline`.
 
-**Dependencies:** `geo/scripts/crm_dashboard.py` provides a rich terminal dashboard (`rich` is installed by `bash geo/scripts/bootstrap_env.sh`; use `uv pip install --python <venv>/bin/python3 rich` if needed, not bare `pip install`).
+**Dependencies:** `skills/geo/scripts/crm_dashboard.py` provides a rich terminal dashboard (`rich` is installed by `bash skills/geo/scripts/bootstrap_env.sh`; use `uv pip install --python <venv>/bin/python3 rich` if needed, not bare `pip install`).
 
 See [commands-reference.md](commands-reference.md) for `/geo prospect`.
 
@@ -232,7 +232,7 @@ These five agents run simultaneously during a `/geo audit` to reduce total runti
 
 ### geo-ai-visibility
 
-**File:** `agents/geo-ai-visibility.md`
+**File:** `skills/geo-ai-visibility/SKILL.md`
 
 **Role:** GEO specialist covering the four highest-weighted AI visibility dimensions.
 
@@ -248,7 +248,7 @@ These five agents run simultaneously during a `/geo audit` to reduce total runti
 
 ### geo-platform-analysis
 
-**File:** `agents/geo-platform-analysis.md`
+**File:** `skills/geo-platform-analysis/SKILL.md`
 
 **Role:** Platform optimization specialist.
 
@@ -264,7 +264,7 @@ These five agents run simultaneously during a `/geo audit` to reduce total runti
 
 ### geo-technical
 
-**File:** `agents/geo-technical.md`
+**File:** `skills/geo-technical/SKILL.md`
 
 **Role:** Technical SEO specialist.
 
@@ -280,7 +280,7 @@ These five agents run simultaneously during a `/geo audit` to reduce total runti
 
 ### geo-content
 
-**File:** `agents/geo-content.md`
+**File:** `skills/geo-content/SKILL.md`
 
 **Role:** Content quality specialist.
 
@@ -296,7 +296,7 @@ These five agents run simultaneously during a `/geo audit` to reduce total runti
 
 ### geo-schema
 
-**File:** `agents/geo-schema.md`
+**File:** `skills/geo-schema/SKILL.md`
 
 **Role:** Schema markup specialist.
 
@@ -314,24 +314,24 @@ These five agents run simultaneously during a `/geo audit` to reduce total runti
 
 | Script | Purpose | Used by |
 |--------|---------|---------|
-| `geo/scripts/fetch_page.py` | Fetches a URL and returns structured data including raw HTML, meta tags, heading structure, word count, and parsed JSON-LD blocks. Bypasses the markdown conversion that WebFetch applies, preserving `<head>` content. | geo-schema (skill + agent), geo-technical |
-| `geo/scripts/citability_scorer.py` | Scores individual text passages for AI citation readiness using five weighted dimensions (answer quality, self-containment, structure, statistical density, uniqueness). Provides `score_passage()` as a callable function. | geo-citability |
-| `geo/scripts/brand_scanner.py` | Checks brand presence across AI-cited platforms (YouTube, Reddit, Wikipedia, LinkedIn). Provides per-platform check functions and instructions for WebFetch-based verification. Requires `requests` and `beautifulsoup4`. | geo-brand-mentions |
-| `geo/scripts/llmstxt_generator.py` | Validates an existing `llms.txt` against the spec (H1 title, blockquote description, H2 sections, absolute URLs, descriptions) and generates a new file from site crawl data. | geo-llmstxt |
-| `geo/scripts/generate_pdf_report.py` | Generates a multi-page PDF from a JSON audit data file using ReportLab. Renders score gauges, bar charts, color-coded tables, and an action plan. Accepts the JSON file path as a CLI argument or via stdin. Requires `reportlab`. | geo-report-pdf |
-| `geo/scripts/crm_dashboard.py` | Renders a rich terminal dashboard for the prospect CRM. Reads `~/.geo-prospects/prospects.json` and displays pipeline stages, MRR, and prospect detail views. Requires `rich`. | geo-prospect |
+| `skills/geo/scripts/fetch_page.py` | Fetches a URL and returns structured data including raw HTML, meta tags, heading structure, word count, and parsed JSON-LD blocks. Bypasses the markdown conversion that WebFetch applies, preserving `<head>` content. | geo-schema (skill + agent), geo-technical |
+| `skills/geo/scripts/citability_scorer.py` | Scores individual text passages for AI citation readiness using five weighted dimensions (answer quality, self-containment, structure, statistical density, uniqueness). Provides `score_passage()` as a callable function. | geo-citability |
+| `skills/geo/scripts/brand_scanner.py` | Checks brand presence across AI-cited platforms (YouTube, Reddit, Wikipedia, LinkedIn). Provides per-platform check functions and instructions for WebFetch-based verification. Requires `requests` and `beautifulsoup4`. | geo-brand-mentions |
+| `skills/geo/scripts/llmstxt_generator.py` | Validates an existing `llms.txt` against the spec (H1 title, blockquote description, H2 sections, absolute URLs, descriptions) and generates a new file from site crawl data. | geo-llmstxt |
+| `skills/geo/scripts/generate_pdf_report.py` | Generates a multi-page PDF from a JSON audit data file using ReportLab. Renders score gauges, bar charts, color-coded tables, and an action plan. Accepts the JSON file path as a CLI argument or via stdin. Requires `reportlab`. | geo-report-pdf |
+| `skills/geo/scripts/crm_dashboard.py` | Renders a rich terminal dashboard for the prospect CRM. Reads `~/.geo-prospects/prospects.json` and displays pipeline stages, MRR, and prospect detail views. Requires `rich`. | geo-prospect |
 
 ---
 
 ## Schema Templates
 
-These JSON-LD files in `schema/` serve as generation references when `geo-schema` or `geo-report` need to produce ready-to-paste structured data. All placeholders follow the pattern `YOUR_FIELD_NAME` or `REPLACE_WITH_VALUE`.
+These JSON-LD files in `skills/geo/assets/schema/` serve as generation references when `geo-schema` or `geo-report` need to produce ready-to-paste structured data. All placeholders follow the pattern `YOUR_FIELD_NAME` or `REPLACE_WITH_VALUE`.
 
 | Template | When to use |
 |----------|-------------|
-| `schema/organization.json` | Any business site; provides the full Organization type with `sameAs` links to Wikipedia, Wikidata, LinkedIn, YouTube, GitHub, and Crunchbase, plus `knowsAbout` for entity topic signals. |
-| `schema/local-business.json` | Businesses with a physical location; extends Organization with address, `geo` coordinates, opening hours, service area, aggregate rating, and an offer catalog. |
-| `schema/article-author.json` | Publisher and blog pages; Article type with a fully populated Person author (credentials, `sameAs`, `alumniOf`, `knowsAbout`) and a `speakable` specification for AI assistant readability. |
-| `schema/product-ecommerce.json` | E-commerce product pages; Product type with Offer (including shipping details and return policy), AggregateRating, and individual Review entries. |
-| `schema/software-saas.json` | SaaS product pages; SoftwareApplication type with tiered AggregateOffer pricing, `featureList`, screenshot, and `sameAs` links to G2, Capterra, ProductHunt, and GitHub. |
-| `schema/website-searchaction.json` | Every site's homepage; WebSite type with a SearchAction `potentialAction` to enable sitelinks search box and provide AI systems with the site's search endpoint. |
+| `skills/geo/assets/schema/organization.json` | Any business site; provides the full Organization type with `sameAs` links to Wikipedia, Wikidata, LinkedIn, YouTube, GitHub, and Crunchbase, plus `knowsAbout` for entity topic signals. |
+| `skills/geo/assets/schema/local-business.json` | Businesses with a physical location; extends Organization with address, `geo` coordinates, opening hours, service area, aggregate rating, and an offer catalog. |
+| `skills/geo/assets/schema/article-author.json` | Publisher and blog pages; Article type with a fully populated Person author (credentials, `sameAs`, `alumniOf`, `knowsAbout`) and a `speakable` specification for AI assistant readability. |
+| `skills/geo/assets/schema/product-ecommerce.json` | E-commerce product pages; Product type with Offer (including shipping details and return policy), AggregateRating, and individual Review entries. |
+| `skills/geo/assets/schema/software-saas.json` | SaaS product pages; SoftwareApplication type with tiered AggregateOffer pricing, `featureList`, screenshot, and `sameAs` links to G2, Capterra, ProductHunt, and GitHub. |
+| `skills/geo/assets/schema/website-searchaction.json` | Every site's homepage; WebSite type with a SearchAction `potentialAction` to enable sitelinks search box and provide AI systems with the site's search endpoint. |

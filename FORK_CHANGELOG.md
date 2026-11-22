@@ -1,5 +1,7 @@
 # Fork Changelog — geo-seo-claude-plus
 
+> **HISTORICAL RECORD.** Entries below describe the tree at the time each change landed. Paths such as `SKILL.cn.md`, `agents/`, `geo/commands/`, and the old installers reflect that history; the current layout is the single `skills/` root documented in the root README and `AGENTS.md`. Do not use this changelog as an install or layout reference.
+
 Downstream changes to [zubair-trabzada/geo-seo-claude](https://github.com/zubair-trabzada/geo-seo-claude).
 
 The upstream LICENSE and all existing skill / agent / script files are **unmodified**. This changelog records only fork-specific additions.

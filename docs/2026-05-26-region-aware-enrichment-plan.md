@@ -1,10 +1,12 @@
 # Region-Aware Enrichment Implementation Plan
 
+> **HISTORICAL DOCUMENT.** This is a dated implementation plan kept for provenance only. Paths below reflect the tree at the time it was written; the current layout is the single `skills/` root documented in the root README and `AGENTS.md`. Do not use this plan as an install or layout reference.
+
 > **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development or superpowers:executing-plans to implement this plan task-by-task.
 
 **Goal:** Complete the CN region-aware system with engine realignment, DSS integration, platform citation data, KPI framework, and strategy extraction — 15 files across 6 dimensions.
 
-**Architecture:** All changes target `feature/region-aware-geo` branch files under `regions/cn/`, `skills/*/SKILL.cn.md`. No new files needed — every change is an edit to an existing CN region file. Each dimension is independent and can be parallelized.
+**Architecture:** All changes target `feature/region-aware-geo` branch files under `regions/cn/`, `skills/*/references/cn.md`. No new files needed — every change is an edit to an existing CN region file. Each dimension is independent and can be parallelized.
 
 **Dimensions:**
 - **A — Engine alignment:** Fix ERNIE Bot → Yuanbao, add MAU-tier weighting, update stale descriptions
@@ -14,7 +16,7 @@
 - **Strategy — 7 tactics:** Prompt expansion, scene KB, engine drift, horizontal comparison, multi-platform network, negative monitoring, phased displacement
 - **KPI — Metrics:** Mention rate, recommendation rate, citation rate, competitor ranking, KPI achievement rate
 
-**Tech Stack:** Markdown (SKILL.cn.md files), YAML frontmatter, Python (no changes to scripts needed)
+**Tech Stack:** Markdown (references/cn.md files), YAML frontmatter, Python (no changes to scripts needed)
 
 ---
 
@@ -52,9 +54,9 @@ Append to each engine entry a "Referral Sources" line listing the 3-5 platforms 
 - Kimi: 微信公众号, Zhihu, 小红书, 豆瓣
 
 
-### Task A2: Update `geo-platform-optimizer/SKILL.cn.md` engine table
+### Task A2: Update `geo-platform-optimizer/references/cn.md` engine table
 
-**Files:** Modify `skills/geo-platform-optimizer/SKILL.cn.md`
+**Files:** Modify `skills/geo-platform-optimizer/references/cn.md`
 
 - [ ] **Step 1: Replace ERNIE Bot → Yuanbao**
 
@@ -80,9 +82,9 @@ Referral info: Most-cited platforms for this engine:
 ```
 
 
-### Task A3: Update `geo-competitor-citation/SKILL.cn.md` engine references
+### Task A3: Update `geo-competitor-citation/references/cn.md` engine references
 
-**Files:** Modify `skills/geo-competitor-citation/SKILL.cn.md`
+**Files:** Modify `skills/geo-competitor-citation/references/cn.md`
 
 - [ ] **Step 1: Replace ERNIE Bot with Yuanbao in engine list**
 
@@ -108,9 +110,9 @@ Phased displacement strategy (源易 methodology):
 ```
 
 
-### Task A4: Update `geo-report/SKILL.cn.md` engine name
+### Task A4: Update `geo-report/references/cn.md` engine name
 
-**Files:** Modify `skills/geo-report/SKILL.cn.md`
+**Files:** Modify `skills/geo-report/references/cn.md`
 
 - [ ] **Step 1: ERNIE Bot → Yuanbao**
 
@@ -121,9 +123,9 @@ Replace "ERNIE Bot (文心一言)" with "Yuanbao (腾讯元宝)" in the CN AI pl
 In the GEO Score Methodology section, note: "CN GEO Score uses MAU-tier weighted engine scores."
 
 
-### Task A5: Update `geo-report-pdf/SKILL.cn.md` engine name
+### Task A5: Update `geo-report-pdf/references/cn.md` engine name
 
-**Files:** Modify `skills/geo-report-pdf/SKILL.cn.md`
+**Files:** Modify `skills/geo-report-pdf/references/cn.md`
 
 - [ ] **Step 1: ERNIE Bot → Yuanbao**
 
@@ -134,9 +136,9 @@ Replace ERNIE Bot with Yuanbao in the CN engine name list.
 Ensure all 6 engine names exactly match `regions/cn/ai-engines.md` canonical names.
 
 
-### Task A6: Update `geo-crawlers/SKILL.cn.md` engine table reference
+### Task A6: Update `geo-crawlers/references/cn.md` engine table reference
 
-**Files:** Modify `skills/geo-crawlers/SKILL.cn.md`
+**Files:** Modify `skills/geo-crawlers/references/cn.md`
 
 - [ ] **Step 1: Replace ERNIE Bot → Yuanbao**
 
@@ -147,9 +149,9 @@ In the CN table referencing AI engine usage, replace ERNIE Bot with Yuanbao.
 If Yuanbao/Bytespider has similar behavior to Doubao/Bytespider, add a note: "Yuanbao may also leverage Bytespider for crawling — treat both Doubao and Yuanbao under the Bytespider access umbrella."
 
 
-### Task B1: Add DSS overlay to `geo-content/SKILL.cn.md`
+### Task B1: Add DSS overlay to `geo-content/references/cn.md`
 
-**Files:** Modify `skills/geo-content/SKILL.cn.md`
+**Files:** Modify `skills/geo-content/references/cn.md`
 
 - [ ] **Step 1: Add DSS section after E-E-A-T rubric**
 
@@ -202,9 +204,9 @@ due to native multi-perspective structure.
 ```
 
 
-### Task C1: 6-step framework in `geo-citation-pipeline/SKILL.cn.md`
+### Task C1: 6-step framework in `geo-citation-pipeline/references/cn.md`
 
-**Files:** Modify `skills/geo-citation-pipeline/SKILL.cn.md`
+**Files:** Modify `skills/geo-citation-pipeline/references/cn.md`
 
 - [ ] **Step 1: Add 6-step methodology reference**
 
@@ -269,7 +271,7 @@ Add section after existing platform descriptions:
 | 头条号 | 10.5% | 4.0% | 6.5% | 3.8% | 7.0% | 4.8% | 6.1% |
 | 微博 | 8.5% | 5.5% | 4.2% | 3.0% | 6.5% | 4.0% | 5.3% |
 
-**Citation ≠ Platform Value**: 微博/抖音/搜狐 show near-zero citation for traditional PR content (3%) vs GEO-optimized content (51.4%). Content optimization is the primary differentiator, not platform choice alone. See geo-distribution-plan/SKILL.cn.md for optimization guidelines.
+**Citation ≠ Platform Value**: 微博/抖音/搜狐 show near-zero citation for traditional PR content (3%) vs GEO-optimized content (51.4%). Content optimization is the primary differentiator, not platform choice alone. See geo-distribution-plan/references/cn.md for optimization guidelines.
 ```
 
 - [ ] **Step 2: Add citation affinity / scene-KB section**
@@ -289,9 +291,9 @@ For each user scene, the most-cited platform cluster:
 ```
 
 
-### Task D2: Add citation affinity to `geo-distribution-plan/SKILL.cn.md`
+### Task D2: Add citation affinity to `geo-distribution-plan/references/cn.md`
 
-**Files:** Modify `skills/geo-distribution-plan/SKILL.cn.md`
+**Files:** Modify `skills/geo-distribution-plan/references/cn.md`
 
 - [ ] **Step 1: Add citation affinity column to CN platform matrix**
 
@@ -323,9 +325,9 @@ This "citation web" effect amplifies each platform's individual contribution by 
 ```
 
 
-### Task D3: Platform sort in `geo-citation-pipeline/SKILL.cn.md`
+### Task D3: Platform sort in `geo-citation-pipeline/references/cn.md`
 
-**Files:** Modify `skills/geo-citation-pipeline/SKILL.cn.md`
+**Files:** Modify `skills/geo-citation-pipeline/references/cn.md`
 
 - [ ] **Step 1: Sort CN authority domains by citation rate**
 
@@ -344,16 +346,16 @@ Tier A domains (sorted by avg citation rate across 6 CN engines):
 Replace the existing flat list with this sorted + annotated version.
 
 
-### Task D4: Per-engine platform targets in `geo-platform-optimizer/SKILL.cn.md`
+### Task D4: Per-engine platform targets in `geo-platform-optimizer/references/cn.md`
 
 **Files:** Already covered in Task A2 — step 3 adds per-engine platform targets.
 
 This task is folded into Task A2 (Step 3 adds per-engine referral platform lists after each engine's optimization section). No additional work needed.
 
 
-### Task D5: Platform authority weighting in `geo-brand-mentions/SKILL.cn.md`
+### Task D5: Platform authority weighting in `geo-brand-mentions/references/cn.md`
 
-**Files:** Modify `skills/geo-brand-mentions/SKILL.cn.md`
+**Files:** Modify `skills/geo-brand-mentions/references/cn.md`
 
 - [ ] **Step 1: Add citation-probability weight column**
 
@@ -389,9 +391,9 @@ Post-optimization: Target Top 3 recommendation in ≥60% of queries (源易 case
 ```
 
 
-### Task D6: Citation affinity hooks in `geo-intent-matrix/SKILL.cn.md`
+### Task D6: Citation affinity hooks in `geo-intent-matrix/references/cn.md`
 
-**Files:** Modify `skills/geo-intent-matrix/SKILL.cn.md`
+**Files:** Modify `skills/geo-intent-matrix/references/cn.md`
 
 - [ ] **Step 1: Add citation affinity column to intent-platform mapping**
 
@@ -423,9 +425,9 @@ This ensures questions reflect real user search behavior, not author assumptions
 ```
 
 
-### Task KPI1: Add KPI framework to `geo-audit/SKILL.cn.md`
+### Task KPI1: Add KPI framework to `geo-audit/references/cn.md`
 
-**Files:** Modify `skills/geo-audit/SKILL.cn.md`
+**Files:** Modify `skills/geo-audit/references/cn.md`
 
 - [ ] **Step 1: Add KPI baseline measurement section**
 
@@ -470,7 +472,7 @@ Each quick win item in the action plan should include estimated KPI impact:
 
 ### Task KPI2: Add KPI sections to remaining files
 
-**Files:** Modify `skills/geo-brand-mentions/SKILL.cn.md`, `skills/geo-competitor-citation/SKILL.cn.md`, `skills/geo-proposal/SKILL.cn.md`
+**Files:** Modify `skills/geo-brand-mentions/references/cn.md`, `skills/geo-competitor-citation/references/cn.md`, `skills/geo-proposal/references/cn.md`
 
 - [ ] **Step 1: Add to geo-brand-mentions — recommendation rate KPI** *(already in Task D5 Step 2)*
 - [ ] **Step 2: Add to geo-competitor-citation — mention rate differential**
@@ -495,9 +497,9 @@ Guarantees supported by 源易 case study data (KPI achievement rate 140%-450%).
 ```
 
 
-### Task KPI3: Add KPI dashboard to `geo-report/SKILL.cn.md`
+### Task KPI3: Add KPI dashboard to `geo-report/references/cn.md`
 
-**Files:** Modify `skills/geo-report/SKILL.cn.md`
+**Files:** Modify `skills/geo-report/references/cn.md`
 
 - [ ] **Step 1: Add KPI dashboard section**
 
@@ -517,9 +519,9 @@ Targets derived from 源易 case study benchmarks. Adjust per client vertical.
 ```
 
 
-### Task KPI4: Add KPI modifier to `geo-citability/SKILL.cn.md`
+### Task KPI4: Add KPI modifier to `geo-citability/references/cn.md`
 
-**Files:** Modify `skills/geo-citability/SKILL.cn.md`
+**Files:** Modify `skills/geo-citability/references/cn.md`
 
 - [ ] **Step 1: Add mention rate prediction**
 
@@ -535,37 +537,37 @@ When scoring, flag content items as:
 ```
 
 
-### Task S1: Strategy — prompt expansion in `geo-intent-matrix/SKILL.cn.md`
+### Task S1: Strategy — prompt expansion in `geo-intent-matrix/references/cn.md`
 
 Already covered in Task D6 Step 2. Merged.
 
 
-### Task S2: Strategy — scene KB in `geo-platform-optimizer/SKILL.cn.md`
+### Task S2: Strategy — scene KB in `geo-platform-optimizer/references/cn.md`
 
 Already covered in Task A2 Step 2. Merged.
 
 
-### Task S3: Strategy — engine drift in `geo-citation-pipeline/SKILL.cn.md`
+### Task S3: Strategy — engine drift in `geo-citation-pipeline/references/cn.md`
 
 Already covered in Task C1 Step 2. Merged.
 
 
-### Task S4: Strategy — horizontal comparison in `geo-content/SKILL.cn.md`
+### Task S4: Strategy — horizontal comparison in `geo-content/references/cn.md`
 
 Already covered in Task B1 Step 2 (horizontal comparison content bonus). Merged.
 
 
-### Task S5: Strategy — multi-platform citation network in `geo-distribution-plan/SKILL.cn.md`
+### Task S5: Strategy — multi-platform citation network in `geo-distribution-plan/references/cn.md`
 
 Already covered in Task D2 Step 2. Merged.
 
 
-### Task S6: Strategy — negative query monitoring in `geo-brand-mentions/SKILL.cn.md`
+### Task S6: Strategy — negative query monitoring in `geo-brand-mentions/references/cn.md`
 
 Already covered in Task D5 Step 1 (negative monitoring). Merged.
 
 
-### Task S7: Strategy — phased displacement in `geo-competitor-citation/SKILL.cn.md`
+### Task S7: Strategy — phased displacement in `geo-competitor-citation/references/cn.md`
 
 Already covered in Task A3 Step 3. Merged.
 

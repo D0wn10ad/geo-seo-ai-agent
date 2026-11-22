@@ -25,11 +25,7 @@ TEXT_SUFFIXES = {".md", ".sh", ".py", ".txt", ".yaml", ".yml", ".json"}
 
 
 def _scoped_surface():
-    files = [
-        ROOT / "install.sh",
-        ROOT / "install-win.sh",
-        ROOT / "README.md",
-    ]
+    files = [ROOT / "README.md"]
     for subdir in ("skills", "docs"):
         files.extend(
             p for p in (ROOT / subdir).rglob("*")

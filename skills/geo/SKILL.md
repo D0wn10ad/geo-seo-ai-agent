@@ -66,7 +66,7 @@ PY="$(command -v python3 || command -v python)"
 
 Replace `<PATH-TO-THIS-SKILL.md>` with the path of the SKILL.md you are reading, then invoke scripts as `"$PY" "$GEO_SCRIPTS/<script>.py" ...`.
 
-**Windows / Git Bash:** both installers require Git Bash, which supplies `cd`, `dirname`, `command -v`, forward-slash paths, and `python3`/`python` on PATH; the preamble therefore works unchanged on Windows. Native PowerShell/CMD is explicitly out of scope because Git Bash is the documented Windows installer entry point.
+**Windows / Git Bash:** the pinned npx install requires Git Bash, which supplies `cd`, `dirname`, `command -v`, forward-slash paths, and `python3`/`python` on PATH; the preamble therefore works unchanged on Windows. Native PowerShell/CMD is explicitly out of scope because Git Bash is the documented Windows entry point.
 
 ---
 
@@ -78,25 +78,25 @@ ecosystems, platforms, and user behaviors across markets. Currently implemented:
 | Region | Code | AI Engines | Key Platforms | Profiles |
 |--------|------|------------|---------------|----------|
 | Global | `global` | ChatGPT, Claude, Perplexity, Gemini, Copilot | YouTube, Reddit, Wikipedia, LinkedIn | Default |
-| China | `cn` | Baidu AI, Doubao, Yuanbao, Qwen, Kimi, DeepSeek | Baidu Baike, Zhihu, WeChat OA, Xiaohongshu, Bilibili, Douyin | `regions/profiles.yaml` |
+| China | `cn` | Baidu AI, Doubao, Yuanbao, Qwen, Kimi, DeepSeek | Baidu Baike, Zhihu, WeChat OA, Xiaohongshu, Bilibili, Douyin | `references/regions/profiles.yaml` |
 
 <!-- GEO-CN-VARIANT:v1 -->
 
 ### CN variant loading (conditional)
 
-The registered `regions/` knowledge base is mirrored under this skill as
-`regions/profiles.yaml`, `regions/cn/*.md` and `regions/cn-variants.json` so an
-`npx skills@1.9.0` recursive copy ships it (a bare repo-root `regions/` dir has
-no `SKILL.md` and is NOT installed). `cn-variants.json` is the manifest: it
-enumerates all 17 `references/cn.md` variants and every CN knowledge file.
+The registered region knowledge base is mirrored under this skill as
+`references/regions/profiles.yaml`, `references/regions/cn/*.md` and
+`references/regions/cn-variants.json` so an `npx skills@1.9.0` recursive copy
+ships it (a bare legacy region directory has no `SKILL.md` and is NOT
+installed). `cn-variants.json` is the manifest: it enumerates all 17
+`../geo-*/references/cn.md` variants and every CN knowledge file.
 
 Resolve these files from the SKILL.md being read — never from a hardcoded path.
-Anchor `SKILL_DIR` as in [Script Path Resolution](#script-path-resolution-self-locating), then use `<PY> <GEO_SCRIPTS>/../resolve_regions.py "$SKILL_DIR"` (candidate roots:
-`"$SKILL_DIR/regions"`, `"$SKILL_DIR/../geo/regions"`, `"$SKILL_DIR/../../regions"`,
-`"$SKILL_DIR/../../../.claude/skills/geo/regions"`; it prints the first existing
-root and fails closed otherwise). The same ordered probe is implemented in
-`geo/scripts/region_resolver.py`, which is dependency-free and can be executed
-from the installed skill:
+Anchor `SKILL_DIR` and `GEO_SCRIPTS` as in
+[Script Path Resolution](#script-path-resolution-self-locating); the single
+canonical scripts root is `$SKILL_DIR/../geo/scripts`. Region files are resolved
+by the dependency-free `region_resolver.py` helper, which is executed from that
+root and can be run from the installed skill:
 
 ```bash
 <PY> "$GEO_SCRIPTS/region_resolver.py" detect <url>       # cn / global / multi
@@ -106,9 +106,10 @@ from the installed skill:
 ```
 
 **Gate:** when `REGION` is `cn`, load `references/cn.md` for the command
-being run plus the `regions/cn/` files and the profile. When `REGION` is
-`global` or any non-CN value, do NOT load `references/cn.md` or any `regions/cn/`
-file — CN content is never folded inline into a primary `SKILL.md`.
+being run plus the `references/regions/cn/` files and the profile. When `REGION`
+is `global` or any non-CN value, do NOT load `references/cn.md` or any
+`references/regions/cn/` file — CN content is never folded inline into a
+primary `SKILL.md`.
 
 ### How region is determined
 
@@ -119,10 +120,10 @@ file — CN content is never folded inline into a primary `SKILL.md`.
 
 ### Adding a new region
 
-See `regions/README.md` (mirrored at `regions/README.md` under this skill) for the complete guide. Steps:
-1. Add profile to `regions/profiles.yaml` (update both the repo-root copy and this skill's mirror)
-2. Create `regions/<code>/` with optional reference data files (mirror them here for npx installs)
-3. Create optional `SKILL.<code>.md` overrides for skill files; add each to `regions/cn-variants.json` when it is a CN variant
+See `references/regions/README.md` for the complete guide. Steps:
+1. Add profile to `references/regions/profiles.yaml` (single canonical location)
+2. Create `references/regions/<code>/` with optional reference data files
+3. Create optional `../geo-<x>/references/cn.md` companions; add each to `references/regions/cn-variants.json` when it is a CN variant
 4. Update all 5 audit-worker SKILL.md files with Region Awareness sections
 5. Update fork skills that accept `--region`
 
@@ -162,7 +163,7 @@ See [Region Support](#region-support) below.
    - "2. Global+CN — run both Global and China assessments"
    - "3. CN only — China market only"
 5. Set REGION variable (default: `global`)
-6. Load region profile from `regions/profiles.yaml` — provides region-specific scoring weights, AI engines, platforms, schema defaults, and crawler expectations
+6. Load region profile from `references/regions/profiles.yaml` — provides region-specific scoring weights, AI engines, platforms, schema defaults, and crawler expectations
 
 **Phase 1: Discovery (Sequential)**
 1. Fetch homepage HTML (curl or `fetch_url`)
@@ -195,7 +196,7 @@ host's skills directory; the former agent definition files are not installed by 
 
 ### Scoring Methodology (Region-Aware)
 
-Weights vary by region. Loaded from `regions/profiles.yaml`.
+Weights vary by region. Loaded from `references/regions/profiles.yaml`.
 
 | Category | Global Weight | CN Weight | Measured By |
 |----------|--------------|-----------|-------------|
@@ -209,8 +210,8 @@ Weights vary by region. Loaded from `regions/profiles.yaml`.
 Non-global regions fall back to Global weights if their profile omits a weight.
 
 When running with `--region cn`, all scoring rubrics should reference the
-CN-specific AI engines (`regions/cn/ai-engines.md`), platforms (`regions/cn/platforms.md`),
-and schema guidance (`regions/cn/schema.md`).
+CN-specific AI engines (`references/regions/cn/ai-engines.md`), platforms (`references/regions/cn/platforms.md`),
+and schema guidance (`references/regions/cn/schema.md`).
 
 ---
 

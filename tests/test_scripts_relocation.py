@@ -21,7 +21,7 @@ def source_files():
 
 
 def test_fetch_page_relocated():
-    assert (ROOT / "geo" / "scripts" / "fetch_page.py").is_file()
+    assert (ROOT / "skills" / "geo" / "scripts" / "fetch_page.py").is_file()
 
 
 def test_root_scripts_dir_removed():
@@ -29,7 +29,7 @@ def test_root_scripts_dir_removed():
 
 
 def test_webapp_relocated():
-    assert (ROOT / "geo" / "scripts" / "webapp" / "app.py").is_file()
+    assert (ROOT / "skills" / "geo" / "scripts" / "webapp" / "app.py").is_file()
 
 
 def test_no_hardcoded_python3_scripts_invocations():

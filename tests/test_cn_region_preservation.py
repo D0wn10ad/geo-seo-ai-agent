@@ -12,8 +12,8 @@ from pathlib import Path
 import pytest
 
 ROOT = Path(__file__).resolve().parents[1]
-RESOLVER_PATH = ROOT / "geo" / "scripts" / "region_resolver.py"
-MANIFEST_PATH = ROOT / "geo" / "regions" / "cn-variants.json"
+RESOLVER_PATH = ROOT / "skills" / "geo" / "scripts" / "region_resolver.py"
+MANIFEST_PATH = ROOT / "skills" / "geo" / "references" / "regions" / "cn-variants.json"
 MARKER = "<!-- GEO-CN-VARIANT:v1 -->"
 
 VARIANT_SKILLS = (
@@ -76,23 +76,20 @@ def test_load_cn_profile():
 
 def test_all_17_cn_variants_exist_with_content():
     for skill in VARIANT_SKILLS:
-        path = ROOT / "skills" / skill / "SKILL.cn.md"
+        path = ROOT / "skills" / skill / "references" / "cn.md"
         assert path.is_file(), f"missing CN variant: {path}"
         assert len(path.read_text(encoding="utf-8").strip()) > 100, f"empty CN variant: {path}"
 
 
-def test_cn_knowledge_mirror_shipped_under_geo_skill():
-    mirrored = ROOT / "geo" / "regions"
+def test_cn_knowledge_single_source_under_geo_skill():
+    canonical = ROOT / "skills" / "geo" / "references" / "regions"
+    legacy = ROOT / "geo" / "regions"
+    assert canonical.is_dir(), f"missing canonical region dir: {canonical}"
+    assert not legacy.exists(), f"legacy region mirror still present: {legacy}"
     for rel in ("profiles.yaml", "README.md"):
-        source = ROOT / "regions" / rel
-        target = mirrored / rel
-        assert target.is_file(), f"missing mirror: {target}"
-        assert target.read_bytes() == source.read_bytes(), f"mirror content drift: {rel}"
+        assert (canonical / rel).is_file(), f"missing canonical region file: {rel}"
     for name in CN_KNOWLEDGE:
-        source = ROOT / "regions" / "cn" / name
-        target = mirrored / "cn" / name
-        assert target.is_file(), f"missing mirror: {target}"
-        assert target.read_bytes() == source.read_bytes(), f"mirror content drift: cn/{name}"
+        assert (canonical / "cn" / name).is_file(), f"missing canonical CN KB file: cn/{name}"
 
 
 def test_manifest_enumerates_all_17_variants_and_knowledge():
@@ -101,29 +98,29 @@ def test_manifest_enumerates_all_17_variants_and_knowledge():
     assert data["region"] == "cn"
     assert len(data["variants"]) == 17
     assert set(data["variants"]) == set(VARIANT_SKILLS)
-    assert data["variant_file"] == "SKILL.cn.md"
+    assert data["variant_file"] == "references/cn.md"
     knowledge = set(data["knowledge_base"])
-    assert "regions/profiles.yaml" in knowledge
-    assert "regions/cn/ai-engines.md" in knowledge
-    assert "regions/cn/platforms.md" in knowledge
-    assert "regions/cn/schema.md" in knowledge
-    assert len([k for k in knowledge if k.startswith("regions/cn/")]) == len(CN_KNOWLEDGE)
+    assert "references/regions/profiles.yaml" in knowledge
+    assert "references/regions/cn/ai-engines.md" in knowledge
+    assert "references/regions/cn/platforms.md" in knowledge
+    assert "references/regions/cn/schema.md" in knowledge
+    assert len([k for k in knowledge if k.startswith("references/regions/cn/")]) == len(CN_KNOWLEDGE)
 
 
 def test_primary_skills_declare_conditional_cn_loading():
     for skill in VARIANT_SKILLS:
         text = (ROOT / "skills" / skill / "SKILL.md").read_text(encoding="utf-8")
         assert MARKER in text, f"{skill}/SKILL.md missing {MARKER}"
-        assert "SKILL.cn.md" in text, f"{skill}/SKILL.md missing variant pointer"
+        assert "references/cn.md" in text, f"{skill}/SKILL.md missing variant pointer"
         assert "REGION" in text, f"{skill}/SKILL.md missing REGION gate"
 
 
 def test_orchestrator_documents_cn_manifest_and_conditional_gate():
-    text = (ROOT / "geo" / "SKILL.md").read_text(encoding="utf-8")
+    text = (ROOT / "skills" / "geo" / "SKILL.md").read_text(encoding="utf-8")
     assert MARKER in text
     assert "cn-variants.json" in text
-    assert "SKILL.cn.md" in text
-    assert "regions/cn/" in text
+    assert "references/cn.md" in text
+    assert "references/regions/cn/" in text
 
 
 @pytest.fixture
@@ -131,15 +128,15 @@ def installed_tree(tmp_path: Path) -> Path:
     """Simulate an npx install: only SKILL.md-bearing skill trees are copied."""
     skills = tmp_path / ".agents" / "skills"
     shutil.copytree(
-        ROOT / "geo",
+        ROOT / "skills" / "geo",
         skills / "geo",
         ignore=shutil.ignore_patterns("__pycache__", ".venv"),
     )
     for skill in VARIANT_SKILLS:
         destination = skills / skill
-        destination.mkdir(parents=True)
+        (destination / "references").mkdir(parents=True)
         shutil.copy2(ROOT / "skills" / skill / "SKILL.md", destination / "SKILL.md")
-        shutil.copy2(ROOT / "skills" / skill / "SKILL.cn.md", destination / "SKILL.cn.md")
+        shutil.copy2(ROOT / "skills" / skill / "references" / "cn.md", destination / "references" / "cn.md")
     return skills
 
 
@@ -167,20 +164,20 @@ def test_installed_resolver_detect_is_correct(installed_tree: Path):
 def test_installed_guidance_is_conditional(installed_tree: Path):
     cn = run_installed(installed_tree, "guidance", "cn")
     assert cn.returncode == 0, cn.stderr
-    assert "geo-audit/SKILL.cn.md" in cn.stdout
-    assert "regions/cn/ai-engines.md" in cn.stdout
-    assert cn.stdout.count("SKILL.cn.md") == 17
+    assert "geo-audit/references/cn.md" in cn.stdout
+    assert "references/regions/cn/ai-engines.md" in cn.stdout
+    assert cn.stdout.count("references/cn.md") == 17
 
     global_run = run_installed(installed_tree, "guidance", "global")
     assert global_run.returncode == 0, global_run.stderr
-    assert "SKILL.cn.md" not in global_run.stdout
-    assert "regions/cn/" not in global_run.stdout
+    assert "references/cn.md" not in global_run.stdout
+    assert "references/regions/cn/" not in global_run.stdout
 
 
 def test_installed_manifest_and_knowledge_present(installed_tree: Path):
-    manifest = json.loads((installed_tree / "geo" / "regions" / "cn-variants.json").read_text(encoding="utf-8"))
+    manifest = json.loads((installed_tree / "geo" / "references" / "regions" / "cn-variants.json").read_text(encoding="utf-8"))
     assert set(manifest["variants"]) == set(VARIANT_SKILLS)
     for rel in ("profiles.yaml", "README.md"):
-        assert (installed_tree / "geo" / "regions" / rel).is_file()
+        assert (installed_tree / "geo" / "references" / "regions" / rel).is_file()
     for name in CN_KNOWLEDGE:
-        assert (installed_tree / "geo" / "regions" / "cn" / name).is_file()
+        assert (installed_tree / "geo" / "references" / "regions" / "cn" / name).is_file()

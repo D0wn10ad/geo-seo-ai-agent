@@ -13,10 +13,9 @@ pinned `skills` CLI. `npx skills add` is the only skill-distribution path; there
 git-clone/copy updater script and no deploy-time rewriting of installed markdown.
 
 Source of truth for what gets installed is the committed tree itself:
-- `geo/SKILL.md` — orchestrator and `/geo` command table.
-- `geo/commands/geo-*.md` — canonical OpenCode command wrappers (committed, never generated at install time).
-- `skills/geo-*/SKILL.md` and vendored skills (for example `skills/uv/SKILL.md`) — npx discovers directories containing a `SKILL.md` and copies their hierarchy verbatim.
-- `geo/scripts/` and `geo/regions/` — nested files and region profiles travel with the `geo` skill; the CN knowledge base lives in `geo/regions/cn/`.
+- `skills/geo/SKILL.md` — orchestrator and `/geo` command table.
+- `skills/geo-*/SKILL.md` and vendored skills (for example `skills/uv/SKILL.md`) — npx discovers directories containing a `SKILL.md` and copies their hierarchy verbatim. npx distributes skills only; it does not install command files.
+- `skills/geo/scripts/`, `skills/geo/assets/schema/` and `skills/geo/references/regions/` — nested utilities, JSON-LD templates and region profiles travel with the `geo` skill. The CN knowledge base lives in `skills/geo/references/regions/cn/`, and the 17 CN skill companions live at `skills/<geo-x>/references/cn.md`.
 
 ---
 
@@ -37,8 +36,8 @@ this skill so the documented commands are executable as written.
   `npx skills@1.9.0 add` verification.
 - Both targets are supported in one command: `-a claude-code -a opencode`.
 - Python dependencies are **not** installed by npx. After an update, re-run the
-  minimal env/deps bootstrap (`geo/scripts/bootstrap_env.sh`, using the pinned
-  `geo/scripts/install_uv.sh` helper) if `requirements.txt` changed.
+  minimal env/deps bootstrap (`skills/geo/scripts/bootstrap_env.sh`, using the
+  pinned `skills/geo/scripts/install_uv.sh` helper) if `requirements.txt` changed.
 
 ---
 
@@ -68,8 +67,8 @@ for both agents, the equivalent add form is:
 npx skills@1.9.0 add -a claude-code -a opencode -y https://github.com/D0wn10ad/geo-seo-ai-agent.git
 ```
 
-Do not pass legacy installer flags or deploy-time rewrite options; none exist
-in the npx CLI and none are needed.
+Do not pass old git-clone flags or deploy-time rewrite options; none exist in
+the npx CLI and none are needed.
 
 ### Step 3: Verify
 
@@ -78,10 +77,11 @@ npx skills@1.9.0 check
 ```
 
 Confirm the check is clean. Then verify the observable install surface:
-- `geo/SKILL.md` is present in the installed `geo` skill, and the 21 canonical
-  `geo/commands/geo-*.md` wrappers are present.
+- The orchestrator `geo/SKILL.md` is present in the installed `geo` skill, and
+  the 21 `geo-*` worker skills are installed under the single `skills/` root.
 - `skills/geo-update/SKILL.md` still documents this fork and the pin.
-- Scripts and region profiles remain nested under the installed `geo` skill.
+- Scripts, JSON-LD templates and region profiles remain nested under the
+  installed `geo` skill (`scripts/`, `assets/schema/`, `references/regions/`).
 
 ### Step 4: Report results
 
@@ -92,13 +92,14 @@ Report to the user:
 - That changes take effect in new sessions; restart the AI client.
 - That runtime data under `~/.geo-prospects/` is never touched by an update.
 - That `--region <code>` (for example `--region cn`) still applies to `/geo` commands
-  after the update, with CN knowledge from `geo/regions/cn/`.
+  after the update, with CN knowledge from `skills/geo/references/regions/cn/` and
+  the 17 companions at `skills/<geo-x>/references/cn.md`.
 
 ---
 
-## Legacy installs
+## Pre-npx installs
 
-`install.sh` and `install-win.sh` are legacy installers; `uninstall.sh` remains a
-legacy-cleanup fallback. They do not distribute or update skills anymore. For a
-legacy install, clean up with `uninstall.sh` (it preserves `~/.geo-prospects/`),
-then perform a fresh `npx skills@1.9.0 add` as shown above.
+The old git-clone install scripts were deleted; `uninstall.sh` remains a
+cleanup fallback only. npx is the only install and update path. For a pre-npx
+install, clean up with `uninstall.sh` (it preserves `~/.geo-prospects/`), then
+perform a fresh `npx skills@1.9.0 add` as shown above.

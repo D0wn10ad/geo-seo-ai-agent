@@ -10,7 +10,7 @@ import sys
 import os
 from unittest.mock import patch, MagicMock
 
-sys.path.insert(0, os.path.join(os.path.dirname(__file__), "..", "geo", "scripts"))
+sys.path.insert(0, os.path.join(os.path.dirname(__file__), "..", "skills", "geo", "scripts"))
 
 from fetch_page import fetch_robots_txt  # noqa: E402
 

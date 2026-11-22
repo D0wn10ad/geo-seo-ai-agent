@@ -44,7 +44,7 @@ Skills are distributed only through the pinned CLI:
 npx skills@1.9.0 add -a claude-code -a opencode -y https://github.com/D0wn10ad/geo-seo-ai-agent.git
 ```
 
-It copies every `SKILL.md` directory from this fork verbatim into the target agents' config dirs (including the committed `geo/commands/` wrappers and nested `geo/scripts/` and `geo/regions/` files) and records the pin in `skills-lock.json`. It does not install Python dependencies: run `bash geo/scripts/install_uv.sh` then `bash geo/scripts/bootstrap_env.sh` once for that (Python 3.10+ required). `install.sh` and `install-win.sh` are **LEGACY** installers that no longer distribute or update skills.
+It copies every `SKILL.md` directory from this fork verbatim into the target agents' config dirs (including the nested `skills/geo/scripts/`, `skills/geo/assets/schema/` and `skills/geo/references/regions/` files) and records the pin in `skills-lock.json`. npx distributes skills only — it does not install command files or Python dependencies: run `bash skills/geo/scripts/install_uv.sh` then `bash skills/geo/scripts/bootstrap_env.sh` once for that (Python 3.10+ required). The old git-clone install scripts were removed; `uninstall.sh` remains a cleanup fallback.
 
 ### How do I check for and apply updates?
 
@@ -64,7 +64,7 @@ The score (0-100) is a weighted aggregate across six categories: AI Citability &
 
 ### How do the parallel subagents work?
 
-During a full audit, five subagents run simultaneously after the initial discovery phase: `geo-ai-visibility`, `geo-platform-analysis`, `geo-technical`, `geo-content`, and `geo-schema`. Each maps to an agent definition file (in `~/.claude/agents/` for Claude Code or `~/.config/opencode/agents/` for OpenCode) and is responsible for a distinct slice of the analysis. The host platform's agent system handles the parallel dispatch; the orchestrator then collects all five reports and synthesizes the composite score. See [architecture.md](architecture.md) for the full flow.
+During a full audit, five phase-2 worker skills run in parallel after the initial discovery phase: `geo-ai-visibility`, `geo-platform-analysis`, `geo-technical`, `geo-content`, and `geo-schema`. Each is a `skills/geo-*/SKILL.md` file and is responsible for a distinct slice of the analysis. The orchestrator dispatches them in parallel, collects all five reports, and synthesizes the composite score. See [architecture.md](architecture.md) for the full flow.
 
 ### Where is prospect, proposal, and report data stored?
 
@@ -77,7 +77,7 @@ Data from `/geo prospect`, `/geo proposal`, and `/geo compare` is written to `~/
 └── reports/<domain>-monthly-<YYYY-MM>.md
 ```
 
-This directory is intentionally preserved by both `npx skills@1.9.0 remove` and the LEGACY `uninstall.sh` fallback. Delete it manually with `rm -rf ~/.geo-prospects` if you want to discard your prospect data.
+This directory is intentionally preserved by both `npx skills@1.9.0 remove` and the `uninstall.sh` fallback. Delete it manually with `rm -rf ~/.geo-prospects` if you want to discard your prospect data.
 
 ---
 
@@ -85,11 +85,11 @@ This directory is intentionally preserved by both `npx skills@1.9.0 remove` and 
 
 ### How do I add a new sub-skill?
 
-Create a new directory under `skills/` following the naming pattern `geo-<skill-name>/`. Add a `SKILL.md` inside it that defines the skill's name, description, and logic. If the skill should participate in the full audit, register it in the appropriate agent file under `agents/`. Follow the structure of an existing sub-skill such as `skills/geo-citability/` as a reference. See [skills-and-agents.md](skills-and-agents.md) for a map of how skills and agents relate.
+Create a new directory under `skills/` following the naming pattern `geo-<skill-name>/`. Add a `SKILL.md` inside it that defines the skill's name, description, and logic. If the skill should participate in the full audit, register it in the orchestrator `skills/geo/SKILL.md`. Follow the structure of an existing sub-skill such as `skills/geo-citability/` as a reference. See [skills-and-agents.md](skills-and-agents.md) for a map of how the skills relate.
 
 ### How do I test my changes before opening a PR?
 
-Run `npx skills@1.9.0 add -a claude-code -a opencode -y https://github.com/D0wn10ad/geo-seo-ai-agent.git` to install from this fork, then `bash geo/scripts/bootstrap_env.sh` for Python dependencies. Run `pytest tests/ -q`, open your AI agent CLI (Claude Code or OpenCode), and exercise the affected commands against a real URL. Verify that all status checks pass before submitting your pull request, as noted in `CONTRIBUTING.md`.
+Run `npx skills@1.9.0 add -a claude-code -a opencode -y https://github.com/D0wn10ad/geo-seo-ai-agent.git` to install from this fork, then `bash skills/geo/scripts/bootstrap_env.sh` for Python dependencies. Run `pytest tests/ -q`, open your AI agent CLI (Claude Code or OpenCode), and exercise the affected commands against a real URL. Verify that all status checks pass before submitting your pull request, as noted in `CONTRIBUTING.md`.
 
 ### Where do I report bugs or request features?
 
@@ -105,7 +105,7 @@ No. The tool audits signals that correlate with AI visibility and provides recom
 
 ### Can I use this with OpenCode?
 
-Yes. Install for both agents in one command: `npx skills@1.9.0 add -a claude-code -a opencode -y https://github.com/D0wn10ad/geo-seo-ai-agent.git`. The 5 agent definitions and 21 canonical `geo/commands/geo-*.md` wrappers come from the committed tree; a `.opencode/` directory may appear locally as a deploy artifact. The `platform/` adapter layer resolves abstract tool names (`` `fetch_url` `` → `webfetch`) at runtime.
+Yes. Install for both agents in one command: `npx skills@1.9.0 add -a claude-code -a opencode -y https://github.com/D0wn10ad/geo-seo-ai-agent.git`. The 21 `skills/geo-*/SKILL.md` skills come from the committed tree; a `.opencode/` directory may appear locally as a deploy artifact. npx distributes skills only — it does not install command files.
 
 ### Does it submit anything to third-party services?
 

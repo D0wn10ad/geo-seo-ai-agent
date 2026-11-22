@@ -33,6 +33,10 @@ CANONICAL_TARGETS: Mapping[str, str] = {
     name: f"skills/{name}/SKILL.md" for name in AGENTS
 }
 
+CANONICAL_SOURCES: Mapping[str, str] = {
+    name: f"skills/{name}/SKILL.md" for name in AGENTS
+}
+
 
 class CheckRow(TypedDict):
     agent: str
@@ -58,7 +62,7 @@ def extract_markers(agent_text: str) -> list[str]:
 
 def canonical_mapping() -> dict[str, tuple[str, str]]:
     return {
-        name: (f"agents/{name}.md", CANONICAL_TARGETS[name]) for name in AGENTS
+        name: (CANONICAL_SOURCES[name], CANONICAL_TARGETS[name]) for name in AGENTS
     }
 
 

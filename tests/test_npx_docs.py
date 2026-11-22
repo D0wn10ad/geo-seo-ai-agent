@@ -38,9 +38,8 @@ def test_readme_quick_start_has_no_curl_installer_default():
 
 def test_legacy_installers_are_explicitly_labeled():
     readme = _read("README.md")
-    assert "LEGACY" in readme
-    assert "install.sh" in readme
     assert "uninstall.sh" in readme
+    assert "legacy" in readme.lower()
 
 
 def test_getting_started_has_no_stale_upstream_install_paths():
@@ -63,8 +62,8 @@ def test_pinning_and_check_update_documented():
 
 def test_uv_bootstrap_documented():
     text = _read("docs/getting-started.md")
-    assert "geo/scripts/bootstrap_env.sh" in text
-    assert "geo/scripts/install_uv.sh" in text
+    assert "skills/geo/scripts/bootstrap_env.sh" in text
+    assert "skills/geo/scripts/install_uv.sh" in text
     assert "Python 3.10+" in text
 
 

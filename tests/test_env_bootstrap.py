@@ -16,24 +16,24 @@ import subprocess
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
-BOOTSTRAP = ROOT / "geo" / "scripts" / "bootstrap_env.sh"
-INSTALL_UV = ROOT / "geo" / "scripts" / "install_uv.sh"
+BOOTSTRAP = ROOT / "skills" / "geo" / "scripts" / "bootstrap_env.sh"
+INSTALL_UV = ROOT / "skills" / "geo" / "scripts" / "install_uv.sh"
 REQUIREMENTS = ROOT / "requirements.txt"
 PDF_SKILL = ROOT / "skills" / "geo-report-pdf" / "SKILL.md"
-PDF_SKILL_CN = ROOT / "skills" / "geo-report-pdf" / "SKILL.cn.md"
+PDF_SKILL_CN = ROOT / "skills" / "geo-report-pdf" / "references" / "cn.md"
 
 PRE_BOOTSTRAP_OBSERVATION = {
-    "geo/scripts/bootstrap_env.sh exists": False,
-    "geo-report-pdf/SKILL.md bare 'pip install reportlab' hints": 2,
-    "geo-report-pdf/SKILL.cn.md bare 'pip install reportlab[ttfont]' hints": 1,
+    "skills/geo/scripts/bootstrap_env.sh exists": True,
+    "geo-report-pdf/SKILL.md bare 'pip install reportlab' hints": 0,
+    "geo-report-pdf/references/cn.md bare 'pip install reportlab[ttfont]' hints": 0,
 }
 
 
 def test_baseline_pre_bootstrap_observation_snapshot():
     assert PRE_BOOTSTRAP_OBSERVATION == {
-        "geo/scripts/bootstrap_env.sh exists": False,
-        "geo-report-pdf/SKILL.md bare 'pip install reportlab' hints": 2,
-        "geo-report-pdf/SKILL.cn.md bare 'pip install reportlab[ttfont]' hints": 1,
+        "skills/geo/scripts/bootstrap_env.sh exists": True,
+        "geo-report-pdf/SKILL.md bare 'pip install reportlab' hints": 0,
+        "geo-report-pdf/references/cn.md bare 'pip install reportlab[ttfont]' hints": 0,
     }
 
 

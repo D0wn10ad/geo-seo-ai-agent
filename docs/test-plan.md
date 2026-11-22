@@ -13,20 +13,19 @@ Manual verification checklist for multi-platform (Claude Code + OpenCode) instal
 ```bash
 npx skills@1.9.0 add -a claude-code -a opencode -y https://github.com/D0wn10ad/geo-seo-ai-agent.git
 npx skills@1.9.0 check
-bash geo/scripts/install_uv.sh
-bash geo/scripts/bootstrap_env.sh
+bash skills/geo/scripts/install_uv.sh
+bash skills/geo/scripts/bootstrap_env.sh
 ```
 
 **Verify:** `check` exits 0; `skills-lock.json` in the install root records the
 pinned source; both target agents report the installed `geo-*` skills; the
 bootstrap prints the venv path with no import errors.
 
-### LEGACY installer check (not the default path)
+### Pre-npx cleanup check (not the default path)
 
-`bash install.sh` (or `bash install-win.sh` from Git Bash on Windows) is retained
-only as a **LEGACY** manual-check path for older installs. It no longer
-distributes or updates skills. If exercised, follow it with the pinned npx `add`
-and bootstrap commands above.
+`bash uninstall.sh` is retained only as a cleanup fallback for older installs.
+It no longer distributes or updates skills. If exercised, follow it with the
+pinned npx `add` and bootstrap commands above.
 
 ---
 
@@ -35,72 +34,52 @@ and bootstrap commands above.
 ```bash
 # Shared skills (both platforms)
 ls ~/.claude/skills/geo/SKILL.md
-ls ~/.claude/skills/geo-*/SKILL.md | wc -l      # expect 21 geo-* skills (+ vendored uv)
-ls ~/.claude/skills/platform/SKILL.md            # platform adapter
-ls ~/.claude/skills/platform/TOOL-MAP.md
+ls -d ~/.claude/skills/geo-* | wc -l             # expect 21 geo-* skills (+ vendored uv)
+ls ~/.claude/skills/geo/references/regions/cn/   # CN knowledge base
+ls ~/.claude/skills/geo/scripts/fetch_page.py    # nested utilities
 
 # OpenCode-specific
-ls ~/.config/opencode/agents/geo-*.md            # expect 5
-ls ~/.config/opencode/commands/geo-*.md          # expect 21
-
-# Claude Code-specific (still intact)
-ls ~/.claude/agents/geo-*.md                     # expect 5
+ls ~/.config/opencode/skills/ | grep geo
 ```
 
 ---
 
-## T3 — Frontmatter Validation
+## T3 — Skill Frontmatter Validation
 
-OpenCode agents must have `mode: subagent` and `permission:` frontmatter.
+Each installed skill must have a `SKILL.md` with `name` and `description` frontmatter.
 
 ```bash
-head -12 ~/.config/opencode/agents/geo-technical.md
+head -12 ~/.config/opencode/skills/geo-technical/SKILL.md
 ```
 
-**Verify:** Lines 4–11 show `mode: subagent`, `permission:` with `read: allow`, `edit: deny`, `bash: allow`, `webfetch: allow`, `glob: allow`, `grep: allow`.
+**Verify:** The frontmatter block declares the skill name and description.
 
 ---
 
-## T4 — No Forbidden Tool Names (body text)
+## T4 — Self-Locating Script Paths
 
-Checks that `WebFetch` and `Bash` appear **only** in the platform adapter, never in skill or agent body text.
+Skills resolve their scripts from the installed skill directory, not a hardcoded repo path.
 
 ```bash
-# Should return 0 matches (platform/ files are the exception)
-rg 'WebFetch|Bash' \
+rg 'SKILL_DIR|GEO_SCRIPTS' \
   ~/.claude/skills/geo/SKILL.md \
   ~/.claude/skills/geo-*/SKILL.md \
-  ~/.claude/agents/geo-*.md \
-  ~/.config/opencode/agents/geo-*.md \
-  -g '*.md'
-```
-
-**Verify:** No matches.
-
-Then confirm platform adapter still has them (expected):
-
-```bash
-# Should return matches only here
-rg 'WebFetch|Bash' ~/.claude/skills/platform/ -g '*.md'
-```
-
-**Verify:** At least one match in `platform/SKILL.md` and/or `platform/TOOL-MAP.md`.
-
----
-
-## T5 — Abstract Tool Names Everywhere
-
-All instruction text should use `` `fetch_url` `` and `` `run_command` ``.
-
-```bash
-rg '`fetch_url`' \
-  ~/.claude/skills/geo/SKILL.md \
-  ~/.claude/skills/geo-*/SKILL.md \
-  ~/.claude/agents/geo-*.md \
   -g '*.md' | head -10
 ```
 
-**Verify:** Many matches. No plain `WebFetch` or `Bash` in body text.
+**Verify:** Matches resolve scripts under the installed `geo` skill; no references to deleted `geo/scripts/` or `resolve_regions.py` paths.
+
+---
+
+## T5 — CN Companion Presence
+
+The 17 region-aware skills carry a `references/cn.md` companion.
+
+```bash
+find ~/.claude/skills -path '*/references/cn.md' | wc -l   # expect 17
+```
+
+**Verify:** 17 CN companions are installed alongside the skills.
 
 ---
 
@@ -109,38 +88,37 @@ rg '`fetch_url`' \
 Core utility still works after install:
 
 ```bash
-python3 geo/scripts/fetch_page.py page https://example.com --timeout 10 2>&1 | head -20
+python3 skills/geo/scripts/fetch_page.py page https://example.com --timeout 10 2>&1 | head -20
 ```
 
 **Verify:** Returns HTTP status, title, meta description, and text content of example.com. No import errors.
 
 ---
 
-## T7 — OpenCode Command Wrapper Syntax
+## T7 — Skill Install Parity
+
+The same skills are installed for both agents (npx distributes skills only).
 
 ```bash
-head -5 ~/.config/opencode/commands/geo-quick.md
+diff <(ls ~/.config/opencode/skills/ | grep geo | sort) \
+     <(ls ~/.claude/skills/ | grep geo | sort)
 ```
 
-**Verify:** Contains `---` frontmatter with `description:` and body text referencing `$1` as the URL argument.
+**Verify:** No differences — both agents have the same `geo-*` skills.
 
 ---
 
-## T8 — Agent Body Parity
+## T8 — Worker Skill Presence
 
-Body text should be identical between OpenCode and Claude Code agents (only frontmatter differs).
+The five phase-2 worker skills are installed alongside the public skills.
 
 ```bash
-# OpenCode frontmatter = 12 lines, Claude Code frontmatter = 9 lines
-diff <(tail -n +13 ~/.config/opencode/agents/geo-content.md) \
-     <(tail -n +10 ~/.claude/agents/geo-content.md)
+for s in geo-ai-visibility geo-platform-analysis geo-technical geo-content geo-schema; do
+  ls ~/.claude/skills/$s/SKILL.md
+done
 ```
 
-**Verify:** No differences. Repeat for other 4 agents:
-- `geo-ai-visibility.md`
-- `geo-platform-analysis.md`
-- `geo-schema.md`
-- `geo-technical.md`
+**Verify:** All five worker skills are present.
 
 ---
 
@@ -172,7 +150,7 @@ In OpenCode CLI:
 
 ```bash
 # Launch the CRM web app
-python3 geo/scripts/webapp/app.py
+python3 skills/geo/scripts/webapp/app.py
 ```
 
 **Verify:** Flask starts without import errors. Visit `http://localhost:5000` — dashboard renders.
@@ -185,12 +163,12 @@ python3 geo/scripts/webapp/app.py
 # Remove npx-managed skills (select the geo / geo-* skills)
 npx skills@1.9.0 remove
 
-# LEGACY fallback only: bash uninstall.sh cleans old git-clone artifacts
+# Cleanup fallback only: bash uninstall.sh cleans old git-clone artifacts
 # (it detects npx layout and deletes nothing when found)
 
 # Reinstall with the pinned add form, then re-bootstrap deps if needed
 npx skills@1.9.0 add -a claude-code -a opencode -y https://github.com/D0wn10ad/geo-seo-ai-agent.git
-bash geo/scripts/bootstrap_env.sh
+bash skills/geo/scripts/bootstrap_env.sh
 
 # Re-run T2 to verify everything is restored, and confirm the pin
 npx skills@1.9.0 check

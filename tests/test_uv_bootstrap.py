@@ -25,7 +25,7 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 VENDORED_SKILL = ROOT / "skills" / "uv" / "SKILL.md"
-INSTALLER = ROOT / "geo" / "scripts" / "install_uv.sh"
+INSTALLER = ROOT / "skills" / "geo" / "scripts" / "install_uv.sh"
 INSTALL_SH = ROOT / "install.sh"
 
 EXPECTED_PIN = "0.13.9"
@@ -37,34 +37,26 @@ UPSTREAM_SHA256 = "96dcc38d6dd80deb2f54ee82a3a15987d6441cdb234452fbc4d43499c3461
 
 PRE_MIGRATION_ABSENCE = {
     "skills/uv/SKILL.md": False,
-    "geo/scripts/install_uv.sh": False,
+    "skills/geo/scripts/install_uv.sh": False,
 }
 
 
 def test_baseline_pre_migration_absence_snapshot():
     assert PRE_MIGRATION_ABSENCE == {
         "skills/uv/SKILL.md": False,
-        "geo/scripts/install_uv.sh": False,
+        "skills/geo/scripts/install_uv.sh": False,
     }
 
 
 def test_retired_install_sh_has_no_bootstrap_and_canonical_guidance_exists():
-    text = INSTALL_SH.read_text(encoding="utf-8")
-    assert "curl -LsSf https://astral.sh/uv/install.sh | sh" not in text
-    assert "install_uv.sh" not in text
-    assert "UV_VERSION" not in text
-    assert "astral.sh/uv/0." not in text
-    assert "astral.sh/uv/$" not in text
-    assert "pip install" not in text
-    assert "npx skills@1.9.0 add" in text
-    assert "bash uninstall.sh" in text
+    assert not INSTALL_SH.exists(), f"legacy installer still present: {INSTALL_SH}"
 
     helper = INSTALLER.read_text(encoding="utf-8")
     assert f'UV_VERSION="{EXPECTED_PIN}"' in helper
     assert f'"https://astral.sh/uv/${{UV_VERSION}}/install.sh"' in helper
     readme = (ROOT / "README.md").read_text(encoding="utf-8")
-    assert "bash geo/scripts/install_uv.sh" in readme
-    assert "bash geo/scripts/bootstrap_env.sh" in readme
+    assert "bash skills/geo/scripts/install_uv.sh" in readme
+    assert "bash skills/geo/scripts/bootstrap_env.sh" in readme
 
 
 def test_vendored_skill_has_frontmatter_and_intact_upstream_teaching():

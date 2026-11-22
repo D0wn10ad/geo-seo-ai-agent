@@ -28,8 +28,9 @@ def _numbered_lines():
 
 
 def test_npx_first_reality_is_true_on_disk():
-    wrappers = sorted((ROOT / "geo" / "commands").glob("geo-*.md"))
-    assert len(wrappers) == 21, f"expected 21 committed wrappers, found {len(wrappers)}"
+    orchestrator = ROOT / "skills" / "geo" / "SKILL.md"
+    assert orchestrator.is_file(), f"missing orchestrator {orchestrator}"
+    assert not (ROOT / "geo" / "commands").exists()
     assert not (ROOT / "geo" / "scripts" / "update_toolkit.py").exists()
     assert not (ROOT / "tests" / "test_update_toolkit.py").exists()
 
@@ -71,15 +72,14 @@ def test_opencode_is_described_as_local_deploy_artifact():
 
 def test_canonical_wrappers_are_documented_as_committed():
     text = _agents_text()
-    assert "geo/commands/" in text
-    assert "geo/commands/geo-*.md" in text
+    assert "skills/geo/SKILL.md" in text
+    assert "skills/geo-*/SKILL.md" in text
 
 
 def test_legacy_installers_are_documented_as_retired():
     text = _agents_text()
-    assert "LEGACY" in text
-    assert "install.sh" in text
-    assert "install-win.sh" in text
+    assert "uninstall.sh" in text
+    assert "legacy" in text.lower()
 
 
 def test_uv_bootstrap_is_documented():

@@ -1,5 +1,7 @@
 # CN Canon Sweep Implementation Plan
 
+> **HISTORICAL DOCUMENT.** This is a dated implementation plan kept for provenance only. Paths below reflect the tree at the time it was written; the current layout is the single `skills/` root documented in the root README and `AGENTS.md`. Do not use this plan as an install or layout reference.
+
 > **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
 
 **Goal:** Clean up residual stale engine naming (ERNIE Bot → Yuanbao) and style drift (emoji markers) across 8 CN skill/agent/region files on `feature/region-aware-geo`.
@@ -20,11 +22,11 @@
 
 ---
 
-### Task 1: geo-report SKILL.cn.md — 6 stale ERNIE refs + emoji
+### Task 1: geo-report references/cn.md — 6 stale ERNIE refs + emoji
 
 **Files:**
-- Modify: `skills/geo-report/SKILL.cn.md:135,233,254,257,317,344`
-- Modify: `skills/geo-report/SKILL.cn.md:93-97` (emoji)
+- Modify: `skills/geo-report/references/cn.md:135,233,254,257,317,344`
+- Modify: `skills/geo-report/references/cn.md:93-97` (emoji)
 
 High priority replacements:
 1. Line 135: `百度 AI 搜索和文心一言` → `百度 AI 搜索和腾讯元宝`
@@ -40,17 +42,17 @@ Medium priority:
 ### Task 2: geo-citation-pipeline + geo-audit — 2 engine naming fixes
 
 **Files:**
-- Modify: `skills/geo-citation-pipeline/SKILL.cn.md:148`
-- Modify: `skills/geo-audit/SKILL.cn.md:58`
+- Modify: `skills/geo-citation-pipeline/references/cn.md:148`
+- Modify: `skills/geo-audit/references/cn.md:58`
 
 Replacements:
 1. `geo-citation-pipeline.cn.md`: `ERNIE Bot (文心一言)` → `Yuanbao (腾讯元宝)` in Stage 6 table
 2. `geo-audit.cn.md`: `ERNIE Bot (文心一言)` → `Yuanbao (腾讯元宝)` in Subagent 2 list
 
-### Task 3: geo-proposal SKILL.cn.md — 4 ERNIE refs
+### Task 3: geo-proposal references/cn.md — 4 ERNIE refs
 
 **Files:**
-- Modify: `skills/geo-proposal/SKILL.cn.md:47,94,192,226`
+- Modify: `skills/geo-proposal/references/cn.md:47,94,192,226`
 
 Replacements:
 1. Line 47: `文心一言` → `腾讯元宝`
@@ -61,8 +63,8 @@ Replacements:
 ### Task 4: geo-platform-optimizer + geo-brand-mentions — 4 fixes
 
 **Files:**
-- Modify: `skills/geo-platform-optimizer/SKILL.cn.md:26,184,169`
-- Modify: `skills/geo-brand-mentions/SKILL.cn.md:13,25`
+- Modify: `skills/geo-platform-optimizer/references/cn.md:26,184,169`
+- Modify: `skills/geo-brand-mentions/references/cn.md:13,25`
 
 Replacements:
 1. `platform-optimizer:26`: `Baidu's ERNIE-powered AI search` → `Baidu's AI search (Yuanbao-powered)`

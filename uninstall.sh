@@ -23,10 +23,9 @@ set -euo pipefail
 #     Remove it manually only if no GEO install still needs it.
 #   * legacy venv ~/.claude/skills/geo/.venv: removed together with the
 #     legacy ~/.claude/skills/geo directory in legacy mode.
-#   * Windows: explicitly SCOPED OUT. Windows installs use install-win.sh
-#     (Git Bash, no symlinks, no .agents/skills npx layout); run the pinned
-#     npx remove command from Git Bash for npx-managed Windows installs. This
-#     POSIX script performs no Windows-specific cleanup.
+#   * Windows: explicitly SCOPED OUT. Run the pinned npx commands from Git Bash
+#     (native PowerShell/CMD is not supported); this POSIX script performs no
+#     Windows-specific cleanup.
 # ============================================================
 
 CLAUDE_SKILLS="${HOME}/.claude/skills"
@@ -167,7 +166,7 @@ else
         fi
     done
 
-    # Legacy OpenCode command wrappers.
+    # Legacy OpenCode command files.
     for cmd_file in "${OPENCODE_COMMANDS}"/geo-*.md; do
         if [ -e "$cmd_file" ] || [ -L "$cmd_file" ]; then
             remove_path "$cmd_file"

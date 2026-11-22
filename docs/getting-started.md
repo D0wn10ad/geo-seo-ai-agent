@@ -46,7 +46,9 @@ npx skills@1.9.0 add -a claude-code -a opencode -y https://github.com/D0wn10ad/g
   between releases. Never substitute an unpinned `npx skills`.
 - Nothing is generated or rewritten at install time: the committed tree is the
   source of truth, and `SKILL.md` directories are copied verbatim with their
-  nested `geo/commands/`, `geo/scripts/`, and `geo/regions/` files.
+  nested `skills/geo/scripts/`, `skills/geo/assets/schema/`, and
+  `skills/geo/references/regions/` files. npx distributes skills only — it does
+  not install command files.
 
 ### Python dependencies — one-time bootstrap
 
@@ -54,8 +56,8 @@ npx skills@1.9.0 add -a claude-code -a opencode -y https://github.com/D0wn10ad/g
 pinned bootstrap helper and the checksum-keyed env bootstrap:
 
 ```bash
-bash geo/scripts/install_uv.sh     # installs pinned uv 0.13.9 only if absent
-bash geo/scripts/bootstrap_env.sh  # venv at ${XDG_CACHE_HOME:-~/.cache}/geo-seo-ai-agent/venv
+bash skills/geo/scripts/install_uv.sh     # installs pinned uv 0.13.9 only if absent
+bash skills/geo/scripts/bootstrap_env.sh  # venv at ${XDG_CACHE_HOME:-~/.cache}/geo-seo-ai-agent/venv
 ```
 
 If you are not in the repo, pass a `requirements.txt` path as the first argument
@@ -63,13 +65,12 @@ to `bootstrap_env.sh`. The script is idempotent: it re-runs only when
 `requirements.txt` changes. It requires `uv` on `PATH` (installed above), uses
 `uv venv` and `uv pip install`, and leaves your system Python untouched.
 
-### LEGACY installers (not the default)
+### Upgrading a pre-npx install
 
-`install.sh` and `install-win.sh` are retained only as **LEGACY** installers for
-older setups; they no longer distribute or update skills. If you previously used
-one, clean up with `bash uninstall.sh` (it preserves `~/.geo-prospects/`) and then
-run the pinned `npx skills@1.9.0 add` command above. Do not pipe either LEGACY
-installer into `bash` for a new install. See [Upgrading an older install](#upgrading-an-older-install) below.
+The old git-clone install scripts were removed. If you previously used one, clean
+up with `bash uninstall.sh` (it preserves `~/.geo-prospects/`) and then run the
+pinned `npx skills@1.9.0 add` command above. npx is the only install path. See
+[Upgrading an older install](#upgrading-an-older-install) below.
 
 ---
 
@@ -97,12 +98,10 @@ To confirm the observable installed surface:
 
 ```bash
 ls ~/.claude/skills/geo/SKILL.md
-ls ~/.claude/skills/geo/commands/geo-*.md | wc -l   # expect 21
+ls -d ~/.claude/skills/geo-* | wc -l   # expect 21
 ls ~/.claude/skills/ | grep geo
-ls ~/.claude/agents/ | grep geo
 # OpenCode-specific:
-ls ~/.config/opencode/agents/ | grep geo
-ls ~/.config/opencode/commands/ | grep geo
+ls ~/.config/opencode/skills/ | grep geo
 ```
 
 ---
@@ -118,7 +117,7 @@ npx skills@1.9.0 update
 
 A non-zero exit from `check` is the expected signal to run `update`. After the
 update, re-run `check` to confirm a clean state. If `requirements.txt` changed,
-re-run `geo/scripts/bootstrap_env.sh`. Restart your AI client so new sessions see
+re-run `skills/geo/scripts/bootstrap_env.sh`. Restart your AI client so new sessions see
 the updated skills; runtime data under `~/.geo-prospects/` is never touched.
 
 **Pinning policy:** always invoke the CLI as `npx skills@1.9.0`. Bump the pin only
@@ -176,8 +175,8 @@ ships nested under the installed skill.
 - Fix: install Python 3.10+ from [python.org](https://www.python.org/downloads/) (on Windows check "Add Python to PATH"), reopen your terminal, then re-run the bootstrap.
 
 **`uv` not found during bootstrap**
-- Symptom: `error: uv not found on PATH; run geo/scripts/install_uv.sh first`
-- Fix: run `bash geo/scripts/install_uv.sh`, which installs the pinned uv 0.13.9 only if absent, then re-run `bash geo/scripts/bootstrap_env.sh`.
+- Symptom: `error: uv not found on PATH; run skills/geo/scripts/install_uv.sh first`
+- Fix: run `bash skills/geo/scripts/install_uv.sh`, which installs the pinned uv 0.13.9 only if absent, then re-run `bash skills/geo/scripts/bootstrap_env.sh`.
 
 **Wrong shell on Windows**
 - Symptom: `npx` or script syntax errors
@@ -187,7 +186,7 @@ ships nested under the installed skill.
 **Python dependencies failed**
 - Symptom: the bootstrap reports a `uv pip install` failure
 - Cause: network or permission error while installing from `requirements.txt`
-- Fix: re-run `bash geo/scripts/bootstrap_env.sh` after resolving the network/permission issue. The bootstrap is checksum-keyed, so delete `${XDG_CACHE_HOME:-~/.cache}/geo-seo-ai-agent/.env-bootstrap-sentinel` first if you need a forced retry with an unchanged `requirements.txt`.
+- Fix: re-run `bash skills/geo/scripts/bootstrap_env.sh` after resolving the network/permission issue. The bootstrap is checksum-keyed, so delete `${XDG_CACHE_HOME:-~/.cache}/geo-seo-ai-agent/.env-bootstrap-sentinel` first if you need a forced retry with an unchanged `requirements.txt`.
 
 ---
 
@@ -263,7 +262,7 @@ npx skills@1.9.0 add -a claude-code -a opencode -y https://github.com/D0wn10ad/g
 
 # 2) Manual cleanup of legacy-only artifacts npx does not own (only if present)
 rm -rf ~/.claude/skills/geo/.venv                  # legacy `.venv` (old per-skill venv; bootstrap now uses XDG cache venv)
-rm -f  ~/.claude/agents/geo-*.md                   # legacy agent files (agents/*.md)
+rm -f  ~/.claude/agents/geo-*.md                   # old agent files from pre-npx installs
 rm -f  "${XDG_CONFIG_HOME:-$HOME/.config}/opencode/agents/geo-*.md"
 rm -f  "${XDG_CONFIG_HOME:-$HOME/.config}/opencode/commands/geo-*.md"  # stale generated .opencode/commands wrappers
 # remove any stale symlinks pointing at removed legacy targets:
