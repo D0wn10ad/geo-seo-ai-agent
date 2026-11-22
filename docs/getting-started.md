@@ -60,8 +60,10 @@ bash skills/geo/scripts/install_uv.sh     # installs pinned uv 0.13.9 only if ab
 bash skills/geo/scripts/bootstrap_env.sh  # venv at ${XDG_CACHE_HOME:-~/.cache}/geo-seo-ai-agent/venv
 ```
 
-If you are not in the repo, pass a `requirements.txt` path as the first argument
-to `bootstrap_env.sh`. The script is idempotent: it re-runs only when
+`bootstrap_env.sh` resolves `skills/geo/scripts/requirements.txt` beside the
+script by default. If you are not in the repo, pass a different `requirements.txt`
+path as the first argument to `bootstrap_env.sh`. The script is idempotent: it
+re-runs only when
 `requirements.txt` changes. It requires `uv` on `PATH` (installed above), uses
 `uv venv` and `uv pip install`, and leaves your system Python untouched.
 
