@@ -267,3 +267,52 @@ def test_absent_uv_errors_with_installer_hint():
         assert proc.returncode != 0
         assert "install_uv.sh" in (proc.stdout + proc.stderr)
         assert not (cache / ".env-bootstrap-sentinel").exists()
+
+
+def test_bootstrap_no_arg_resolves_requirements_sibling_of_script():
+    """No-arg bootstrap must default to a requirements.txt beside the script.
+
+    Self-contained: copies bootstrap_env.sh into a fresh temp tree, places a
+    valid requirements.txt as its SIBLING, stubs uv via a fake bin on PATH, and
+    points XDG_CACHE_HOME at a temp cache. It deliberately does NOT reference
+    the module-level REQUIREMENTS constant (owned by a separate change).
+    """
+    with _scratch("task2-noarg-") as root:
+        bin_dir = root / "bin"
+        bin_dir.mkdir()
+
+        # Nest the script two levels deep so the OLD default (../..) resolves
+        # to <root>/requirements.txt, which we intentionally do NOT create.
+        script_dir = root / "nested" / "scripts"
+        script_dir.mkdir(parents=True)
+        copied_bootstrap = script_dir / "bootstrap_env.sh"
+        copied_bootstrap.write_text(
+            BOOTSTRAP.read_text(encoding="utf-8"), encoding="utf-8"
+        )
+
+        requirements = script_dir / "requirements.txt"
+        requirements.write_text("rich>=13.0.0,<14.0.0\n", encoding="utf-8")
+
+        call_log = root / "uv-calls.log"
+        marker = root / "install.marker"
+        _write_fake_uv(bin_dir, call_log, marker)
+        cache = root / "cache"
+        env = _isolated_env(bin_dir, XDG_CACHE_HOME=str(cache))
+
+        proc = subprocess.run(
+            ["bash", str(copied_bootstrap)],
+            env=env,
+            capture_output=True,
+            text=True,
+            timeout=30,
+        )
+
+        assert proc.returncode == 0, (proc.stdout, proc.stderr)
+        lines = call_log.read_text(encoding="utf-8").splitlines()
+        assert any(
+            line.startswith("pip install ") and str(requirements) in line
+            for line in lines
+        ), lines
+        assert marker.exists(), "pip install was not invoked"
+        sentinel = cache / "geo-seo-ai-agent" / ".env-bootstrap-sentinel"
+        assert sentinel.read_text(encoding="utf-8").strip() == _sha(requirements)
