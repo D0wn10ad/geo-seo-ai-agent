@@ -18,7 +18,7 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]
 BOOTSTRAP = ROOT / "skills" / "geo" / "scripts" / "bootstrap_env.sh"
 INSTALL_UV = ROOT / "skills" / "geo" / "scripts" / "install_uv.sh"
-REQUIREMENTS = ROOT / "requirements.txt"
+REQUIREMENTS = ROOT / "skills" / "geo" / "scripts" / "requirements.txt"
 PDF_SKILL = ROOT / "skills" / "geo-report-pdf" / "SKILL.md"
 PDF_SKILL_CN = ROOT / "skills" / "geo-report-pdf" / "references" / "cn.md"
 

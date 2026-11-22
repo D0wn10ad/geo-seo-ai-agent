@@ -9,7 +9,7 @@ scoped distribution surface, not implementation details.
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
-REQUIREMENTS = ROOT / "requirements.txt"
+REQUIREMENTS = ROOT / "skills" / "geo" / "scripts" / "requirements.txt"
 
 KEEP_DEPS = {
     "beautifulsoup4>=4.12.0,<5.0.0",
