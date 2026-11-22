@@ -6,7 +6,15 @@ author: geo-seo-claude
 tags: [geo, pdf, report, client-deliverable, professional]
 ---
 
+<!-- GEO-CN-VARIANT:v1 -->
+
+**Conditional CN variant.** Only when `REGION` resolves to `cn`, read `references/cn.md` and apply its overrides; its CN knowledge files are enumerated in the geo skill's `regions/cn-variants.json` (self-locating resolution is documented in `geo/SKILL.md` → "CN variant loading"). For `global` or any non-CN region, do NOT load `references/cn.md` or any `regions/cn/` file.
+
 # GEO PDF Report Generator
+
+<!-- GEO-SCRIPT-RESOLUTION:v1 -->
+
+**Script resolution.** Set `SKILL_DIR` to this SKILL.md's directory. Resolve `GEO_SCRIPTS` as the first existing of `"$SKILL_DIR/scripts"`, `"$SKILL_DIR/../geo/scripts"`, `"$SKILL_DIR/../../geo/scripts"`, `"$SKILL_DIR/../../../.claude/skills/geo/scripts"` (full preamble in `geo/SKILL.md` → "Script Path Resolution"). Set `PY="$(command -v python3 || command -v python)"`, then invoke scripts as `"$PY" "$GEO_SCRIPTS/<script>.py" ...`. Windows runs through Git Bash, which supplies these commands and forward-slash paths; native PowerShell/CMD is out of scope.
 
 ## Purpose
 
@@ -14,8 +22,8 @@ This skill generates a professional, visually polished PDF report from GEO audit
 
 ## Prerequisites
 
-- **ReportLab** must be installed: `pip install reportlab`
-- The PDF generation script is located at: `scripts/generate_pdf_report.py`
+- **ReportLab** must be installed in the venv: run `bash geo/scripts/bootstrap_env.sh` once first (installs all deps from requirements.txt into the venv); if still missing, use `uv pip install --python <venv>/bin/python3 reportlab` — never bare `pip install` (PEP 668)
+- The PDF generation script is located at: `$GEO_SCRIPTS/generate_pdf_report.py`
 - Run a full GEO audit first (using `/geo-audit`) to have data to include in the report
 
 ## How to Generate a PDF Report
@@ -88,7 +96,7 @@ EOF
 Run the PDF generation script:
 
 ```bash
-python3 scripts/generate_pdf_report.py /tmp/geo-audit-data.json GEO-REPORT-[brand].pdf
+"$PY" "$GEO_SCRIPTS/generate_pdf_report.py" /tmp/geo-audit-data.json GEO-REPORT-[brand].pdf
 ```
 
 The script will produce a professional PDF report with:
@@ -131,7 +139,7 @@ When the user runs this skill, follow this exact sequence:
 
 6. **Run the PDF generator**:
    ```bash
-   python3 scripts/generate_pdf_report.py /tmp/geo-audit-data.json "GEO-REPORT-[brand_name].pdf"
+   "$PY" "$GEO_SCRIPTS/generate_pdf_report.py" /tmp/geo-audit-data.json "GEO-REPORT-[brand_name].pdf"
    ```
 
 7. **Report success** — Tell the user the PDF was generated, its location, and file size.
@@ -156,7 +164,7 @@ When extracting data from existing GEO markdown reports, look for these patterns
 
 ## Notes
 
-- If ReportLab is not installed, run: `pip install reportlab`
+- If ReportLab is not installed in the venv, run the bootstrap once (`bash geo/scripts/bootstrap_env.sh`), then `uv pip install --python <venv>/bin/python3 reportlab` — not bare `pip install`
 - The PDF is designed for US Letter size (8.5" x 11")
 - Color palette: Navy primary (#1a1a2e), Blue accent (#0f3460), Coral highlight (#e94560), Green success (#00b894)
 - Each page has a header line, page numbers, "Confidential" watermark, and generation date

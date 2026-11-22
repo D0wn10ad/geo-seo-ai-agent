@@ -66,3 +66,6 @@ Thumbs.db
 .opencode/*
 !.opencode/agents/
 !.opencode/commands/
+
+skills-lock.json
+.agents/

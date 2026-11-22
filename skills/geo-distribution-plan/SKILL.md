@@ -16,6 +16,10 @@ author: geo-seo-claude-plus
 tags: [geo, distribution, syndication, channels, cadence, authority]
 ---
 
+<!-- GEO-CN-VARIANT:v1 -->
+
+**Conditional CN variant.** Only when `REGION` resolves to `cn`, read `references/cn.md` and apply its overrides; its CN knowledge files are enumerated in the geo skill's `regions/cn-variants.json` (self-locating resolution is documented in `geo/SKILL.md` → "CN variant loading"). For `global` or any non-CN region, do NOT load `references/cn.md` or any `regions/cn/` file.
+
 # GEO Distribution Plan Skill
 
 ## Core Insight

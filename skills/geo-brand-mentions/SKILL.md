@@ -3,7 +3,15 @@ name: geo-brand-mentions
 description: Brand mention and authority scanner for AI visibility. Analyzes brand presence across platforms that AI models rely on for entity recognition and citation decisions. Produces a Brand Authority Score (0-100) with platform-specific recommendations.
 ---
 
+<!-- GEO-CN-VARIANT:v1 -->
+
+**Conditional CN variant.** Only when `REGION` resolves to `cn`, read `references/cn.md` and apply its overrides; its CN knowledge files are enumerated in the geo skill's `regions/cn-variants.json` (self-locating resolution is documented in `geo/SKILL.md` → "CN variant loading"). For `global` or any non-CN region, do NOT load `references/cn.md` or any `regions/cn/` file.
+
 # Brand Mention Scanner Skill
+
+<!-- GEO-SCRIPT-RESOLUTION:v1 -->
+
+**Script resolution.** Set `SKILL_DIR` to this SKILL.md's directory. Resolve `GEO_SCRIPTS` as the first existing of `"$SKILL_DIR/scripts"`, `"$SKILL_DIR/../geo/scripts"`, `"$SKILL_DIR/../../geo/scripts"`, `"$SKILL_DIR/../../../.claude/skills/geo/scripts"` (full preamble in `geo/SKILL.md` → "Script Path Resolution"). Set `PY="$(command -v python3 || command -v python)"` before inline interpreter calls. Windows runs through Git Bash, which supplies these commands and forward-slash paths; native PowerShell/CMD is out of scope.
 
 ## Core Insight
 
@@ -235,7 +243,7 @@ For each platform, use `fetch_url` to search and assess presence:
 
 **Method 1 — Python API check (MOST RELIABLE, do this FIRST):**
 ```bash
-python3 -c "
+"$PY" -c "
 import requests, json
 from urllib.parse import quote_plus
 brand = '[Brand_Name]'
