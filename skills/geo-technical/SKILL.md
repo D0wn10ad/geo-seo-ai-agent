@@ -1,10 +1,9 @@
 ---
 name: geo-technical
 description: Technical SEO audit with GEO-specific checks. Evaluates crawlability, indexability, security, performance, server-side rendering, and AI crawler access to surface infrastructure issues that limit AI visibility. Use when diagnosing technical SEO problems, SSR rendering gaps, or AI crawler access restrictions on a site.
-version: 1.0.0
-author: geo-seo-claude
-tags: [geo, technical-seo, core-web-vitals, ssr, crawlability, security, performance]
-allowed-tools: Read, Grep, Glob, Bash, WebFetch, Write
+metadata:
+  tags: [geo, technical-seo, core-web-vitals, ssr, crawlability, security, performance]
+  allowed-tools: Read, Grep, Glob, Bash, WebFetch, Write
 ---
 
 <!-- GEO-CN-VARIANT:v1 -->

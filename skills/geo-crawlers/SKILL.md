@@ -1,13 +1,14 @@
 ---
 name: geo-crawlers
 description: AI crawler access analysis that checks robots.txt, meta tags, and HTTP headers to map which AI crawlers can reach a site and recommends access controls. Use when auditing whether GPTBot, ClaudeBot, Googlebot, and other AI crawlers are allowed or blocked, or when tuning AI visibility without giving up control.
-allowed-tools:
-  - Read
-  - Grep
-  - Glob
-  - Bash
-  - WebFetch
-  - Write
+metadata:
+  allowed-tools:
+    - Read
+    - Grep
+    - Glob
+    - Bash
+    - WebFetch
+    - Write
 ---
 
 <!-- GEO-CN-VARIANT:v1 -->

@@ -10,9 +10,8 @@ description: >
   mapped back to geo-content, geo-distribution-plan, and geo-citation-pipeline.
   Use when user says "compete", "competitor", "gap analysis", "citation gap",
   "/geo compete", or asks how your AI visibility compares against named rivals.
-version: 1.0.0
-author: geo-seo-claude-plus
-tags: [geo, competitor, gap-analysis, citation, ai-engines, benchmarking]
+metadata:
+  tags: [geo, competitor, gap-analysis, citation, ai-engines, benchmarking]
 ---
 
 <!-- GEO-CN-VARIANT:v1 -->

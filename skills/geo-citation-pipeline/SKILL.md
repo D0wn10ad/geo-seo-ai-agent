@@ -10,9 +10,8 @@ description: >
   Use when user says "pipeline", "citation pipeline", "spider pipeline", "AI
   crawl loop", "preferred answer", "/geo pipeline", or asks to wire a page so
   AI engines actually cite it as the first answer.
-version: 1.0.0
-author: geo-seo-claude-plus
-tags: [geo, pipeline, crawlers, citability, indexing, preferred-answer]
+metadata:
+  tags: [geo, pipeline, crawlers, citability, indexing, preferred-answer]
 ---
 
 <!-- GEO-CN-VARIANT:v1 -->

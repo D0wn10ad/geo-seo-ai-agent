@@ -1,10 +1,9 @@
 ---
 name: geo-ai-visibility
 description: Parallel phase-2 audit worker for AI search visibility that scores citability, checks AI crawler access, validates llms.txt compliance, and scans brand mentions across AI-cited platforms by delegating to the geo-citability, geo-crawlers, geo-llmstxt, and geo-brand-mentions skills. Use when a full GEO audit fans out its AI-visibility analysis to a dedicated subagent.
-version: 1.0.0
-author: geo-seo-claude
-tags: [geo, audit-worker, parallel-subagent, ai-visibility]
-allowed-tools: Read, Bash, WebFetch, Write, Glob, Grep
+metadata:
+  tags: [geo, audit-worker, parallel-subagent, ai-visibility]
+  allowed-tools: Read, Bash, WebFetch, Write, Glob, Grep
 ---
 
 > **Parallel audit worker.** This SKILL.md is the executable phase-2 instruction for the `geo-ai-visibility` worker. The `/geo audit` orchestrator loads it into one of five concurrent tasks. Its Region Awareness, Execution Steps, and Output Format sections are authoritative for that worker's report. A bare skill invocation runs in the main context; the orchestrator must dispatch all five workers via the host's parallel task/subagent mechanism.
