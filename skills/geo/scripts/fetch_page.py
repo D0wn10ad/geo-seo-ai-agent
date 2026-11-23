@@ -36,7 +36,32 @@ DEFAULT_HEADERS = {
 }
 
 
-def fetch_page(url: str, timeout: int = 30) -> dict:
+def _resolve_headers(user_agent=None):
+    """Build request headers for an optional bot User-Agent.
+
+    ``user_agent`` may be:
+      * ``None`` -> the unchanged browser ``DEFAULT_HEADERS``;
+      * a key of ``AI_CRAWLERS`` -> that crawler's UA string;
+      * a raw UA string (contains a space or ``/``) -> used verbatim;
+      * an unknown bare name -> falls back to the default browser UA.
+
+    Always returns a fresh dict so the module-level ``DEFAULT_HEADERS`` is never
+    mutated. No new dependencies; no KeyError on unknown names.
+    """
+    headers = dict(DEFAULT_HEADERS)
+    if user_agent is None:
+        return headers
+    if user_agent in AI_CRAWLERS:
+        ua = AI_CRAWLERS[user_agent]
+    elif " " in user_agent or "/" in user_agent:
+        ua = user_agent
+    else:
+        ua = DEFAULT_HEADERS["User-Agent"]
+    headers["User-Agent"] = ua
+    return headers
+
+
+def fetch_page(url: str, timeout: int = 30, user_agent=None) -> dict:
     """Fetch a page and return structured analysis data."""
     result = {
         "url": url,
@@ -68,7 +93,7 @@ def fetch_page(url: str, timeout: int = 30) -> dict:
     try:
         response = requests.get(
             url,
-            headers=DEFAULT_HEADERS,
+            headers=_resolve_headers(user_agent),
             timeout=timeout,
             allow_redirects=True,
         )
@@ -474,13 +499,17 @@ def crawl_sitemap(url: str, max_pages: int = 50, timeout: int = 15) -> list:
 if __name__ == "__main__":
     if len(sys.argv) < 2:
         print("Usage: python fetch_page.py <url> [mode]")
-        print("Modes: page (default), robots, llms, sitemap, blocks, full")
+        print("Modes: page (default), robots, llms, sitemap, blocks, full, bot <crawler>")
         sys.exit(1)
 
     target_url = sys.argv[1]
     mode = sys.argv[2] if len(sys.argv) > 2 else "page"
 
-    if mode == "page":
+    if mode == "bot":
+        crawler = sys.argv[3] if len(sys.argv) > 3 else None
+        data = fetch_page(target_url, user_agent=crawler)
+        data["user_agent"] = _resolve_headers(crawler)["User-Agent"]
+    elif mode == "page":
         data = fetch_page(target_url)
     elif mode == "robots":
         data = fetch_robots_txt(target_url)

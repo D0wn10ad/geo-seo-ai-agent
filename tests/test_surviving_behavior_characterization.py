@@ -269,7 +269,7 @@ class TestFetchPageCliModes:
         captured, exit_exc = _run_cli(capsys, monkeypatch, _routes())
         assert exit_exc is not None and exit_exc.code == 1
         assert "Usage: python fetch_page.py <url> [mode]" in captured.out
-        assert "Modes: page (default), robots, llms, sitemap, blocks, full" in captured.out
+        assert "Modes: page (default), robots, llms, sitemap, blocks, full, bot <crawler>" in captured.out
 
 
 @pytest.fixture(scope="module")

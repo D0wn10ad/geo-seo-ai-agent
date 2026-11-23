@@ -43,7 +43,7 @@ description: >
 | `/geo prospect <cmd>` | CRM-lite: manage prospects through the sales pipeline |
 | `/geo proposal <domain>` | Auto-generate client proposal from audit data |
 | `/geo compare <domain>` | Monthly delta report: show score improvements to client |
-| `/geo update` | Check/update this fork's skills via pinned `npx skills@1.9.0` (Claude Code + OpenCode) |
+| `/geo update` | Check/update this fork's skills via pinned `npx skills&#64;1.9.0` (Claude Code + OpenCode) |
 | `/geo matrix <core-topic> [--region <code>]` | (fork+) Build 4-quadrant intent matrix and 12-week schedule |
 | `/geo pipeline <url> [--region <code>]` | (fork+) Run 5-stage AI citation pipeline + 6-engine preferred-answer verify |
 | `/geo distribute <topic> [--region <code>]` | (fork+) Generate tiered 14-day multi-platform distribution plan |
@@ -94,7 +94,7 @@ ecosystems, platforms, and user behaviors across markets. Currently implemented:
 
 The registered region knowledge base is mirrored under this skill as
 `references/regions/profiles.yaml`, `references/regions/cn/*.md` and
-`references/regions/cn-variants.json` so an `npx skills@1.9.0` recursive copy
+`references/regions/cn-variants.json` so an `npx skills&#64;1.9.0` recursive copy
 ships it (a bare legacy region directory has no `SKILL.md` and is NOT
 installed). `cn-variants.json` is the manifest: it enumerates all 17
 `../geo-*/references/cn.md` variants and every CN knowledge file.
@@ -220,6 +220,8 @@ Non-global regions fall back to Global weights if their profile omits a weight.
 When running with `--region cn`, all scoring rubrics should reference the
 CN-specific AI engines (`references/regions/cn/ai-engines.md`), platforms (`references/regions/cn/platforms.md`),
 and schema guidance (`references/regions/cn/schema.md`).
+
+Degraded mode: if a live AI-engine or citation query is unavailable, blocked, or times out, mark the affected engine visibility percentages as UNVERIFIED. UNVERIFIED figures MUST NOT enter any scoring parameter, weight input, or composite GEO_Score — report them as unavailable evidence only, never as a measured value. Do not substitute estimates or infer a score from partial data.
 
 ---
 

@@ -69,6 +69,14 @@ Traditional SEO optimizes for search engine rankings. GEO optimizes for AI citat
 | **Agency/Services** | Case studies, portfolio, "Our Work" section, team page, client logos, service descriptions |
 | **Hybrid** | Combination of above signals -- classify by dominant pattern |
 
+**Step 1b: Compare Browser UA vs Bot UA Rendering**
+
+Some sites serve materially different content to AI crawlers than to an ordinary browser (client-side shells that hide server-rendered content). A single browser-UA fetch can therefore misclassify a rich, AI-served site as an empty shell. Guard against this before trusting any page-content signal:
+
+1. Fetch the homepage twice using the self-located `fetch_page.py` helper (see the script-resolution preamble in `skills/geo/SKILL.md`): once with the default browser UA (`fetch_page.py <url> page`) and once with a bot UA (`fetch_page.py <url> bot GPTBot`).
+2. Compare `word_count`, H1 count (`h1_tags`), and link counts between the two snapshots.
+3. If the bot rendering is materially richer (e.g. bot `word_count` is substantially greater than browser `word_count`, or the browser snapshot has 0 H1 while the bot snapshot has one), flag every page-content fact derived from this homepage as `VERIFY — UA-dependent rendering detected` and record BOTH snapshots (browser and bot) in the audit notes. Do NOT treat the browser-only snapshot as authoritative in this case; carry the VERIFY flag into Phase 3 so the fact is not scored as confirmed.
+
 **Step 2: Crawl Sitemap and Internal Links**
 
 1. Attempt to fetch `/sitemap.xml` and `/sitemap_index.xml`.
