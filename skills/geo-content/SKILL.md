@@ -1,6 +1,6 @@
 ---
 name: geo-content
-description: Content quality and E-E-A-T assessment for AI citability — evaluate experience, expertise, authoritativeness, trustworthiness, and content structure
+description: Content quality and E-E-A-T assessment for AI citability. Evaluates experience, expertise, authoritativeness, trustworthiness, and content structure to judge how well a page's content earns AI citations. Use when assessing content depth, author credibility, or E-E-A-T signals for AI search visibility.
 version: 1.0.0
 author: geo-seo-claude
 tags: [geo, content-quality, eeat, citability, ai-content, topical-authority]

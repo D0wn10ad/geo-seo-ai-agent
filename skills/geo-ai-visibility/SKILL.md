@@ -1,10 +1,6 @@
 ---
 name: geo-ai-visibility
-description: >
-  Parallel phase-2 audit worker for AI search visibility: citability scoring,
-  AI crawler access, llms.txt compliance, and brand mention presence across
-  AI-cited platforms. Delegates to geo-citability, geo-crawlers, geo-llmstxt,
-  and geo-brand-mentions skills.
+description: Parallel phase-2 audit worker for AI search visibility that scores citability, checks AI crawler access, validates llms.txt compliance, and scans brand mentions across AI-cited platforms by delegating to the geo-citability, geo-crawlers, geo-llmstxt, and geo-brand-mentions skills. Use when a full GEO audit fans out its AI-visibility analysis to a dedicated subagent.
 version: 1.0.0
 author: geo-seo-claude
 tags: [geo, audit-worker, parallel-subagent, ai-visibility]

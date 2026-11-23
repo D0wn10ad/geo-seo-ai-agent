@@ -1,8 +1,6 @@
 ---
 name: geo-platform-analysis
-description: >
-  Parallel phase-2 audit worker scoring readiness for Google AI Overviews,
-  ChatGPT web search, Perplexity AI, Google Gemini, and Bing Copilot.
+description: Scores AI-search readiness for Google AI Overviews, ChatGPT, Perplexity, Gemini, and Bing Copilot as a parallel phase-2 audit worker. Use when the /geo audit orchestrator dispatches platform-readiness analysis or when per-engine AI visibility scoring is needed.
 version: 1.0.0
 author: geo-seo-claude
 tags: [geo, audit-worker, parallel-subagent, platform-analysis]
