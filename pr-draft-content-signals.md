@@ -23,6 +23,8 @@ This tells AI operators what they can and cannot do with the content downstream 
 - **`specs/agent-readiness-checks.md`** — Full spec for this check (and the two HTTP-level checks in a separate PR).
 - **`tests/agent-readiness-test-results.md`** — Test results covering Content Signals across 2 sites.
 
+> **Historical/unmerged draft:** this PR was never merged. The `agents/geo-ai-visibility.md` and `specs/agent-readiness-checks.md` paths above no longer exist in this tree (the agent was folded into a skill; no `specs/` directory exists). They are retained here only as a record of the original proposal.
+
 ## Scoring
 
 This check is **non-scoring**. It produces a pass or recommendation, never a deduction. The standard is an IETF draft; penalizing absence would be unfair.
@@ -48,3 +50,5 @@ Notable finding: the spec author's own site (`contentsignals.org`) uses an unkno
 - `agents/geo-ai-visibility.md`
 - `specs/agent-readiness-checks.md`
 - `tests/agent-readiness-test-results.md`
+
+> **Historical/unmerged draft:** the `agents/geo-ai-visibility.md` and `specs/agent-readiness-checks.md` entries above no longer exist in this tree; they are listed only as the original proposal's file set.

@@ -89,7 +89,7 @@ Create a new directory under `skills/` following the naming pattern `geo-<skill-
 
 ### How do I test my changes before opening a PR?
 
-Run `npx skills@1.9.0 add -a claude-code -a opencode -y https://github.com/D0wn10ad/geo-seo-ai-agent.git` to install from this fork, then `bash skills/geo/scripts/bootstrap_env.sh` for Python dependencies. Run `pytest tests/ -q`, open your AI agent CLI (Claude Code or OpenCode), and exercise the affected commands against a real URL. Verify that all status checks pass before submitting your pull request, as noted in `CONTRIBUTING.md`.
+Run `npx skills@1.9.0 add -a claude-code -a opencode -y https://github.com/D0wn10ad/geo-seo-ai-agent.git` to install from this fork, then `bash skills/geo/scripts/bootstrap_env.sh` for Python dependencies. Run `pytest tests/ -q`, open your AI agent CLI (Claude Code or OpenCode), and exercise the affected commands against a real URL. This fork has no CI status checks; the local test suite and manual CLI exercise above are the verification gate before submitting your pull request, as noted in `CONTRIBUTING.md`.
 
 ### Where do I report bugs or request features?
 
