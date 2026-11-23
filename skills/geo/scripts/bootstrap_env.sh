@@ -2,7 +2,7 @@
 set -euo pipefail
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-REQ_FILE="${1:-${SCRIPT_DIR}/../../requirements.txt}"
+REQ_FILE="${1:-${SCRIPT_DIR}/requirements.txt}"
 
 if [ ! -f "$REQ_FILE" ]; then
     printf 'error: requirements.txt not found: %s\n' "$REQ_FILE" >&2

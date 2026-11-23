@@ -20,7 +20,8 @@ geo-seo-ai-agent/
 │   │   │   ├── region_resolver.py
 │   │   │   ├── crm_dashboard.py
 │   │   │   ├── bootstrap_env.sh  # idempotent, checksum-keyed dep bootstrap
-│   │   │   └── install_uv.sh     # pinned uv 0.13.9 installer helper
+│   │   │   ├── install_uv.sh     # pinned uv 0.13.9 installer helper
+│   │   │   └── requirements.txt  # Python dependencies
 │   │   ├── assets/schema/        # 6 JSON-LD templates
 │   │   └── references/regions/   # region profiles + CN knowledge base (cn/)
 │   │       ├── profiles.yaml
@@ -50,7 +51,6 @@ geo-seo-ai-agent/
 │   └── uv/                       # Vendored pinned uv installer skill
 ├── docs/                         # Full documentation
 ├── uninstall.sh                  # cleanup fallback for pre-npx installs
-├── requirements.txt              # Python dependencies
 └── README.md                     # Main project view
 ```
 

@@ -69,11 +69,11 @@ bash skills/geo/scripts/install_uv.sh     # installs pinned uv 0.13.9 only if ab
 bash skills/geo/scripts/bootstrap_env.sh  # creates ${XDG_CACHE_HOME:-~/.cache}/geo-seo-ai-agent/venv
 ```
 
-Pass a different `requirements.txt` path as the first argument to
-`bootstrap_env.sh` if you are running it outside the repo. The bootstrap is
-checksum-keyed and idempotent: re-running it is a no-op until `requirements.txt`
-changes. Your system Python is untouched, and `~/.geo-prospects/` is never
-removed.
+`bootstrap_env.sh` resolves `skills/geo/scripts/requirements.txt` beside the
+script by default. Pass a different `requirements.txt` path as the first argument
+if you are running it outside the repo. The bootstrap is checksum-keyed and
+idempotent: re-running it is a no-op until `requirements.txt` changes. Your system
+Python is untouched, and `~/.geo-prospects/` is never removed.
 
 ### Check and update
 
@@ -164,7 +164,8 @@ geo-seo-ai-agent/
 │   │   │   ├── crm_dashboard.py
 │   │   │   ├── bootstrap_env.sh    # idempotent, checksum-keyed dep bootstrap
 │   │   │   ├── install_uv.sh       # pinned uv 0.13.9 installer helper
-│   │   │   └── webapp/
+│   │   │   ├── webapp/
+│   │   │   └── requirements.txt    # Python dependencies
 │   │   ├── assets/schema/      # JSON-LD templates (6 files)
 │   │   └── references/regions/ # region profiles + CN knowledge base (cn/)
 │   │       ├── profiles.yaml
@@ -193,8 +194,7 @@ geo-seo-ai-agent/
 │   ├── geo-update/
 │   └── uv/                     ═ vendored pinned installer helper
 ├── docs/                       # full documentation
-├── uninstall.sh                # cleanup fallback for pre-npx installs
-└── requirements.txt
+└── uninstall.sh                # cleanup fallback for pre-npx installs
 ```
 
 `npx skills@1.9.0 add` discovers directories containing a `SKILL.md` and copies

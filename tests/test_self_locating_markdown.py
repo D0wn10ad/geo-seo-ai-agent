@@ -81,3 +81,28 @@ def test_script_invoking_files_use_canonical_skills_paths() -> None:
     for name in sorted(SCRIPT_INVOKING_FILES):
         assert name.startswith("skills/"), name
         assert (REPO_ROOT / name).is_file(), name
+
+
+# Dependency-error hints must point at the sibling bootstrap script and resolve
+# it relative to __file__, so the hint works from any install root.
+DEPENDENCY_HINT_SCRIPTS: frozenset[str] = frozenset(
+    {
+        "fetch_page.py",
+        "citability_scorer.py",
+        "brand_scanner.py",
+        "llmstxt_generator.py",
+        "generate_pdf_report.py",
+    }
+)
+STALE_HINT: str = "pip install -r requirements.txt"
+BOOTSTRAP_HINT: str = "bootstrap_env.sh"
+SELF_LOCATION_PATTERN: str = "os.path.dirname(os.path.abspath(__file__))"
+
+
+def test_dependency_error_hint_is_self_locating() -> None:
+    for name in sorted(DEPENDENCY_HINT_SCRIPTS):
+        path = REPO_ROOT / "skills" / "geo" / "scripts" / name
+        text = path.read_text(encoding="utf-8")
+        assert STALE_HINT not in text, f"{name} still shows stale '{STALE_HINT}' hint"
+        assert BOOTSTRAP_HINT in text, f"{name} hint does not reference bootstrap_env.sh"
+        assert SELF_LOCATION_PATTERN in text, f"{name} hint does not self-locate via __file__"

@@ -5,6 +5,7 @@ Extracts HTML, text content, meta tags, headers, and structured data.
 """
 
 import sys
+import os
 import json
 import re
 from urllib.parse import urljoin, urlparse
@@ -13,7 +14,9 @@ try:
     import requests
     from bs4 import BeautifulSoup
 except ImportError:
-    print("ERROR: Required packages not installed. Run: pip install -r requirements.txt")
+    _boot = os.path.join(os.path.dirname(os.path.abspath(__file__)), "bootstrap_env.sh")
+    print(f"ERROR: Required packages not installed. Run: bash \"{_boot}\" once, "
+          "then re-run this script with the venv Python path the bootstrap prints.")
     sys.exit(1)
 
 # Common AI crawler user agents for testing
