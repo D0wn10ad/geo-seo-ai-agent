@@ -14,6 +14,7 @@ HARDCODED_ROOT: re.Pattern[str] = re.compile(r"\bpython3?\s+(?:geo/)?scripts/")
 SCRIPT_INVOKING_FILES: frozenset[str] = frozenset(
     {
         "skills/geo/SKILL.md",
+        "skills/geo-ai-visibility/SKILL.md",
         "skills/geo-brand-mentions/SKILL.md",
         "skills/geo-report-pdf/SKILL.md",
         "skills/geo-report-pdf/references/cn.md",
@@ -46,6 +47,16 @@ def test_script_markdown_declares_resolution_convention(name: str) -> None:
     assert MARKER in text, f"{name} missing convention marker {MARKER}"
     assert "GEO_SCRIPTS" in text, f"{name} does not use the GEO_SCRIPTS variable"
     assert "SKILL_DIR" in text, f"{name} does not anchor resolution to SKILL_DIR"
+
+
+@pytest.mark.parametrize("name", sorted(SCRIPT_INVOKING_FILES))
+def test_preamble_resolves_venv_python(name: str) -> None:
+    text = (REPO_ROOT / name).read_text(encoding="utf-8")
+    assert MARKER in text, f"{name} missing convention marker {MARKER}"
+    assert "GEO_CACHE_DIR" in text, f"{name} does not define GEO_CACHE_DIR"
+    assert "VENV_DIR=" in text, f"{name} does not explicitly define VENV_DIR"
+    assert "VENV_DIR}/bin/python3" in text, f"{name} does not resolve the venv python3"
+    assert "command -v python3" in text, f"{name} dropped the system-python fallback"
 
 
 def test_orchestrator_documents_single_literal_script_path() -> None:

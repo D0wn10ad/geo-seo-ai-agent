@@ -61,7 +61,15 @@ Helper scripts are located relative to the `SKILL.md` you are reading — never 
 SKILL_DIR="$(cd "$(dirname "<PATH-TO-THIS-SKILL.md>")" && pwd)"
 GEO_SCRIPTS="$(cd "$SKILL_DIR/../geo/scripts" && pwd)"
 : "${GEO_SCRIPTS:?GEO scripts root not found}"
-PY="$(command -v python3 || command -v python)"
+GEO_CACHE_DIR="${GEO_CACHE_DIR:-${XDG_CACHE_HOME:-$HOME/.cache}/geo-seo-ai-agent}"
+VENV_DIR="${GEO_CACHE_DIR}/venv"
+if [ -x "${VENV_DIR}/bin/python3" ]; then
+  PY="${VENV_DIR}/bin/python3"
+elif [ -x "${VENV_DIR}/bin/python" ]; then
+  PY="${VENV_DIR}/bin/python"
+else
+  PY="$(command -v python3 || command -v python)"
+fi
 ```
 
 Replace `<PATH-TO-THIS-SKILL.md>` with the path of the SKILL.md you are reading, then invoke scripts as `"$PY" "$GEO_SCRIPTS/<script>.py" ...`.
@@ -99,10 +107,10 @@ by the dependency-free `region_resolver.py` helper, which is executed from that
 root and can be run from the installed skill:
 
 ```bash
-<PY> "$GEO_SCRIPTS/region_resolver.py" detect <url>       # cn / global / multi
-<PY> "$GEO_SCRIPTS/region_resolver.py" profile cn         # CN profile (BaiduSpider, baidu_baike)
-<PY> "$GEO_SCRIPTS/region_resolver.py" guidance cn        # CN-only files to load
-<PY> "$GEO_SCRIPTS/region_resolver.py" guidance global    # empty: no CN guidance
+"$PY" "$GEO_SCRIPTS/region_resolver.py" detect <url>       # cn / global / multi
+"$PY" "$GEO_SCRIPTS/region_resolver.py" profile cn         # CN profile (BaiduSpider, baidu_baike)
+"$PY" "$GEO_SCRIPTS/region_resolver.py" guidance cn        # CN-only files to load
+"$PY" "$GEO_SCRIPTS/region_resolver.py" guidance global    # empty: no CN guidance
 ```
 
 **Gate:** when `REGION` is `cn`, load `references/cn.md` for the command

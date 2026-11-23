@@ -12,7 +12,19 @@ Apply the following adjustments to the base PDF generation workflow.
 
 <!-- GEO-SCRIPT-RESOLUTION:v1 -->
 
-**Script resolution.** Set `SKILL_DIR` to this SKILL.md's directory. Resolve `GEO_SCRIPTS` as the first existing of `"$SKILL_DIR/scripts"`, `"$SKILL_DIR/../geo/scripts"`, `"$SKILL_DIR/../../geo/scripts"`, `"$SKILL_DIR/../../../.claude/skills/geo/scripts"` (full preamble in `geo/SKILL.md` → "Script Path Resolution"). Set `PY="$(command -v python3 || command -v python)"`, then invoke scripts as `"$PY" "$GEO_SCRIPTS/<script>.py" ...`. Windows runs through Git Bash, which supplies these commands and forward-slash paths; native PowerShell/CMD is out of scope.
+**Script resolution.** Set `SKILL_DIR` to this SKILL.md's directory. Resolve `GEO_SCRIPTS` as the first existing of `"$SKILL_DIR/scripts"`, `"$SKILL_DIR/../geo/scripts"`, `"$SKILL_DIR/../../geo/scripts"`, `"$SKILL_DIR/../../../.claude/skills/geo/scripts"` (full preamble in `geo/SKILL.md` → "Script Path Resolution"). Set `PY` using the resolution block below (prefers the bootstrapped venv python, falls back to system python), then invoke scripts as `"$PY" "$GEO_SCRIPTS/<script>.py" ...`. Windows runs through Git Bash, which supplies these commands and forward-slash paths; native PowerShell/CMD is out of scope.
+
+```bash
+GEO_CACHE_DIR="${GEO_CACHE_DIR:-${XDG_CACHE_HOME:-$HOME/.cache}/geo-seo-ai-agent}"
+VENV_DIR="${GEO_CACHE_DIR}/venv"
+if [ -x "${VENV_DIR}/bin/python3" ]; then
+  PY="${VENV_DIR}/bin/python3"
+elif [ -x "${VENV_DIR}/bin/python" ]; then
+  PY="${VENV_DIR}/bin/python"
+else
+  PY="$(command -v python3 || command -v python)"
+fi
+```
 
 ---
 
