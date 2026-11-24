@@ -1,6 +1,6 @@
 # Skills, Agents, Scripts, and Schemas
 
-This reference describes every moving part in this fork's skill bundle. The bundle optimizes websites for Generative Engine Optimization (GEO) — making content discoverable and citable by AI search platforms (ChatGPT, Perplexity, Google AI Overviews, Gemini, Bing Copilot) — while maintaining traditional SEO foundations. It is structured as one orchestrator skill, 21 `geo-*` skills plus the vendored `uv` skill, 5 parallel subagents (with platform-specific copies for Claude Code and OpenCode), 7 Python helper scripts, and 6 JSON-LD schema templates.
+This reference describes every moving part in this fork's skill bundle. The bundle optimizes websites for Generative Engine Optimization (GEO) — making content discoverable and citable by AI search platforms (ChatGPT, Perplexity, Google AI Overviews, Gemini, Bing Copilot) — while maintaining traditional SEO foundations. It is structured as one orchestrator skill, 21 `geo-*` skills plus the vendored `uv` skill, 5 parallel subagents (with platform-specific copies for Claude Code and OpenCode), 8 Python helper scripts, and 6 JSON-LD schema templates.
 
 Skills are installed from this fork with the pinned `npx skills@1.9.0 add -a claude-code -a opencode -y https://github.com/D0wn10ad/geo-seo-ai-agent.git` command; the committed tree is copied verbatim and nothing is generated at install time. Python dependencies are installed separately by `skills/geo/scripts/bootstrap_env.sh` (using the pinned `skills/geo/scripts/install_uv.sh` helper). See [getting-started.md](getting-started.md) for the full flow.
 
@@ -320,6 +320,8 @@ These five agents run simultaneously during a `/geo audit` to reduce total runti
 | `skills/geo/scripts/llmstxt_generator.py` | Validates an existing `llms.txt` against the spec (H1 title, blockquote description, H2 sections, absolute URLs, descriptions) and generates a new file from site crawl data. | geo-llmstxt |
 | `skills/geo/scripts/generate_pdf_report.py` | Generates a multi-page PDF from a JSON audit data file using ReportLab. Renders score gauges, bar charts, color-coded tables, and an action plan. Accepts the JSON file path as a CLI argument or via stdin. Requires `reportlab`. | geo-report-pdf |
 | `skills/geo/scripts/crm_dashboard.py` | Renders a rich terminal dashboard for the prospect CRM. Reads `~/.geo-prospects/prospects.json` and displays pipeline stages, MRR, and prospect detail views. Requires `rich`. | geo-prospect |
+| `skills/geo/scripts/region_resolver.py` | Resolves a `--region` code to its knowledge-base profile and CN variant manifest, auto-detecting region from URL/content when omitted. | geo (orchestrator), all region-aware skills |
+| `skills/geo/scripts/webapp/app.py` | Flask + HTMX web UI for the prospect CRM (alternative to the `crm_dashboard.py` CLI). | geo-prospect |
 
 ---
 

@@ -27,7 +27,7 @@ Please follow these steps to have your contribution considered by the maintainer
 
 1. Follow all instructions in the template.
 2. Follow the styleguides provided below.
-3. After you submit your pull request, verify that all status checks are passing.
+3. After you submit your pull request, run the test suite locally (`pytest tests/ -q`) and exercise the affected commands against a real URL. This fork has no CI status checks, so local verification is the gate.
 
 ## Styleguides
 

@@ -1,12 +1,9 @@
 ---
 name: geo-platform-analysis
-description: >
-  Parallel phase-2 audit worker scoring readiness for Google AI Overviews,
-  ChatGPT web search, Perplexity AI, Google Gemini, and Bing Copilot.
-version: 1.0.0
-author: geo-seo-claude
-tags: [geo, audit-worker, parallel-subagent, platform-analysis]
-allowed-tools: Read, Bash, WebFetch, Write, Glob, Grep
+description: Scores AI-search readiness for Google AI Overviews, ChatGPT, Perplexity, Gemini, and Bing Copilot as a parallel phase-2 audit worker. Use when the /geo audit orchestrator dispatches platform-readiness analysis or when per-engine AI visibility scoring is needed.
+metadata:
+  tags: [geo, audit-worker, parallel-subagent, platform-analysis]
+  allowed-tools: Read, Bash, WebFetch, Write, Glob, Grep
 ---
 
 > **Parallel audit worker.** This SKILL.md is the executable phase-2 instruction for the `geo-platform-analysis` worker. The `/geo audit` orchestrator loads it into one of five concurrent tasks. Its Region Awareness, Execution Steps, and Output Format sections are authoritative for that worker's report. A bare skill invocation runs in the main context; the orchestrator must dispatch all five workers via the host's parallel task/subagent mechanism.

@@ -1,6 +1,6 @@
 ---
 name: geo-llmstxt
-description: Analyzes and generates llms.txt files -- the emerging standard for helping AI systems understand website structure and content. Can validate existing llms.txt files or generate new ones from scratch by crawling the site.
+description: Analyzes, validates, and generates llms.txt files that tell AI systems which site content is most useful. Use when a user asks to check, create, or improve a site's llms.txt or AI-discoverability guidance.
 ---
 
 # llms.txt Standard Analysis and Generation Skill

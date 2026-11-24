@@ -1,6 +1,6 @@
 ---
 name: geo-citability
-description: AI citability scoring and optimization. Analyzes web page content to determine how likely AI systems (ChatGPT, Claude, Perplexity, Gemini) are to cite or quote passages from the page. Provides a citability score (0-100) with specific rewrite suggestions.
+description: AI citability scoring and optimization. Analyzes web page content to determine how likely AI systems (ChatGPT, Claude, Perplexity, Gemini) are to cite or quote passages, producing a citability score (0-100) with specific rewrite suggestions. Use when assessing or improving the likelihood that a page's content is quoted or cited by AI answer engines.
 ---
 
 <!-- GEO-CN-VARIANT:v1 -->

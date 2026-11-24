@@ -1,6 +1,6 @@
 ---
 name: geo-update
-description: Check and update the pinned npx skills install for this fork across Claude Code and OpenCode.
+description: Checks and applies pinned npx skill updates for this fork (D0wn10ad/geo-seo-ai-agent) across Claude Code and OpenCode. Use when a user asks to check for, update, or reinstall the installed GEO skills.
 ---
 
 # GEO-SEO Update Skill

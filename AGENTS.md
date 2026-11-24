@@ -43,7 +43,7 @@ Client-facing artifacts written to the repo root are gitignored on purpose: `/GE
 ## Python scripts
 
 - `skills/geo/scripts/fetch_page.py` — most-used utility. CLI modes: `page`, `robots`, `llms`, `sitemap`, `blocks`, `full`; `robots` mode returns `cloudflare_managed:true` when Cloudflare-managed robots is detected.
-- `skills/geo/scripts/generate_pdf_report.py` — 941 lines, heaviest script. Uses ReportLab directly with custom drawing primitives
+- `skills/geo/scripts/generate_pdf_report.py` — 943 lines, heaviest script. Uses ReportLab directly with custom drawing primitives
 - `skills/geo/scripts/crm_dashboard.py` — CLI CRM (see quirk 4 below)
 - `skills/geo/scripts/webapp/app.py` — Flask + HTMX CRM web UI; its `region_label()` falls back from `region` to `country`
 - `skills/geo/scripts/install_uv.sh` — pinned uv 0.13.9 installer helper for the dependency bootstrap
@@ -78,7 +78,7 @@ Two UIs, both incomplete:
 
 ### 5. `/geo update` targets this fork via pinned npx
 
-`npx skills@1.9.0 check` / `npx skills@1.9.0 update` operate against the pinned source recorded in `skills-lock.json` (`https://github.com/D0wn10ad/geo-seo-ai-agent.git`), so updates self-target this fork. The `zubair-trabzada/geo-seo-claude` references in `FORK_CHANGELOG.md:53` are stale upstream history, not the active update source.
+`npx skills@1.9.0 check` / `npx skills@1.9.0 update` operate against the pinned source recorded in `skills-lock.json` (`https://github.com/D0wn10ad/geo-seo-ai-agent.git`), so updates self-target this fork. The `zubair-trabzada/geo-seo-claude` references in `FORK_CHANGELOG.md:5 and :93` are stale upstream history, not the active update source.
 
 ### 6. No Python dependency lockfile
 

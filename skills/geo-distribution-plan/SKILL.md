@@ -11,9 +11,8 @@ description: >
   day authority-signal reclaim checklist. Use when user says "distribute",
   "distribution plan", "syndication", "publishing cadence", "channel plan",
   "/geo distribute".
-version: 1.0.0
-author: geo-seo-claude-plus
-tags: [geo, distribution, syndication, channels, cadence, authority]
+metadata:
+  tags: [geo, distribution, syndication, channels, cadence, authority]
 ---
 
 <!-- GEO-CN-VARIANT:v1 -->

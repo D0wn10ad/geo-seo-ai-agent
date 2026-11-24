@@ -10,9 +10,8 @@ description: >
   Use when user says "matrix", "intent matrix", "content angles", "intent angles",
   "topic plan", "/geo matrix", or asks how to systematically cover a topic for
   AI search.
-version: 1.0.0
-author: geo-seo-claude-plus
-tags: [geo, intent, content-strategy, planning, matrix, coverage]
+metadata:
+  tags: [geo, intent, content-strategy, planning, matrix, coverage]
 ---
 
 <!-- GEO-CN-VARIANT:v1 -->

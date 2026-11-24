@@ -1,6 +1,6 @@
 ---
 name: geo-brand-mentions
-description: Brand mention and authority scanner for AI visibility. Analyzes brand presence across platforms that AI models rely on for entity recognition and citation decisions. Produces a Brand Authority Score (0-100) with platform-specific recommendations.
+description: Brand mention and authority scanner for AI visibility that analyzes brand presence across the platforms AI models rely on for entity recognition and citation decisions, producing a Brand Authority Score (0-100) with platform-specific recommendations. Use when measuring how often and how favorably a brand is cited by AI engines.
 ---
 
 <!-- GEO-CN-VARIANT:v1 -->
